@@ -11,11 +11,11 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class ContentUploadComponent implements OnInit {
   languages: string[] = ['English', 'French', 'Spanish'];
-  types: string[] = ['Conll-U', 'Conll-X', 'Biluo', 'Raw']
+  types: string[] = ['Conll-U', 'Conll-X', 'Biluo', 'Raw'];
 
-  contentUploadFormGroup: FormGroup = this._formBuilder.group(new ContentUploadForm());
+  contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.contentUploadFormGroup.get(ContentUploadForm.TYPE).valueChanges

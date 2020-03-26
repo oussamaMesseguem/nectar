@@ -4,7 +4,6 @@
   grid-template-columns: 1fr 1fr;
   height: 100%;
 }
-
 .flow-diagram {
   grid-area: flow-diagram;
   background-color: orange;
@@ -12,31 +11,22 @@
   min-width: 350px;
   max-width: 700px;
 }
-
 .upload-form {
   grid-area: upload-form;
   margin: 5% 15% 8% 5%;
   min-width: 350px;
   max-width: 700px;
 }
-
 .type-mat-form-field {
-  // to get the chips in a line
   display: block;
 }
-
-// All the steps are visible
 ::ng-deep .mat-vertical-stepper-content {
   visibility: visible !important;
   height: 100% !important;
 }
-
 ::ng-deep .mat-step-icon {
-  background-color: #7b1fa2  !important;
+  background-color: #7b1fa2 !important;
 }
-
-
-// Media screen
 @media screen and (max-width: 860px) {
   .main-container {
     display: grid;
@@ -44,11 +34,9 @@
     grid-template-rows: 1fr 1fr;
     width: 100%;
   }
-
   .flow-diagram {
     margin: 5% 15% 5% 15%;
   }
-
   .upload-form {
     margin: 5% 15% 5% 15%;
   }

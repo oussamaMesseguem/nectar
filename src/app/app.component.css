@@ -1,0 +1,12 @@
+.main-container {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+  height: 100%;
+  width: 100%;
+}
+.app-toolbar {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 1000;
+}

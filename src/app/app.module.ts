@@ -4,8 +4,10 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularMaterialModule } from './angular-material.module';
 import { ContentUploadModule } from './content-upload/content-upload.module';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { ContentUploadModule } from './content-upload/content-upload.module';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AngularMaterialModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatGridListModule,
     ContentUploadModule,
     AppRoutingModule
   ],

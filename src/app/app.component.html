@@ -1,6 +1,29 @@
-<mat-toolbar color="primary">
-  <span><mat-icon aria-label="Example home icon">🕊</mat-icon></span>
-  <span>Nectar</span>
+<!-- <mat-grid-list cols="1">
 
-</mat-toolbar>
-<router-outlet></router-outlet>
+  <mat-grid-tile>
+    <mat-toolbar color="primary">
+      <span>
+        <mat-icon aria-label="Example home icon">🕊</mat-icon>
+      </span>
+      <span>Nectar</span>
+    </mat-toolbar>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <router-outlet></router-outlet>
+  </mat-grid-tile>
+
+</mat-grid-list> -->
+
+<div class="main-container">
+  <mat-toolbar class="app-toolbar" color="primary">
+    <span>
+      <mat-icon aria-label="Example home icon">🕊</mat-icon>
+    </span>
+    <span>Nectar</span>
+  </mat-toolbar>
+
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

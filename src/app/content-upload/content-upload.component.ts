@@ -28,7 +28,20 @@ export class ContentUploadComponent implements OnInit {
   get lang(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.LANG) as FormControl; }
   get type(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.TYPE) as FormControl; }
 
+  /**
+   * Sets the value of the type into the ControlForm.
+   * Done manually because chiplist does not handle it.
+   * @param value the value of the type
+   */
   changeType(value: string) {
-    this.contentUploadFormGroup.get(ContentUploadForm.TYPE).setValue(value);
+    this.type.setValue(value);
+  }
+
+  /**
+   * Reset the FormControl of the type to null.
+   * Not done by the reset button.
+   */
+  resetType() {
+    this.type.reset();
   }
 }

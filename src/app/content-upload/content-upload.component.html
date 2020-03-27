@@ -43,6 +43,15 @@
                     </mat-step>
 
                     <mat-step>
+
+                        <ng-template matStepLabel>Upload</ng-template>
+                        <div>
+                            <button mat-raised-button (click)="upload()">Open file</button>
+                        </div>
+
+                    </mat-step>
+
+                    <mat-step>
                         <ng-template matStepLabel>Validation</ng-template>
                         <div>
                             <button mat-button (click)="stepper.reset(); reset()">Reset</button>

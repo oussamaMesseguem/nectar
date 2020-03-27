@@ -42,9 +42,12 @@ export class ContentUploadComponent implements OnInit {
       this.isValid = false;
     } else {
       this.type.setValue(value);
-      this.content.setValue(value);
     }
     this.isRaw = value === 'Raw';
+  }
+
+  upload() {
+    this.content.setValue('value');
   }
 
   /**
@@ -53,6 +56,7 @@ export class ContentUploadComponent implements OnInit {
    */
   reset() {
     this.changeType(null);
+    this.content.setValue(null);
     this.isValid = false;
   }
 

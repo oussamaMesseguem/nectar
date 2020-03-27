@@ -10,6 +10,8 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./content-upload.component.scss']
 })
 export class ContentUploadComponent implements OnInit {
+  isValid = false;
+  isRaw = false;
   languages: string[] = ['English', 'French', 'Spanish'];
   types: string[] = ['Conll-U', 'Conll-X', 'Biluo', 'Raw'];
 
@@ -18,15 +20,16 @@ export class ContentUploadComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.contentUploadFormGroup.get(ContentUploadForm.TYPE).valueChanges
+    this.contentUploadFormGroup.valueChanges
       .subscribe(v => {
-        console.log(v);
+        this.validate();
       });
 
   }
 
   get lang(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.LANG) as FormControl; }
   get type(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.TYPE) as FormControl; }
+  get content(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.CONTENT) as FormControl; }
 
   /**
    * Sets the value of the type into the ControlForm.
@@ -34,14 +37,40 @@ export class ContentUploadComponent implements OnInit {
    * @param value the value of the type
    */
   changeType(value: string) {
-    this.type.setValue(value);
+    if (value === null || value === undefined) {
+      this.type.reset();
+      this.isValid = false;
+    } else {
+      this.type.setValue(value);
+      this.content.setValue(value);
+    }
+    this.isRaw = value === 'Raw';
   }
 
   /**
-   * Reset the FormControl of the type to null.
-   * Not done by the reset button.
+   * Reset the FormControls to null.
+   * Not handled by the reset button.
    */
-  resetType() {
-    this.type.reset();
+  reset() {
+    this.changeType(null);
+    this.isValid = false;
+  }
+
+  /**
+   * Redirects to the annotation page.
+   */
+  annotate() {
+    console.log(this.contentUploadFormGroup.value);
+  }
+
+  /**
+   * Validates the form.
+   * The main validation is to get a valid parsing of the content.
+   */
+  validate() {
+    if (!Object.values(this.contentUploadFormGroup.value).includes(null) && this.content.value != null) {
+      this.isValid = true;
+      console.log(Object.values(this.contentUploadFormGroup.value));
+    }
   }
 }

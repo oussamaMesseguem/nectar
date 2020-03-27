@@ -45,7 +45,9 @@
                     <mat-step>
                         <ng-template matStepLabel>Validation</ng-template>
                         <div>
-                            <button mat-button (click)="stepper.reset(); resetType()">Reset</button>
+                            <button mat-button (click)="stepper.reset(); reset()">Reset</button>
+                            <button mat-button (click)="annotate()" *ngIf="isValid && !isRaw">Annotate</button>
+                            <button mat-button (click)="adjust()" *ngIf="isValid && isRaw">Adjust</button>
                         </div>
                     </mat-step>
 

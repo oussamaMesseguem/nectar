@@ -64,6 +64,13 @@ export class ContentUploadComponent implements OnInit {
   }
 
   /**
+   * Redirects to the adjusment form.
+   */
+  adjust() {
+    console.log(this.contentUploadFormGroup.value);
+  }
+
+  /**
    * Validates the form.
    * The main validation is to get a valid parsing of the content.
    */

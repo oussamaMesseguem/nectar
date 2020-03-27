@@ -31,7 +31,7 @@
 
                         <mat-form-field  class="type-mat-form-field">
                             <mat-chip-list class="type-chips" aria-label="Fish selection" multiple=false
-                                ariaOrientation="horizontal" required>
+                                ariaOrientation="horizontal" required [formControl]="type">
                                 <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
                                     (click)="changeType(typeContent)">
                                     {{ typeContent }}

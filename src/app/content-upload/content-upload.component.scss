@@ -18,6 +18,8 @@
   margin: 5% 15% 8% 5%;
   min-width: 350px;
   max-width: 700px;
+  padding: 5px 10px 5px 10px;
+  // max-height: 400px;
 }
 
 .type-mat-form-field {
@@ -31,8 +33,16 @@
   height: 100% !important;
 }
 
+::ng-deep .mat-vertical-stepper-header {
+  padding: 14px !important;
+}
+
+::ng-deep .mat-vertical-content {
+  padding: 0 24px 14px 24px !important;
+}
+
 ::ng-deep .mat-step-icon {
-  background-color: #7b1fa2  !important;
+  background-color: #7b1fa2 !important;
 }
 
 

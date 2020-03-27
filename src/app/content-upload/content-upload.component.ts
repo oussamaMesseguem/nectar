@@ -84,4 +84,10 @@ export class ContentUploadComponent implements OnInit {
       console.log(Object.values(this.contentUploadFormGroup.value));
     }
   }
+
+  onFileComplete(v) {
+    console.log('the event');
+    
+    console.log(v);
+  }
 }

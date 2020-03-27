@@ -12,12 +12,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [ContentUploadComponent],
+  declarations: [ContentUploadComponent, FileUploadComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
     MatGridListModule,
     MatCardModule,
     MatStepperModule,
@@ -26,6 +31,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatAutocompleteModule,
     MatChipsModule,
     MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
     ContentUploadRoutingModule
   ]
 })

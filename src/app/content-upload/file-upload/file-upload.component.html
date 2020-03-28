@@ -1,0 +1,18 @@
+<div class="container-upload">
+    <button mat-button color="warn" (click)="onClick()">
+        <mat-icon>file_upload</mat-icon>
+        {{text}}
+    </button>
+    <ul>
+        <li *ngFor="let file of files" [@fadeInOut]="file.state">
+            <mat-progress-bar [value]="file.progress"></mat-progress-bar>
+            <span style="margin-top: 10px;" id="file-label">
+                {{file.data.name}}
+                <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
+                    <mat-icon>cancel</mat-icon>
+                </a>
+            </span>
+        </li>
+    </ul>
+    <input type="file" id="fileUpload" name="fileUpload" multiple="multiple" style="display:none;" />
+</div>

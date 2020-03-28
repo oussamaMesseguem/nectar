@@ -1,0 +1,72 @@
+<div class="main-container">
+    <mat-card class="flow-diagram">
+        <!-- <img mat-card-image class="img-size" src="assets\img\content-injection-flow-diagram.png"> -->
+    </mat-card>
+
+    <mat-card class="upload-form">
+
+        <mat-card-content>
+
+            <form [formGroup]="contentUploadFormGroup">
+                <mat-vertical-stepper [linear]=true #stepper>
+
+                    <mat-step [stepControl]="lang">
+
+                        <ng-template matStepLabel>Select the language</ng-template>
+                        <mat-form-field>
+                            <input type="text" placeholder="Language" aria-label="Language" matInput [formControl]="lang"
+                                [matAutocomplete]="auto" required>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let language of languages" [value]="language">
+                                    {{language}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                    </mat-step>
+
+                    <mat-step>
+
+                        <ng-template matStepLabel>Choose the type</ng-template>
+
+                        <mat-form-field  class="type-mat-form-field">
+                            <mat-chip-list class="type-chips" aria-label="Fish selection" multiple=false
+                                ariaOrientation="horizontal" required [formControl]="type">
+                                <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
+                                    (click)="changeType(typeContent)">
+                                    {{ typeContent }}
+                                </mat-chip>
+                            </mat-chip-list>
+
+                        </mat-form-field>
+
+                    </mat-step>
+
+                    <mat-step>
+
+                        <ng-template matStepLabel>Upload</ng-template>
+                        <!-- <div>
+                            <button mat-raised-button (click)="upload()">Open file</button>
+                        </div> -->
+                        <app-file-upload (uploadCompleted)="onFileComplete($event)"></app-file-upload>
+
+                    </mat-step>
+
+                    <mat-step>
+                        <ng-template matStepLabel>Validation</ng-template>
+                        <div>
+                            <button mat-button (click)="stepper.reset(); reset()">Reset</button>
+                            <button mat-button (click)="annotate()" *ngIf="isValid && !isRaw">Annotate</button>
+                            <button mat-button (click)="adjust()" *ngIf="isValid && isRaw">Adjust</button>
+                        </div>
+                    </mat-step>
+
+                </mat-vertical-stepper>
+
+            </form>
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>

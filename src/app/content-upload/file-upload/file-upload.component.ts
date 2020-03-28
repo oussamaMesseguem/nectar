@@ -24,7 +24,7 @@ export class FileUploadComponent implements OnInit {
   /** Target URL for file uploading. */
   @Input() target = 'https://file.io';
 
-  @Output() complete = new EventEmitter<File>();
+  @Output() uploadCompleted = new EventEmitter<File>();
 
   clicked = false;
 
@@ -44,8 +44,7 @@ export class FileUploadComponent implements OnInit {
 
     fileUpload.onchange = () => {
 
-      for (let index = 0; index < fileUpload.files.length; index++) {
-        const file = fileUpload.files[index];
+      Array.from(fileUpload.files).forEach(file => {
         this.files.push({
           data: file,
           state: 'in',
@@ -54,7 +53,7 @@ export class FileUploadComponent implements OnInit {
           canRetry: false,
           canCancel: true
         });
-      }
+      });
 
       this.uploadFiles();
     };

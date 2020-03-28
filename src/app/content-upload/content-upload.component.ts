@@ -87,7 +87,7 @@ export class ContentUploadComponent implements OnInit {
 
   onFileComplete(v) {
     console.log('the event');
-    
+
     console.log(v);
   }
 }

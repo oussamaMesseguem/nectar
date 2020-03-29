@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from
 import { ContentUploadForm } from './content-upload.model';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ContentUploadService } from './content-upload.service';
 
 @Component({
   selector: 'app-content-upload',
@@ -14,10 +15,12 @@ export class ContentUploadComponent implements OnInit {
   isRaw = false;
   languages: string[] = ['English', 'French', 'Spanish'];
   types: string[] = ['Conll-U', 'Conll-X', 'Biluo', 'Raw'];
+  readerProgressValue: number;
+  parserProgressValue: number;
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService) { }
 
   ngOnInit(): void {
     this.contentUploadFormGroup.valueChanges
@@ -85,9 +88,33 @@ export class ContentUploadComponent implements OnInit {
     }
   }
 
-  onFileComplete(v) {
-    console.log('the event');
+  onFileComplete(file: File) {
+    console.log('File uploaded');
+    const reader = new FileReader();
+    console.log(file);
+    reader.readAsText(file);
 
-    console.log(v);
+    // While on progress a progress bar is displayed
+    reader.onprogress = (event: ProgressEvent) => {
+      console.log('inside onprogress');
+      this.readerProgressValue = Math.round((event.loaded * 100) / event.total);
+      console.log(this.readerProgressValue);
+    };
+
+    // Once the content has been read, it gets emitted to the service
+    // for parsing.
+    reader.onload = (event: ProgressEvent) => {
+      this.contentUploadService.parseContent('Conll-U', reader.result.toString()).subscribe(progressValue => {
+        this.parserProgressValue = progressValue;
+        console.log(progressValue);
+
+      },
+        err => { },
+        () => {
+          console.log('compt complete');
+
+        });
+    };
+
   }
 }

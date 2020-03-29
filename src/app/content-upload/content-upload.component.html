@@ -45,10 +45,8 @@
                     <mat-step>
 
                         <ng-template matStepLabel>Upload</ng-template>
-                        <!-- <div>
-                            <button mat-raised-button (click)="upload()">Open file</button>
-                        </div> -->
-                        <app-file-upload (uploadCompleted)="onFileComplete($event)"></app-file-upload>
+
+                        <app-file-upload (uploadCompleted)="onFileComplete($event)" [readerProgressValue]=readerProgressValue></app-file-upload>
 
                     </mat-step>
 

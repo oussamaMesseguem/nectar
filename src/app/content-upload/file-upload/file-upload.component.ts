@@ -17,12 +17,7 @@ import { map, tap, last, catchError } from 'rxjs/operators';
 })
 export class FileUploadComponent implements OnInit {
 
-  /** Link text */
-  @Input() text = 'Upload';
-  /** Name used in form which will be sent in HTTP request. */
-  @Input() param = 'file';
-  /** Target URL for file uploading. */
-  @Input() target = 'https://file.io';
+  @Input() readerProgressValue: number;
 
   @Output() uploadCompleted = new EventEmitter<File>();
 
@@ -33,8 +28,6 @@ export class FileUploadComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() { }
-
-  get file() { return this.files[0]; }
 
   onClick() {
     this.clicked = true;
@@ -72,49 +65,7 @@ export class FileUploadComponent implements OnInit {
   }
 
   private uploadFile(file: FileUploadModel) {
-    const reader = new FileReader();
-    file.inProgress = true;
-    reader.onprogress = (event: ProgressEvent) => {
-      file.progress = Math.round((event.loaded * 100) / event.total);
-      console.log(file.progress);
-      console.log(reader.result.toString() != null);
-    };
-    reader.readAsText(file.data);
-
-    // const fd = new FormData();
-    // fd.append(this.param, file.data);
-
-    // const req = new HttpRequest('POST', this.target, fd, {
-    //   reportProgress: true
-    // });
-
-    // file.inProgress = true;
-    // file.sub = this.http
-    //   .request(req)
-    //   .pipe(
-    //     map(event => {
-    //       switch (event.type) {
-    //         case HttpEventType.UploadProgress:
-    //           file.progress = Math.round((event.loaded * 100) / event.total);
-    //           break;
-    //         case HttpEventType.Response:
-    //           return event;
-    //       }
-    //     }),
-    //     tap(message => { }),
-    //     last(),
-    //     catchError((error: HttpErrorResponse) => {
-    //       file.inProgress = false;
-    //       file.canRetry = true;
-    //       return of(`${file.data.name} upload failed.`);
-    //     })
-    //   )
-    //   .subscribe((event: any) => {
-    //     if (typeof event === 'object') {
-    //       this.removeFileFromArray(file);
-    //       // this.complete.emit(file.data);
-    //     }
-    //   });
+    this.uploadCompleted.emit(file.data);
   }
 
   private uploadFiles() {

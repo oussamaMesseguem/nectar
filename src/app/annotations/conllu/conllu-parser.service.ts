@@ -22,7 +22,7 @@ export class ConlluParser implements IParser {
                     } else {
                         // The sentence is sent and the array reset
                         const size = sentence.map(token => token.token.length).reduce((acc, len) => acc + len, 0) + 20;
-                        const parserModel: ParserModel = { data: sentence, size };
+                        const parserModel: ParserModel = { sentence, size };
                         observer.next(parserModel);
                         sentence = [];
                     }

@@ -113,5 +113,5 @@ class ParserService {
 
 export interface ParserModel {
     size: number;
-    data: any[];
+    sentence: any[];
 }

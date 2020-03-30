@@ -1,8 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Subscription, of, empty } from 'rxjs';
-import { HttpClient, HttpRequest, HttpEventType, HttpErrorResponse } from '@angular/common/http';
-import { map, tap, last, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-file-upload',
@@ -18,19 +15,33 @@ import { map, tap, last, catchError } from 'rxjs/operators';
 export class FileUploadComponent implements OnInit {
 
   @Input() readerProgressValue: number;
-
+  @Input() isDisabled: boolean;
+  /**
+   * Once the file is upload it's sent to parent
+   */
   @Output() uploadCompleted = new EventEmitter<File>();
 
-  clicked = false;
+  /**
+   * Disables the button
+   */
+  uploadCanceledValue = false;
+  @Output() uploadCanceledChange = new EventEmitter<boolean>();
+
 
   files: Array<FileUploadModel> = [];
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   ngOnInit() { }
 
+  // @Input() get uploadCanceled() { return this.uploadCanceledValue; }
+
+  // set uploadCanceled(value: boolean) {
+  //   this.uploadCanceledValue = value;
+  //   this.uploadCanceledChange.emit(this.uploadCanceledValue);
+  // }
+
   onClick() {
-    this.clicked = true;
     const fileUpload = document.getElementById(
       'fileUpload'
     ) as HTMLInputElement;
@@ -43,7 +54,6 @@ export class FileUploadComponent implements OnInit {
           state: 'in',
           inProgress: false,
           progress: 0,
-          canRetry: false,
           canCancel: true
         });
       });
@@ -55,13 +65,8 @@ export class FileUploadComponent implements OnInit {
   }
 
   cancelFile(file: FileUploadModel) {
-    file.sub.unsubscribe();
     this.removeFileFromArray(file);
-  }
-
-  retryFile(file: FileUploadModel) {
-    this.uploadFile(file);
-    file.canRetry = false;
+    this.uploadCanceledChange.emit(true);
   }
 
   private uploadFile(file: FileUploadModel) {
@@ -92,7 +97,5 @@ export class FileUploadModel {
   state: string;
   inProgress: boolean;
   progress: number;
-  canRetry: boolean;
   canCancel: boolean;
-  sub?: Subscription;
 }

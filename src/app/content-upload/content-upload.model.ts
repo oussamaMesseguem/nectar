@@ -17,12 +17,12 @@ export class ContentUploadForm {
 
     lang = new FormControl();
     type = new FormControl();
-    content = new FormControl();
+    // content = new FormControl();
 
     constructor(content?: string, type?: string, lang?: string) {
-        if (content) {
-            this.content.setValue(content);
-        }
+        // if (content) {
+        //     this.content.setValue(content);
+        // }
         if (type) {
             this.type.setValue(type);
         }

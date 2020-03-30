@@ -2,8 +2,11 @@
 import { ConllToken } from './conllu.model';
 import { IParser, ParserModel } from 'src/app/content-upload/content-upload.service';
 import { Observable, of, Subject, from } from 'rxjs';
+import { Annotation } from '../annotations';
 
 export class ConlluParser implements IParser {
+
+    annotation: Annotation = Annotation.conllu;
 
     constructor() { }
 

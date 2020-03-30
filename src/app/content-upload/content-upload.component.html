@@ -30,8 +30,8 @@
                         <ng-template matStepLabel>Choose the type</ng-template>
 
                         <mat-form-field class="type-mat-form-field">
-                            <mat-chip-list class="type-chips" aria-label="Fish selection" multiple=false
-                                ariaOrientation="horizontal" required [formControl]="type">
+                            <mat-chip-list class="type-chips" multiple=false ariaOrientation="horizontal" required
+                                [formControl]="type">
                                 <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
                                     (click)="changeType(typeContent)">
                                     {{ typeContent }}
@@ -46,8 +46,8 @@
 
                         <ng-template matStepLabel>Upload</ng-template>
 
-                        <app-file-upload (uploadCompleted)="onFileComplete($event)"
-                            [readerProgressValue]=readerProgressValue></app-file-upload>
+                        <app-file-upload (uploadCompleted)="onFileComplete($event)" (uploadCanceledChange)="cancelUpload()"
+                            [readerProgressValue]="readerProgressValue" [isDisabled]="!isFormValid"></app-file-upload>
 
                     </mat-step>
 
@@ -55,23 +55,27 @@
                         <ng-template matStepLabel>Validation</ng-template>
                         <div class="validation-step">
                             <div>
-                                <div *ngIf="validationInProgress" class="validation-in-progress">
-                                    <mat-spinner *ngIf="validationInProgress" [diameter]="35"></mat-spinner>
+                                <div *ngIf="contentValidationInProgress" class="validation-in-progress">
+                                    <mat-spinner [diameter]="35"></mat-spinner>
                                     <div>Validation in progress..</div>
                                 </div>
-                                
+
                                 <div *ngIf="isValid">
-                                    
-                                    <mat-card class="mat-elevation-z0 validation-btns-card">                                    
-                                        <button mat-button (click)="annotate()" *ngIf="!isRaw"><mat-icon>check</mat-icon>Annotate</button>
-                                        <button mat-button (click)="adjust()" *ngIf="isRaw"><mat-icon>check</mat-icon>Adjust</button>
+
+                                    <mat-card class="mat-elevation-z0 validation-btns-card">
+                                        <button mat-button (click)="annotate()" *ngIf="!isRaw">
+                                            <mat-icon>check</mat-icon>Annotate
+                                        </button>
+                                        <button mat-button (click)="adjust()" *ngIf="isRaw">
+                                            <mat-icon>check</mat-icon>Adjust
+                                        </button>
                                     </mat-card>
-                                    
+
                                 </div>
                             </div>
 
                             <div>
-                                <button mat-button (click)="stepper.reset(); reset()">Reset</button>
+                                <button mat-button (click)="stepper.reset(); changeType(null)">Reset</button>
                             </div>
                         </div>
                     </mat-step>

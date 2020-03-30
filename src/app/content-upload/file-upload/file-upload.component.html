@@ -1,9 +1,9 @@
 <div class="container-upload">
-    <button mat-button color="warn" (click)="onClick()">
+    <button mat-button color="warn" (click)="onClick()" [disabled]="isDisabled">
         <mat-icon>file_upload</mat-icon>
         Upload
     </button>
-    <ul>
+    <ul *ngIf="!isDisabled">
         <li *ngFor="let file of files" [@fadeInOut]="file.state">
             <mat-progress-bar [value]="readerProgressValue"></mat-progress-bar>
             <span style="margin-top: 10px;" id="file-label">

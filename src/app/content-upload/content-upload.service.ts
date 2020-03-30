@@ -2,6 +2,7 @@ import { ConlluParser } from '../annotations/conllu/conllu-parser.service';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { timeout } from 'rxjs/operators';
+import { Annotation } from '../annotations/annotations';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +19,7 @@ export class ContentUploadService {
 
     parseContent(annotation: string, content: string): Promise<string> | never {
         switch (annotation) {
-            case 'Conll-U':
+            case Annotation.conllu:
                 this.parser = new ParserService(new ConlluParser());
                 break;
 
@@ -85,6 +86,8 @@ export class ContentUploadService {
  * Defines the methods parsers should implement to be used in this service
  */
 export interface IParser {
+
+    annotation: Annotation;
 
     /**
      * Transforms the content string into an associated object.

@@ -11,14 +11,16 @@ import { ContentUploadService } from './content-upload.service';
   styleUrls: ['./content-upload.component.scss']
 })
 export class ContentUploadComponent implements OnInit {
-  isValid = false;
-  isRaw = false;
+
   languages: string[] = ['English', 'French', 'Spanish'];
   types: string[] = ['Conll-U', 'Conll-X', 'Biluo', 'Raw'];
   readerProgressValue: number;
-  parserProgressValue: number;
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
+
+  isValid = false;
+  isRaw = false;
+  validationInProgress = false;
 
   constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService) { }
 
@@ -40,13 +42,18 @@ export class ContentUploadComponent implements OnInit {
    * @param value the value of the type
    */
   changeType(value: string) {
-    if (value === null || value === undefined) {
-      this.type.reset();
-      this.isValid = false;
-    } else {
-      this.type.setValue(value);
+    // To ensure that the value of the type cannot be changed
+    // Once the content has been validated
+    // Otherwise the button gets switched
+    if (!this.isValid) {
+      if (value === null || value === undefined) {
+        this.type.reset();
+        this.isValid = false;
+      } else {
+        this.type.setValue(value);
+      }
+      this.isRaw = value === 'Raw';
     }
-    this.isRaw = value === 'Raw';
   }
 
   upload() {
@@ -104,16 +111,17 @@ export class ContentUploadComponent implements OnInit {
     // Once the content has been read, it gets emitted to the service
     // for parsing.
     reader.onload = (event: ProgressEvent) => {
-      this.contentUploadService.parseContent('Conll-U', reader.result.toString()).subscribe(progressValue => {
-        this.parserProgressValue = progressValue;
-        console.log(progressValue);
+      this.validationInProgress = true;
+      this.contentUploadService.parseContent('Conll-U', reader.result.toString())
+        .then(_ => {
+          console.log('validation done.');
 
-      },
-        err => { },
-        () => {
-          console.log('compt complete');
-
-        });
+          this.validationInProgress = false;
+          this.isValid = true;
+        },
+          err => {
+            console.error(err);
+          });
     };
 
   }

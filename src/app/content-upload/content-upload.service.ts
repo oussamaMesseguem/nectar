@@ -1,6 +1,7 @@
 import { ConlluParser } from '../annotations/conllu/conllu-parser.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,7 @@ export class ContentUploadService {
 
     }
 
-    parseContent(annotation: string, content: string): Observable<number> | never {
+    parseContent(annotation: string, content: string): Promise<string> | never {
         switch (annotation) {
             case 'Conll-U':
                 this.parser = new ParserService(new ConlluParser());
@@ -25,29 +26,49 @@ export class ContentUploadService {
                 throw this.assertAnnotationType(annotation);
         }
 
-        let unitsProgress = 0;
+        // let unitsProgress = 0;
 
-        const obs: Observable<number> = new Observable(observer => {
+        // const obs: Observable<number> = new Observable(observer => {
 
+        //     console.log(`content.length: ${content.length}`);
+
+        //     this.parser.streamObject(content).subscribe(unit => {
+        //         console.log(unit);
+        //         unitsProgress += unit.size;
+        //         const progress = Math.round(unitsProgress * 100 / content.length);
+        //         console.log(`progress: ${unitsProgress}`);
+
+        //         observer.next(progress);
+        //     },
+        //         err => { },
+        //         () => {
+        //             console.log('obvervable from parser complete');
+        //             observer.complete();
+        //         });
+
+        // });
+
+        const prom = new Promise<string>((resolve, reject) => {
             console.log(`content.length: ${content.length}`);
 
             this.parser.streamObject(content).subscribe(unit => {
                 console.log(unit);
-                unitsProgress += unit.size;
-                const progress = Math.round(unitsProgress * 100 / content.length);
-                console.log(`progress: ${unitsProgress}`);
-
-                observer.next(progress);
+                // unitsProgress += unit.size;
+                // const progress = Math.round(unitsProgress * 100 / content.length);
+                // console.log(`progress: ${unitsProgress}`);
             },
-                err => { },
+                err => {
+                    reject('Something went wring');
+                 },
                 () => {
                     console.log('obvervable from parser complete');
-                    observer.complete();
+                    setTimeout(() => {
+                        resolve('Content been parsed');
+                      }, 10000);
                 });
-
         });
 
-        return obs;
+        return prom;
 
     }
 

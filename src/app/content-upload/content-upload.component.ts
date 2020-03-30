@@ -18,42 +18,43 @@ export class ContentUploadComponent implements OnInit {
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 
+  /**
+   * Whether the content has been validated
+   */
   isValid = false;
-  isRaw = false;
+
+  /**
+   * Wheter the promise of Validation has been started
+   * Also used to display the spinner
+   */
   contentValidationInProgress = false;
+  /***
+   * The
+   */
   uploadCanceled: boolean;
 
   constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService) { }
 
   ngOnInit(): void { }
 
+  /**
+   * Whether the Form is filled: language and type not null.
+   * Used to enable the upload button.
+   */
   get isFormValid(): boolean {
     return !Object.values(this.contentUploadFormGroup.value).includes(null);
   }
 
+  /**
+   * Whether the selected type is Raw.
+   * The goto buttons depens on the types
+   */
+  get isRaw(): boolean {
+    return this.type.value === Annotation.raw;
+  }
+
   get lang(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.LANG) as FormControl; }
   get type(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.TYPE) as FormControl; }
-
-  /**
-   * Sets the value of the type into the ControlForm.
-   * Done manually because chiplist does not handle it.
-   * @param value the value of the type
-   */
-  changeType(value: string) {
-    // To ensure that the value of the type cannot be changed
-    // Once the content has been validated
-    // Otherwise the button gets switched
-    if (!this.isValid) {
-      if (value === null || value === undefined) {
-        this.type.reset();
-        this.isValid = false;
-      } else {
-        this.type.setValue(value);
-      }
-      this.isRaw = value === Annotation.raw;
-    }
-    console.log(this.contentUploadFormGroup.value);
-  }
 
   /**
    * Redirects to the annotation page.
@@ -74,6 +75,7 @@ export class ContentUploadComponent implements OnInit {
    * @param file The upload content
    */
   onFileComplete(file: File) {
+    console.log(this.contentUploadFormGroup.value);
     if (this.isFormValid) {
       console.log('File uploaded');
       const reader = new FileReader();
@@ -112,6 +114,7 @@ export class ContentUploadComponent implements OnInit {
 
   cancelUpload() {
     this.contentValidationInProgress = false;
+    this.uploadCanceled = true;
     this.isValid = false;
     console.log(this.contentUploadFormGroup.value);
 

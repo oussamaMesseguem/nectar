@@ -33,7 +33,7 @@
                             <mat-chip-list class="type-chips" multiple=false ariaOrientation="horizontal" required
                                 [formControl]="type">
                                 <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
-                                    (click)="changeType(typeContent)">
+                                    (click)="type.setValue(typeContent)">
                                     {{ typeContent }}
                                 </mat-chip>
                             </mat-chip-list>
@@ -47,7 +47,7 @@
                         <ng-template matStepLabel>Upload</ng-template>
 
                         <app-file-upload (uploadCompleted)="onFileComplete($event)" (uploadCanceledChange)="cancelUpload()"
-                            [readerProgressValue]="readerProgressValue" [isDisabled]="!isFormValid"></app-file-upload>
+                            [readerProgressValue]="readerProgressValue" [isDisabled]="!isFormValid" [displayFileProgress]="!uploadCanceled"></app-file-upload>
 
                     </mat-step>
 
@@ -75,7 +75,7 @@
                             </div>
 
                             <div>
-                                <button mat-button (click)="stepper.reset(); changeType(null)">Reset</button>
+                                <button mat-button (click)="stepper.reset(); type.reset(); uploadCanceled=true">Reset</button>
                             </div>
                         </div>
                     </mat-step>

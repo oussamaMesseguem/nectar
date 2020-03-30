@@ -3,12 +3,12 @@
         <mat-icon>file_upload</mat-icon>
         Upload
     </button>
-    <ul *ngIf="!isDisabled">
+    <ul *ngIf="displayFileProgress">
         <li *ngFor="let file of files" [@fadeInOut]="file.state">
             <mat-progress-bar [value]="readerProgressValue"></mat-progress-bar>
             <span style="margin-top: 10px;" id="file-label">
                 {{file.data.name}}
-                <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
+                <a title="Cancel" (click)="cancelFile()" *ngIf="file.canCancel">
                     <mat-icon>cancel</mat-icon>
                 </a>
             </span>

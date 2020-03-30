@@ -24,8 +24,8 @@ export class FileUploadComponent implements OnInit {
   /**
    * Disables the button
    */
-  uploadCanceledValue = false;
   @Output() uploadCanceledChange = new EventEmitter<boolean>();
+  @Input() displayFileProgress: boolean;
 
 
   files: Array<FileUploadModel> = [];
@@ -33,13 +33,6 @@ export class FileUploadComponent implements OnInit {
   constructor() { }
 
   ngOnInit() { }
-
-  // @Input() get uploadCanceled() { return this.uploadCanceledValue; }
-
-  // set uploadCanceled(value: boolean) {
-  //   this.uploadCanceledValue = value;
-  //   this.uploadCanceledChange.emit(this.uploadCanceledValue);
-  // }
 
   onClick() {
     const fileUpload = document.getElementById(
@@ -64,13 +57,15 @@ export class FileUploadComponent implements OnInit {
     fileUpload.click();
   }
 
-  cancelFile(file: FileUploadModel) {
-    this.removeFileFromArray(file);
+  cancelFile() {
+    this.files = [];
+    // this.removeFileFromArray(file);
     this.uploadCanceledChange.emit(true);
   }
 
   private uploadFile(file: FileUploadModel) {
     this.uploadCompleted.emit(file.data);
+    this.displayFileProgress = true;
   }
 
   private uploadFiles() {

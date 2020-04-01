@@ -1,12 +1,14 @@
 
 import { ConllToken } from './conllu.model';
 import { IParser, ParserModel } from 'src/app/content-upload/content-upload.service';
-import { Observable, of, Subject, from } from 'rxjs';
+import { Observable, of, Subject, from, Subscriber } from 'rxjs';
 import { Annotation } from '../annotations';
 
 export class ConlluParser implements IParser {
 
     annotation: Annotation = Annotation.conllu;
+    subscriber: Subscriber<ParserModel>;
+    observable$: Observable<ParserModel>;
 
     constructor() { }
 
@@ -35,6 +37,10 @@ export class ConlluParser implements IParser {
         });
 
         return obs;
+    }
+
+    stopStreaming(): void {
+        this.subscriber.complete();
     }
 
     toString(content: any): string {

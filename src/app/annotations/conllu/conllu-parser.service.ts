@@ -31,16 +31,18 @@ export class ConlluParser implements IParser {
                     }
                 });
 
-            setTimeout(() => {
-                console.log('obvervable from parser complete11');
-                observer.complete();
-            }, 2000);
+            observer.complete();
+            // setTimeout(() => {
+            //     console.log('obvervable from parser complete11');
+            //     observer.complete();
+            // }, 2000);
         });
 
         return obs;
     }
 
     stopStreaming(): void {
+        console.error('Request to stop Streaming');
     }
 
     toString(content: any): string {

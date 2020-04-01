@@ -11,14 +11,12 @@ export class ContentUploadService {
 
     private parser: ParserService;
 
-    private isParsingInProgress: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    constructor() { }
-
     /**
      * Whether the content is being parsed
      */
-    get isParsingProgressing(): boolean { return this.isParsingInProgress.getValue(); }
+    private isParsingInProgress = false;
+
+    constructor() { }
 
     parseContent(lang: string, annotation: string, content: string): Observable<boolean> | never {
         switch (annotation) {
@@ -32,13 +30,18 @@ export class ContentUploadService {
 
         const obs: Observable<boolean> = new Observable(observer => {
             observer.next(true);
+            this.isParsingInProgress = true;
 
             // The parsing is being done and the Model filled
             this.parser.streamObject(content)
                 .subscribe(
                     {
                         next: unit => {
-                            console.log(unit);
+                            if (!this.isParsingInProgress) {
+                                console.log(`progressing: ${this.isParsingInProgress}`);
+                                this.parser.stopStreaming();
+                                observer.error('The parsing has been stopped');
+                            }
                         },
                         error: err => {
                             observer.error(err);
@@ -47,8 +50,13 @@ export class ContentUploadService {
                         complete: () => {
                             // If the parsing has been done successfully,
                             // the obsevable completes.
+
                             console.log('parseContent complete');
                             observer.complete();
+                            // setTimeout(() => {
+                            //     console.log('obvervable from parser complete11');
+                            //     observer.complete();
+                            // }, 5000);
                         }
                     });
         });
@@ -61,7 +69,7 @@ export class ContentUploadService {
      * Stop the parsing
      */
     stopParsing() {
-        this.isParsingInProgress.next(false);
+        this.isParsingInProgress = false;
     }
 
     assertAnnotationType(annotation: string): never {
@@ -114,7 +122,7 @@ class ParserService {
     }
 
     stopStreaming(): void {
-
+        this.parser.stopStreaming();
     }
 
     toString(content: any): string {

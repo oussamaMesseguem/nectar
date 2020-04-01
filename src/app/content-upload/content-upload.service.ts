@@ -1,7 +1,7 @@
 import { ConlluParser } from '../annotations/conllu/conllu-parser.service';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { timeout } from 'rxjs/operators';
+import { Observable, of, Subscription, Subscriber, BehaviorSubject } from 'rxjs';
+import { timeout, takeWhile } from 'rxjs/operators';
 import { Annotation } from '../annotations/annotations';
 
 @Injectable({
@@ -11,13 +11,16 @@ export class ContentUploadService {
 
     private parser: ParserService;
 
-    model: object = {};
+    private isParsingInProgress: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    constructor() {
+    constructor() { }
 
-    }
+    /**
+     * Whether the content is being parsed
+     */
+    get isParsingProgressing(): boolean { return this.isParsingInProgress.getValue(); }
 
-    parseContent(annotation: string, content: string): Promise<string> | never {
+    parseContent(lang: string, annotation: string, content: string): Observable<boolean> | never {
         switch (annotation) {
             case Annotation.conllu:
                 this.parser = new ParserService(new ConlluParser());
@@ -27,54 +30,32 @@ export class ContentUploadService {
                 throw this.assertAnnotationType(annotation);
         }
 
-        // let unitsProgress = 0;
+        const obs: Observable<boolean> = new Observable(observer => {
+            observer.next(true);
 
-        // const obs: Observable<number> = new Observable(observer => {
+            // The parsing is being done and the Model filled
+            // while (this.isParsingInProgress.getValue()) {
+            //     // Get next value
+            // }
 
-        //     console.log(`content.length: ${content.length}`);
+            // If the parsing has been done successfully,
+            // the obsevable completes.
+            setTimeout(() => {
+                console.log('obvervable from parser complete');
 
-        //     this.parser.streamObject(content).subscribe(unit => {
-        //         console.log(unit);
-        //         unitsProgress += unit.size;
-        //         const progress = Math.round(unitsProgress * 100 / content.length);
-        //         console.log(`progress: ${unitsProgress}`);
-
-        //         observer.next(progress);
-        //     },
-        //         err => { },
-        //         () => {
-        //             console.log('obvervable from parser complete');
-        //             observer.complete();
-        //         });
-
-        // });
-
-        const prom = new Promise<string>((resolve, reject) => {
-            console.log(`content.length: ${content.length}`);
-
-            this.parser.streamObject(content).subscribe(unit => {
-                console.log(unit);
-                // unitsProgress += unit.size;
-                // const progress = Math.round(unitsProgress * 100 / content.length);
-                // console.log(`progress: ${unitsProgress}`);
-            },
-                err => {
-                    reject('Something went wring');
-                 },
-                () => {
-                    console.log('obvervable from parser complete');
-                    setTimeout(() => {
-                        resolve('Content been parsed');
-                      }, 10000);
-                });
+                observer.complete();
+            }, 5000);
         });
 
-        return prom;
+        return obs;
 
     }
 
-    parseUnit(): string {
-        return '';
+    /**
+     * Stop the parsing
+     */
+    stopParsing() {
+        this.isParsingInProgress.next(false);
     }
 
     assertAnnotationType(annotation: string): never {
@@ -88,12 +69,19 @@ export class ContentUploadService {
 export interface IParser {
 
     annotation: Annotation;
+    subscriber: Subscriber<ParserModel>;
+    observable$: Observable<ParserModel>;
 
     /**
      * Transforms the content string into an associated object.
      * @param content the content itself as scheme
      */
     streamObject(content: string): Observable<ParserModel>;
+
+    /***
+     * Stops the generation of objects
+     */
+    stopStreaming(): void;
 
     /**
      * Transforms the content object into the string scheme.
@@ -112,13 +100,22 @@ export interface IParser {
 class ParserService {
 
     private parser: IParser;
+    subscriber: Subscriber<ParserModel>;
+    observable$: Observable<ParserModel>;
 
     constructor(parser: IParser) {
         this.parser = parser;
     }
 
+    get isParsingProgressing(): boolean { return this.isParsingProgressing; }
+    set isParsingProgressing(value: boolean) { this.isParsingProgressing = value; }
+
     streamObject(content: string): Observable<ParserModel> {
         return this.parser.streamObject(content);
+    }
+
+    stopStreaming(): void {
+
     }
 
     toString(content: any): string {

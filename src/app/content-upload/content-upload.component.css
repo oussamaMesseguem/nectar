@@ -35,6 +35,30 @@
 .type-mat-form-field {
   display: block;
 }
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#file-label {
+  display: inline-flex;
+  vertical-align: middle;
+  font-size: 12px;
+  line-height: 18px;
+}
+#file-label mat-icon {
+  font-size: 18px;
+  text-align: center;
+}
+#file-label a {
+  cursor: pointer;
+}
+.container-upload {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  column-gap: 5px;
+}
 ::ng-deep .mat-vertical-stepper-content {
   visibility: visible !important;
   height: 100% !important;

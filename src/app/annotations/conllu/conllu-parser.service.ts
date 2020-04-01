@@ -7,8 +7,6 @@ import { Annotation } from '../annotations';
 export class ConlluParser implements IParser {
 
     annotation: Annotation = Annotation.conllu;
-    subscriber: Subscriber<ParserModel>;
-    observable$: Observable<ParserModel>;
 
     constructor() { }
 
@@ -40,7 +38,6 @@ export class ConlluParser implements IParser {
     }
 
     stopStreaming(): void {
-        this.subscriber.complete();
     }
 
     toString(content: any): string {

@@ -69,8 +69,6 @@ export class ContentUploadService {
 export interface IParser {
 
     annotation: Annotation;
-    subscriber: Subscriber<ParserModel>;
-    observable$: Observable<ParserModel>;
 
     /**
      * Transforms the content string into an associated object.
@@ -100,15 +98,10 @@ export interface IParser {
 class ParserService {
 
     private parser: IParser;
-    subscriber: Subscriber<ParserModel>;
-    observable$: Observable<ParserModel>;
 
     constructor(parser: IParser) {
         this.parser = parser;
     }
-
-    get isParsingProgressing(): boolean { return this.isParsingProgressing; }
-    set isParsingProgressing(value: boolean) { this.isParsingProgressing = value; }
 
     streamObject(content: string): Observable<ParserModel> {
         return this.parser.streamObject(content);

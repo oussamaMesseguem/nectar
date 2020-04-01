@@ -31,7 +31,10 @@ export class ConlluParser implements IParser {
                     }
                 });
 
-            observer.complete();
+            setTimeout(() => {
+                console.log('obvervable from parser complete11');
+                observer.complete();
+            }, 2000);
         });
 
         return obs;

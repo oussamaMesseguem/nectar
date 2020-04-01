@@ -1,6 +1,6 @@
 import { ConlluParser } from '../annotations/conllu/conllu-parser.service';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subscription, Subscriber, BehaviorSubject } from 'rxjs';
+import { Observable, of, Subscription, Subscriber, BehaviorSubject, from } from 'rxjs';
 import { timeout, takeWhile } from 'rxjs/operators';
 import { Annotation } from '../annotations/annotations';
 
@@ -34,17 +34,23 @@ export class ContentUploadService {
             observer.next(true);
 
             // The parsing is being done and the Model filled
-            // while (this.isParsingInProgress.getValue()) {
-            //     // Get next value
-            // }
+            this.parser.streamObject(content)
+                .subscribe(
+                    {
+                        next: unit => {
+                            console.log(unit);
+                        },
+                        error: err => {
+                            observer.error(err);
 
-            // If the parsing has been done successfully,
-            // the obsevable completes.
-            setTimeout(() => {
-                console.log('obvervable from parser complete');
-
-                observer.complete();
-            }, 5000);
+                        },
+                        complete: () => {
+                            // If the parsing has been done successfully,
+                            // the obsevable completes.
+                            console.log('parseContent complete');
+                            observer.complete();
+                        }
+                    });
         });
 
         return obs;

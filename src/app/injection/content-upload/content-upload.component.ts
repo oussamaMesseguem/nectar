@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ContentUploadService } from './content-upload.service';
-import { Annotation } from '../annotations/annotations';
+import { Annotation } from '../../annotations/annotations';
 
 @Component({
   selector: 'app-content-upload',

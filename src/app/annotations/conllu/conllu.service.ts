@@ -3,10 +3,12 @@ import { ConllToken } from './conllu.model';
 import { IParser, ParserModel } from 'src/app/content-upload/content-upload.service';
 import { Observable, of, Subject, from, Subscriber } from 'rxjs';
 import { Annotation } from '../annotations';
+import { IAnnotator } from '../annotator.service';
 
-export class ConlluParser implements IParser {
+export class Conllu implements IParser, IAnnotator {
 
     annotation: Annotation = Annotation.conllu;
+    sentences = [];
 
     constructor() { }
 
@@ -27,6 +29,7 @@ export class ConlluParser implements IParser {
                         const size = sentence.map(token => token.token.length).reduce((acc, len) => acc + len, 0) + 20;
                         const parserModel: ParserModel = { sentence, size };
                         observer.next(parserModel);
+                        this.sentences.push(sentence);
                         sentence = [];
                     }
                 });
@@ -45,7 +48,7 @@ export class ConlluParser implements IParser {
         console.error('Request to stop Streaming');
     }
 
-    toString(content: any): string {
+    intoString(content: any): string {
         return '';
     }
 
@@ -54,5 +57,13 @@ export class ConlluParser implements IParser {
     }
     isValid(): boolean {
         throw new Error('Method not implemented.');
+    }
+
+    getSentence(index: number): [] {
+        return this.sentences[index];
+    }
+
+    setSentence(index: number, sentence: []) {
+        this.sentences[index] = sentence;
     }
 }

@@ -1,4 +1,4 @@
-import { ConlluParser } from '../annotations/conllu/conllu-parser.service';
+import { Conllu } from '../annotations/conllu/conllu.service';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subscription, Subscriber, BehaviorSubject, from } from 'rxjs';
 import { timeout, takeWhile } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class ContentUploadService {
     parseContent(lang: string, annotation: string, content: string): Observable<boolean> | never {
         switch (annotation) {
             case Annotation.conllu:
-                this.parser = new ParserService(new ConlluParser());
+                this.parser = new ParserService(new Conllu());
                 break;
 
             default:
@@ -99,7 +99,7 @@ export interface IParser {
      * Transforms the content object into the string scheme.
      * @param content the content itself as an object
      */
-    toString(content: any): string;
+    intoString(content: any): string;
 
     isUnitValid(unit: any): boolean;
 
@@ -126,7 +126,7 @@ class ParserService {
     }
 
     toString(content: any): string {
-        return this.parser.toString(content);
+        return this.parser.intoString(content);
     }
 
     isUnitValid(unit: any): boolean {

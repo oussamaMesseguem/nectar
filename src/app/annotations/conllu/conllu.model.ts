@@ -1,27 +1,4 @@
-// /**
-//  * Collection of sentences conll-u annotated
-//  */
-// export interface IConll {
-//     sentences: ConllSentence[];
-// }
-
-import { ParserModel } from 'src/app/content-upload/content-upload.service';
-
-// /**
-//  * Collection of ConllToken for one sentence.
-//  */
-// export class ConllSentence {
-
-//     tokens: ConllToken[] = [];
-
-//     constructor(tokens?: ConllToken[]) {
-//         if (tokens) {
-//             this.tokens = tokens;
-//         } else {
-//             this.tokens = [];
-//         }
-//     }
-// }
+import { FormControl } from '@angular/forms';
 
 /**
  * Conll-u tags for one token
@@ -81,31 +58,31 @@ export class ConllToken {
             });
 
         return conll;
-
     }
-
 }
 
-// export class CollTokenModelParser extends ConllToken implements ParserModel {
+export class ConllTokenForm {
+    index = new FormControl();
+    token = new FormControl();
+    lemma = new FormControl();
+    upos = new FormControl();
+    xpos = new FormControl();
+    feat = new FormControl();
+    head = new FormControl();
+    deprel = new FormControl();
+    deps = new FormControl();
+    misc = new FormControl();
 
-//     get size(): number {
-//         return this.token.length;
-//     }
-
-//     static fromTab(content: string[]) {
-//         const conll = new ConllToken(
-//             {
-//                 // tslint:disable-next-line: radix
-//                 index: Number.parseInt(
-//                     content[0]), token: content[1], lemma: content[2], upos: content[3], xpos: content[4], feat: content[5],
-//                 // tslint:disable-next-line: radix
-//                 head: Number.parseInt(content[6]), deprel: content[7], deps: content[8], misc: content[9]
-//             });
-
-//         const modelParser = conll as CollTokenModelParser;
-
-
-//         return modelParser;
-
-//     }
-// }
+    constructor(conll: ConllToken) {
+        this.index.setValue(conll.index);
+        this.token.setValue(conll.token);
+        this.lemma.setValue(conll.lemma);
+        this.upos.setValue(conll.upos);
+        this.xpos.setValue(conll.xpos);
+        this.feat.setValue(conll.feat);
+        this.head.setValue(conll.head);
+        this.deprel.setValue(conll.deprel);
+        this.deps.setValue(conll.deps);
+        this.misc.setValue(conll.misc);
+    }
+}

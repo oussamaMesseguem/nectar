@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { ContentUploadService } from './content-upload.service';
 import { Annotation } from '../../annotations/annotations';
 import { Router } from '@angular/router';
+import { InjectionService } from '../injection.service';
 
 @Component({
   selector: 'app-content-upload',
@@ -36,7 +36,7 @@ export class ContentUploadComponent implements OnInit {
 
   files: Array<FileUploadModel> = [];
 
-  constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService,
+  constructor(private formBuilder: FormBuilder, private injectionService: InjectionService,
               private router: Router) { }
 
   ngOnInit(): void { }
@@ -128,7 +128,7 @@ export class ContentUploadComponent implements OnInit {
       // Once the content has been read, it's sent to the service
       // for parsing.
       reader.onload = _ => {
-        this.contentUploadService.parseContent(
+        this.injectionService.parseContent(
           this.lang.value, this.type.value, reader.result.toString())
           .subscribe(
             {
@@ -156,7 +156,7 @@ export class ContentUploadComponent implements OnInit {
 
   cancelFile() {
     // Stop the parsing of the content
-    this.contentUploadService.stopParsing();
+    this.injectionService.stopParsing();
     // No file uploaded, hence empty array
     this.files = [];
     // No parsing running

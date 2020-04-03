@@ -1,6 +1,6 @@
 
 import { ConllToken } from './conllu.model';
-import { IParser, ParserModel } from 'src/app/injection/content-upload/content-upload.service';
+import { IParser, ParserModel } from 'src/app/injection/injection.service';
 import { Observable, of, Subject, from, Subscriber } from 'rxjs';
 import { Annotation } from '../annotations';
 import { IAnnotator } from '../annotator.service';

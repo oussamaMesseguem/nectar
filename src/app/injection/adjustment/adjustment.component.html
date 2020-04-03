@@ -1,0 +1,19 @@
+<div class="main-container">
+    <div>
+        <button class="btn-validation" mat-fab>
+            <mat-icon>check</mat-icon>
+        </button>
+    </div>
+
+    <div class="sentences-container" cdkDropListGroup>
+        <mat-card class="sentence-card" [cdkDropListData]="sent" cdkDropList
+            cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)"
+            *ngFor="let sent of sentences;">
+
+            <mat-chip-list ariaOrientation="horizontal">
+                <mat-chip class="mat-chip-token" *ngFor="let token of sent" [value]="token" cdkDrag>{{ token }}</mat-chip>
+            </mat-chip-list>
+        </mat-card>
+    </div>
+
+</div>

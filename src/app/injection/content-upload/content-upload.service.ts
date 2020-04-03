@@ -1,8 +1,8 @@
-import { Conllu } from '../annotations/conllu/conllu.service';
+import { Conllu } from '../../annotations/conllu/conllu.service';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subscription, Subscriber, BehaviorSubject, from } from 'rxjs';
 import { timeout, takeWhile } from 'rxjs/operators';
-import { Annotation } from '../annotations/annotations';
+import { Annotation } from '../../annotations/annotations';
 
 @Injectable({
     providedIn: 'root',

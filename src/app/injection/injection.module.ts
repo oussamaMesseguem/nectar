@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentUploadComponent } from './content-upload.component';
-import { ContentUploadRoutingModule } from './content-upload-routing.module';
+import { ContentUploadComponent } from './content-upload/content-upload.component';
+import { InjectionRoutingModule } from './injection-routing.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -16,9 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
+import { AdjustmentComponent } from './adjustment/adjustment.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
-  declarations: [ContentUploadComponent],
+  declarations: [ContentUploadComponent, AdjustmentComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -34,7 +36,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatIconModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    ContentUploadRoutingModule
+    DragDropModule,
+    InjectionRoutingModule
   ]
 })
-export class ContentUploadModule { }
+export class InjectionModule { }

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ContentUploadService } from './content-upload.service';
-import { Annotation } from '../annotations/annotations';
+import { Annotation } from '../../annotations/annotations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-content-upload',
@@ -35,7 +36,8 @@ export class ContentUploadComponent implements OnInit {
 
   files: Array<FileUploadModel> = [];
 
-  constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService) { }
+  constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService,
+              private router: Router) { }
 
   ngOnInit(): void { }
 
@@ -96,6 +98,8 @@ export class ContentUploadComponent implements OnInit {
    */
   annotate() {
     console.log(this.contentUploadFormGroup.value);
+    this.router.navigateByUrl('adjust');
+
   }
 
   /**

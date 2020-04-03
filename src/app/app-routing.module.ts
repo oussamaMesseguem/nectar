@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'content-upload',
-    loadChildren: () => import('./content-upload/content-upload.module').then(m => m.ContentUploadModule)
+    path: 'inject',
+    loadChildren: () => import('./injection/injection.module').then(m => m.InjectionModule)
   }
 ];
 

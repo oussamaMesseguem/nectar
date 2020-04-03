@@ -8,9 +8,9 @@
     <div class="sentences-container" cdkDropListGroup>
         <mat-card class="sentence-card" [cdkDropListData]="sent" cdkDropList
             cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)"
-            *ngFor="let sent of sentences;">
+            *ngFor="let sent of sentences">
 
-            <mat-chip-list ariaOrientation="horizontal">
+            <mat-chip-list>
                 <mat-chip class="mat-chip-token" *ngFor="let token of sent" [value]="token" cdkDrag>{{ token }}</mat-chip>
             </mat-chip-list>
         </mat-card>

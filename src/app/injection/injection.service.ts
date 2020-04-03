@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Annotation } from '../annotations/annotations';
 import { Conllu } from '../annotations/conllu/conllu.service';
+import { Raw } from '../annotations/raw/raw.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { Conllu } from '../annotations/conllu/conllu.service';
 export class InjectionService {
 
   private parser: ParserService;
+  private parsedContent: any[][] = [];
 
   /**
    * Whether the content is being parsed
@@ -22,7 +24,15 @@ export class InjectionService {
       case Annotation.conllu:
         this.parser = new ParserService(new Conllu());
         break;
-
+      case Annotation.conllx:
+        this.parser = new ParserService(new Conllu());
+        break;
+      case Annotation.ner:
+        this.parser = new ParserService(new Conllu());
+        break;
+      case Annotation.raw:
+        this.parser = new ParserService(new Raw());
+        break;
       default:
         throw this.assertAnnotationType(annotation);
     }
@@ -41,6 +51,7 @@ export class InjectionService {
                 this.parser.stopStreaming();
                 observer.error('The parsing has been stopped');
               }
+              this.parsedContent.push(unit.sentence);
             },
             error: err => {
               observer.error(err);
@@ -73,6 +84,10 @@ export class InjectionService {
 
   assertAnnotationType(annotation: string): never {
     throw new Error(`Annotation type '${annotation}' not recognized`);
+  }
+
+  getSentences() {
+    return this.parsedContent;
   }
 }
 

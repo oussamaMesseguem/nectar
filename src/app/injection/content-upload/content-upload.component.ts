@@ -107,6 +107,7 @@ export class ContentUploadComponent implements OnInit {
    */
   adjust() {
     console.log(this.contentUploadFormGroup.value);
+    this.router.navigateByUrl('adjust');
   }
 
   /**

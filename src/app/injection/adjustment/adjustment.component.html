@@ -6,10 +6,13 @@
     </div>
 
     <div class="sentences-container" cdkDropListGroup>
-        <mat-card class="sentence-card example-list" [cdkDropListData]="sent" cdkDropList
+        <mat-card class="sentence-card" [cdkDropListData]="sent" cdkDropList
             cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)"
             *ngFor="let sent of sentences; let i = index">
-            <div class="example-box" *ngFor="let token of sent" cdkDrag>{{token}}</div>
+
+            <mat-chip-list>
+                <mat-chip class="mat-chip-token" *ngFor="let token of sent" [value]="token" cdkDrag>{{ token }}</mat-chip>
+            </mat-chip-list>
         </mat-card>
     </div>
 

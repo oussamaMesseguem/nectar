@@ -10,15 +10,16 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class AdjustmentComponent implements OnInit {
 
   sentences: string[][] = [
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi'],
-    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi']
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
+      'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
   ];
 
   constructor() { }

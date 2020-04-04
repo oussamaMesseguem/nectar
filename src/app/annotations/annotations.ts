@@ -8,3 +8,9 @@ export enum Annotation {
     ner = 'Ner',
     raw = 'Raw'
 }
+
+export enum Language {
+    en = 'English',
+    fr = 'French',
+    es = 'Spanish'
+}

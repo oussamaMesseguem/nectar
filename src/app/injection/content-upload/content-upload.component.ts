@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Annotation } from '../../annotations/annotations';
+import { Annotation, Language } from '../../annotations/annotations';
 import { Router } from '@angular/router';
 import { InjectionService } from '../injection.service';
 
@@ -18,7 +18,7 @@ import { InjectionService } from '../injection.service';
 })
 export class ContentUploadComponent implements OnInit {
 
-  languages: string[] = ['English', 'French', 'Spanish'];
+  languages: string[] = Object.values(Language);
   types: string[] = Object.values(Annotation);
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());

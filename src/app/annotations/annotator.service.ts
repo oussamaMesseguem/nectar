@@ -34,7 +34,7 @@ export interface IAnnotator {
 
   annotation: Annotation;
 
-  getSentence(index: number): [];
+  getSentence(index: number): any[];
 
   setSentence(index: number, sentence: []): void;
 }

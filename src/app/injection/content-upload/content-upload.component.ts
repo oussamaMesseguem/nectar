@@ -129,26 +129,20 @@ export class ContentUploadComponent implements OnInit {
       // Once the content has been read, it's sent to the service
       // for parsing.
       reader.onload = _ => {
-        this.injectionService.parseContent(
-          this.lang.value, this.type.value, reader.result.toString())
-          .subscribe(
-            {
-              next: nextValue => {
-                this.contentValidationInProgress = nextValue;
-                console.log(`The content is being parsed: ${nextValue}`);
-              },
-              error: err => {
-                this.contentValidationInProgress = false;
-                console.error(`An error occured while parsing the content: ${err}`);
-              },
-              complete: () => {
-                this.contentValidationInProgress = false;
-                // The upload is valid when the parsing has been done successfully.
-                this.isValid = true;
-                console.log(`The content has been parsed successfully.`);
-              }
-            }
-          );
+        this.contentValidationInProgress = true;
+        this.injectionService.injectContent(this.lang.value, this.type.value, reader.result.toString())
+          .then(value => {
+            console.log(this.injectionService.getSentences());
+            this.isValid = true;
+            console.log(`The content is being parsed: ${value}`);
+          })
+          .catch((err) => {
+            this.contentValidationInProgress = false;
+            console.error(`An error occured while parsing the content: ${err}`);
+          })
+          .finally(() => {
+            this.contentValidationInProgress = false;
+          });
       };
 
     }
@@ -157,7 +151,7 @@ export class ContentUploadComponent implements OnInit {
 
   cancelFile() {
     // Stop the parsing of the content
-    this.injectionService.stopParsing();
+    this.injectionService.cancelContentInjection();
     // No file uploaded, hence empty array
     this.files = [];
     // No parsing running

@@ -1,93 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Annotation } from '../annotations/annotations';
 import { Conllu } from '../annotations/conllu/conllu.service';
-import { Raw } from '../annotations/raw/raw.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InjectionService {
 
-  private parser: ParserService;
-  private parsedContent: any[][] = [];
+  private parser: IParser;
 
-  /**
-   * Whether the content is being parsed
-   */
-  private isParsingInProgress = false;
+  constructor(private http: HttpClient, private conlluService: Conllu) { }
 
-  constructor() { }
-
-  parseContent(lang: string, annotation: string, content: string): Observable<boolean> | never {
+  injectContent(lang: string, annotation: string, content: string): Promise<boolean> | never {
     switch (annotation) {
       case Annotation.conllu:
-        this.parser = new ParserService(new Conllu());
+        this.parser = this.conlluService;
         break;
       case Annotation.conllx:
-        this.parser = new ParserService(new Conllu());
+        // this.parser = new ParserService(new Conllu());
         break;
       case Annotation.ner:
-        this.parser = new ParserService(new Conllu());
+        // this.parser = new ParserService(new Conllu());
         break;
       case Annotation.raw:
-        this.parser = new ParserService(new Raw());
+        this.parser = new Raw();
         break;
       default:
         throw this.assertAnnotationType(annotation);
     }
 
-    const obs: Observable<boolean> = new Observable(observer => {
-      observer.next(true);
-      this.isParsingInProgress = true;
-
-      // The parsing is being done and the Model filled
-      this.parser.streamObject(content)
-        .subscribe(
-          {
-            next: unit => {
-              if (!this.isParsingInProgress) {
-                console.log(`progressing: ${this.isParsingInProgress}`);
-                this.parser.stopStreaming();
-                observer.error('The parsing has been stopped');
-              }
-              this.parsedContent.push(unit.sentence);
-            },
-            error: err => {
-              observer.error(err);
-
-            },
-            complete: () => {
-              // If the parsing has been done successfully,
-              // the obsevable completes.
-
-              console.log('parseContent complete');
-              observer.complete();
-              // setTimeout(() => {
-              //     console.log('obvervable from parser complete11');
-              //     observer.complete();
-              // }, 5000);
-            }
-          });
-    });
-
-    return obs;
-
+    this.parser.cancelContentInjection(false);
+    return this.parser.injectContent(content);
   }
 
   /**
-   * Stop the parsing
+   * Cancel the injection of the data
    */
-  stopParsing() {
-    this.isParsingInProgress = false;
+  cancelContentInjection() {
+    this.parser.cancelContentInjection(true);
   }
 
-  assertAnnotationType(annotation: string): never {
+  private assertAnnotationType(annotation: string): never {
     throw new Error(`Annotation type '${annotation}' not recognized`);
   }
 
   getSentences() {
-    return this.parsedContent;
+    return this.parser.sentences;
   }
 }
 
@@ -97,63 +56,54 @@ export class InjectionService {
 export interface IParser {
 
   annotation: Annotation;
+  sentences: any[][];
 
   /**
-   * Transforms the content string into an associated object.
+   * Injects the content string into an associated object.
    * @param content the content itself as scheme
    */
-  streamObject(content: string): Observable<ParserModel>;
+  injectContent(content: string): Promise<boolean>;
 
   /***
-   * Stops the generation of objects
+   * Cancel the content injection
+   * @param value whether the injection should stop
    */
-  stopStreaming(): void;
-
-  /**
-   * Transforms the content object into the string scheme.
-   * @param content the content itself as an object
-   */
-  intoString(content: any): string;
-
-  isUnitValid(unit: any): boolean;
-
-  isValid(): boolean;
+  cancelContentInjection(value: boolean): void;
 }
 
 /**
- * Internal service used by the ContentUploadService for parsing content
+ * Used by this Injection service to split and tokenise the content
+ * in case of Raw content.
+ * Since it isn't a proper annotation it behaves a little differently
  */
-class ParserService {
+export class Raw implements IParser {
+  annotation: Annotation.raw;
+  sentences: any[][] = [];
+  stopInjecting: boolean;
 
-  private parser: IParser;
+  constructor() { }
 
-  constructor(parser: IParser) {
-    this.parser = parser;
+  injectContent(content: string): Promise<boolean> {
+    const promise: Promise<boolean> = new Promise((resolve, reject) => {
+      content.split('\n')
+        .filter(l => !l.startsWith('#'))
+        .forEach((line: string) => {
+          // A sentence has been parsed
+          const sentence = line.trim().split(' ');
+          this.sentences.push(sentence);
+        });
+
+      if (this.stopInjecting) {
+        this.stopInjecting = false;
+        reject(new Error('Parsing has been asked to be stopped'));
+      }
+      resolve(true);
+    });
+
+    return promise;
   }
 
-  streamObject(content: string): Observable<ParserModel> {
-    return this.parser.streamObject(content);
+  cancelContentInjection(value: boolean): void {
+    this.stopInjecting = value;
   }
-
-  stopStreaming(): void {
-    this.parser.stopStreaming();
-  }
-
-  toString(content: any): string {
-    return this.parser.intoString(content);
-  }
-
-  isUnitValid(unit: any): boolean {
-    throw new Error('Method not implemented.');
-  }
-
-  isValid(): boolean {
-    throw new Error('Method not implemented.');
-  }
-
-}
-
-export interface ParserModel {
-  size: number;
-  sentence: any[];
 }

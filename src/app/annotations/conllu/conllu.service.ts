@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 export class Conllu implements IParser {
 
     annotation: Annotation = Annotation.conllu;
-    sentences: any[][] = [];
+    sentences: ConllToken[][] = [];
     stopInjecting: boolean;
 
     constructor() { }
@@ -45,5 +45,9 @@ export class Conllu implements IParser {
 
     cancelContentInjection(value: boolean) {
         this.stopInjecting = value;
+    }
+
+    tokens(): string[][] {
+        return this.sentences.map(sent => sent.map(token => token.token));
     }
 }

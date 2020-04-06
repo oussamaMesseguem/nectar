@@ -132,7 +132,7 @@ export class ContentUploadComponent implements OnInit {
         this.contentValidationInProgress = true;
         this.injectionService.injectContent(this.lang.value, this.type.value, reader.result.toString())
           .then(value => {
-            console.log(this.injectionService.getSentences());
+            console.log(this.injectionService.sentences());
             this.isValid = true;
             console.log(`The content is being parsed: ${value}`);
           })

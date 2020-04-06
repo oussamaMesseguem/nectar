@@ -45,8 +45,12 @@ export class InjectionService {
     throw new Error(`Annotation type '${annotation}' not recognized`);
   }
 
-  getSentences() {
+  sentences() {
     return this.parser.sentences;
+  }
+
+  tokens() {
+    return this.parser.tokens();
   }
 }
 
@@ -69,6 +73,8 @@ export interface IParser {
    * @param value whether the injection should stop
    */
   cancelContentInjection(value: boolean): void;
+
+  tokens(): string[][];
 }
 
 /**
@@ -78,7 +84,7 @@ export interface IParser {
  */
 export class Raw implements IParser {
   annotation: Annotation.raw;
-  sentences: any[][] = [];
+  sentences: string[][] = [];
   stopInjecting: boolean;
 
   constructor() { }
@@ -105,5 +111,9 @@ export class Raw implements IParser {
 
   cancelContentInjection(value: boolean): void {
     this.stopInjecting = value;
+  }
+
+  tokens(): string[][] {
+    return this.sentences;
   }
 }

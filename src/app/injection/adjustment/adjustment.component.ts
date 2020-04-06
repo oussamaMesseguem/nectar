@@ -27,7 +27,7 @@ export class AdjustmentComponent implements OnInit {
   constructor(private injectionService: InjectionService) { }
 
   ngOnInit(): void {
-    this.sentences = this.injectionService.getSentences();
+    // this.sentences = this.injectionService.getSentences();
   }
 
   moveWithinSentence(event: CdkDragDrop<string[]>) {

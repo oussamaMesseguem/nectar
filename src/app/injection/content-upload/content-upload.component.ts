@@ -129,20 +129,20 @@ export class ContentUploadComponent implements OnInit {
       // Once the content has been read, it's sent to the service
       // for parsing.
       reader.onload = _ => {
-        this.contentValidationInProgress = true;
         this.injectionService.injectContent(this.lang.value, this.type.value, reader.result.toString())
-          .then(value => {
-            console.log(this.injectionService.sentences());
-            this.isValid = true;
-            console.log(`The content is being parsed: ${value}`);
-          })
-          .catch((err) => {
-            this.contentValidationInProgress = false;
-            console.error(`An error occured while parsing the content: ${err}`);
-          })
-          .finally(() => {
-            this.contentValidationInProgress = false;
-          });
+          .subscribe(
+            next => {
+              this.contentValidationInProgress = next;
+            },
+            error => {
+              this.contentValidationInProgress = false;
+              console.error(`An error occured while parsing the content: ${error}`);
+            },
+            () => {
+              this.contentValidationInProgress = false;
+              this.isValid = true;
+              console.log(this.injectionService.sentences());
+            });
       };
 
     }

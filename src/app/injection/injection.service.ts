@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Annotation } from '../annotations/annotations';
+import { Annotation, Language } from '../annotations/annotations';
 import { Conllu } from '../annotations/conllu/conllu.service';
 import { HttpClient } from '@angular/common/http';
 import { Conllx } from '../annotations/conllx/conllx.service';
 import { Ner } from '../annotations/ner/ner.service';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InjectionService {
 
+  lang: string;
+  annotation: string;
+
   private parser: IParser;
+  private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
   constructor(private http: HttpClient, private conlluService: Conllu, private conllxService: Conllx, private nerService: Ner) { }
 
-  injectContent(lang: string, annotation: string, content: string): Promise<boolean> | never {
+  injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
+    this.lang = lang;
+    this.annotation = annotation;
+
     switch (annotation) {
       case Annotation.conllu:
         this.parser = this.conlluService;
@@ -33,7 +41,22 @@ export class InjectionService {
     }
 
     this.parser.cancelContentInjection(false);
-    return this.parser.injectContent(content);
+    this.isInProgress.next(true);
+
+    setTimeout(() => {
+      this.parser.injectContent(content).then(_ => {
+        this.isInProgress.complete();
+      })
+        .catch((error) => {
+          this.isInProgress.error(error);
+        })
+        .finally(() => {
+          this.isInProgress.unsubscribe();
+        });
+    }, 5000);
+
+
+    return this.isInProgress.asObservable();
   }
 
   /**

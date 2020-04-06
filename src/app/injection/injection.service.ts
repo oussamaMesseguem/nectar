@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Annotation } from '../annotations/annotations';
 import { Conllu } from '../annotations/conllu/conllu.service';
 import { HttpClient } from '@angular/common/http';
+import { Conllx } from '../annotations/conllx/conllx.service';
+import { Ner } from '../annotations/ner/ner.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class InjectionService {
 
   private parser: IParser;
 
-  constructor(private http: HttpClient, private conlluService: Conllu) { }
+  constructor(private http: HttpClient, private conlluService: Conllu, private conllxService: Conllx, private nerService: Ner) { }
 
   injectContent(lang: string, annotation: string, content: string): Promise<boolean> | never {
     switch (annotation) {
@@ -18,10 +20,10 @@ export class InjectionService {
         this.parser = this.conlluService;
         break;
       case Annotation.conllx:
-        // this.parser = new ParserService(new Conllu());
+        this.parser = this.conllxService;
         break;
       case Annotation.ner:
-        // this.parser = new ParserService(new Conllu());
+        this.parser = this.nerService;
         break;
       case Annotation.raw:
         this.parser = new Raw();

@@ -10,24 +10,29 @@ import { InjectionService } from '../injection.service';
 })
 export class AdjustmentComponent implements OnInit {
 
-  sentences: string[][];
-  // sentences: string[][] = [
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', '.'],
-  //   ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
-  //     'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
-  // ];
+  // sentences: string[][];
+  sentences: string[][] = [
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
+  'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
+      'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
+  'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
+  ];
 
   constructor(private injectionService: InjectionService) { }
 
   ngOnInit(): void {
-    // this.sentences = this.injectionService.getSentences();
+    try {
+      this.sentences = this.injectionService.sentences();
+    } catch (error) {
+    }
   }
 
   moveWithinSentence(event: CdkDragDrop<string[]>) {

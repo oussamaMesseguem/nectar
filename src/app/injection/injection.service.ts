@@ -40,21 +40,30 @@ export class InjectionService {
         throw this.assertAnnotationType(annotation);
     }
 
-    this.parser.cancelContentInjection(false);
-    this.isInProgress.next(true);
+    // New Behaviour might have been destroyed by an unsubscribing
+    this.isInProgress = new BehaviorSubject(true);
 
-    setTimeout(() => {
-      this.parser.injectContent(content).then(_ => {
+    // Parsing warpped in a promise
+    // Once done the isInProgress subject completes and unsubscribe
+    const promise: Promise<boolean> = new Promise((resolve, reject) => {
+      this.parser.sentences = this.parse(content);
+
+      if (this.parser.sentences.length === 0) {
+        reject(new Error('Parsing has been asked to be stopped'));
+      }
+      resolve(true);
+    });
+
+    promise
+      .then(_ => {
         this.isInProgress.complete();
       })
-        .catch((error) => {
-          this.isInProgress.error(error);
-        })
-        .finally(() => {
-          this.isInProgress.unsubscribe();
-        });
-    }, 5000);
-
+      .catch((error) => {
+        this.isInProgress.error(error);
+      })
+      .finally(() => {
+        this.isInProgress.unsubscribe();
+      });
 
     return this.isInProgress.asObservable();
   }
@@ -63,7 +72,8 @@ export class InjectionService {
    * Cancel the injection of the data
    */
   cancelContentInjection() {
-    this.parser.cancelContentInjection(true);
+    this.isInProgress.unsubscribe();
+    this.parser.sentences = [];
   }
 
   private assertAnnotationType(annotation: string): never {
@@ -77,6 +87,24 @@ export class InjectionService {
   tokens() {
     return this.parser.tokens();
   }
+
+  /**
+   * Parses the content according to the right parser
+   * @param content The content to parse
+   */
+  private parse(content: string) {
+    // Parsing algo
+    // Split into array of sentences
+    // Split into array of tokens
+    // Split into tokens and annotations
+    return content.split(this.parser.splitPattern)
+      .map(sent => sent.split(/\n/)
+        .filter(line => !line.trim().match(this.parser.ignoreLinePattern))
+        .map(line => line.trim().split(this.parser.tokenPattern))
+        .filter(tab => tab[0].length > 0)
+        .map(line => this.parser.ofToken(line))
+      );
+  }
 }
 
 /**
@@ -86,20 +114,29 @@ export interface IParser {
 
   annotation: Annotation;
   sentences: any[][];
+  /**
+   * The pattern to split sentences on
+   */
+  splitPattern: RegExp;
+  /**
+   * The pattern to split tokens on
+   */
+  tokenPattern: RegExp;
+  /**
+   * The pattern to ignore lines
+   */
+  ignoreLinePattern: RegExp;
 
   /**
-   * Injects the content string into an associated object.
-   * @param content the content itself as scheme
+   * Returns the tokens only
    */
-  injectContent(content: string): Promise<boolean>;
-
-  /***
-   * Cancel the content injection
-   * @param value whether the injection should stop
-   */
-  cancelContentInjection(value: boolean): void;
-
   tokens(): string[][];
+
+  /**
+   * Builds an Anootation Token
+   * @param tokenAndAnnotation the split array containing a token and its annotations
+   */
+  ofToken(tokenAndAnnotation: string[]): any;
 }
 
 /**
@@ -109,36 +146,28 @@ export interface IParser {
  */
 export class Raw implements IParser {
   annotation: Annotation.raw;
-  sentences: string[][] = [];
+  private privateSentences: any = [];
   stopInjecting: boolean;
+
+  splitPattern: RegExp = new RegExp(/\n/);
+  tokenPattern: RegExp = new RegExp(/\s/);
+  ignoreLinePattern: RegExp = new RegExp('#');
 
   constructor() { }
 
-  injectContent(content: string): Promise<boolean> {
-    const promise: Promise<boolean> = new Promise((resolve, reject) => {
-      content.split('\n')
-        .filter(l => !l.startsWith('#'))
-        .forEach((line: string) => {
-          // A sentence has been parsed
-          const sentence = line.trim().split(' ');
-          this.sentences.push(sentence);
-        });
-
-      if (this.stopInjecting) {
-        this.stopInjecting = false;
-        reject(new Error('Parsing has been asked to be stopped'));
-      }
-      resolve(true);
-    });
-
-    return promise;
+  get sentences(): string[][] {
+    return Array.from(this.privateSentences.filter((tab: string[][]) => tab.length > 0).map((tab: string[][]) => tab[0]));
   }
 
-  cancelContentInjection(value: boolean): void {
-    this.stopInjecting = value;
+  set sentences(sentences: string[][]) {
+    this.privateSentences = sentences;
   }
-
+  // TODO Needs to be fixed for async call
   tokens(): string[][] {
     return this.sentences;
+  }
+
+  ofToken(tokenAndAnnotation: string[]): string[] {
+    return tokenAndAnnotation;
   }
 }

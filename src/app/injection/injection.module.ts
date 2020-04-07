@@ -20,9 +20,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AdjustmentComponent } from './adjustment/adjustment.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TokenComponent } from './adjustment/token/token.component';
+import { SentenceComponent } from './adjustment/sentence/sentence.component';
 
 @NgModule({
-  declarations: [ContentUploadComponent, AdjustmentComponent, TokenComponent],
+  declarations: [ContentUploadComponent, AdjustmentComponent, TokenComponent, SentenceComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

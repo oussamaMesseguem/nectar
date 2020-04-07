@@ -35,8 +35,4 @@ export class AdjustmentComponent implements OnInit {
     }
   }
 
-  moveWithinSentence(event: CdkDragDrop<string[]>, i: number) {
-    moveItemInArray(this.sentences[i], event.previousIndex, event.currentIndex);
-  }
-
 }

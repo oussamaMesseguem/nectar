@@ -17,12 +17,12 @@ export class Conllu implements IParser {
     ignoreLinePattern: RegExp = new RegExp('#');
 
     constructor() { }
-    
+
     tokens(): string[][] {
         return this.sentences.map(sent => sent.map(token => token.token));
     }
 
     ofToken(tokenAndAnnotation: string[]): ConllToken {
         return ConllToken.fromTab(tokenAndAnnotation);
-      }
+    }
 }

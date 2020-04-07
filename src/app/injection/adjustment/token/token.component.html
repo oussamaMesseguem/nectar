@@ -1,6 +1,22 @@
-<mat-chip class="mat-chip-token"  [value]="token">{{ token }}
-    <!-- <mat-menu #aboveMenu="matMenu" yPosition="above">
-        <button mat-menu-item>Item 1</button>
-        <button mat-menu-item>Item 2</button>
-      </mat-menu> -->
+<mat-chip class="mat-chip-token" #chipToken [matMenuTriggerFor]="menu" [value]="token">{{ token }}
+    <mat-menu #menu="matMenu" yPosition="above">
+        <button mat-icon-button>
+            <mat-icon>arrow_left</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>arrow_right</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-menu>
 </mat-chip>

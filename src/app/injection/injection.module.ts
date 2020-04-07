@@ -13,6 +13,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,6 +39,7 @@ import { TokenComponent } from './adjustment/token/token.component';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     DragDropModule,
+    MatMenuModule,
     InjectionRoutingModule
   ]
 })

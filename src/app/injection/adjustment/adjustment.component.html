@@ -5,15 +5,32 @@
         </button>
     </div>
 
-    <div class="sentences-container" cdkDropListGroup>
-        <mat-card class="sentence-card" [cdkDropListData]="sent" cdkDropList
-            cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)"
-            *ngFor="let sent of sentences">
+    <div class="sentences-container">
+        <div class="sentence-card" *ngFor="let sent of sentences; let i = index;">
+            <mat-card cdkDropList cdkDropListOrientation="horizontal"
+                (cdkDropListDropped)="moveWithinSentence($event, i)">
+                <mat-chip-list>
+                    <app-token *ngFor="let token of sent" [token]="token" cdkDrag></app-token>
+                </mat-chip-list>
+            </mat-card>
 
-            <mat-chip-list>
-                <mat-chip class="mat-chip-token" *ngFor="let token of sent" [value]="token" cdkDrag>{{ token }}</mat-chip>
-            </mat-chip-list>
-        </mat-card>
+            <div class="btns-grid">
+                <button mat-icon-button>
+                    <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+        </div>
     </div>
-
 </div>

@@ -18,9 +18,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { AdjustmentComponent } from './adjustment/adjustment.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TokenComponent } from './adjustment/token/token.component';
 
 @NgModule({
-  declarations: [ContentUploadComponent, AdjustmentComponent],
+  declarations: [ContentUploadComponent, AdjustmentComponent, TokenComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

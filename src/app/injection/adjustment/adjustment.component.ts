@@ -21,9 +21,9 @@ export class AdjustmentComponent implements OnInit {
     ['je', 'suis', 'le', 'roi', '.'],
     ['je', 'suis', 'le', 'roi', '.'],
     ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
-  'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
+      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
       'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
-  'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
+      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
   ];
 
   constructor(private injectionService: InjectionService) { }
@@ -35,15 +35,8 @@ export class AdjustmentComponent implements OnInit {
     }
   }
 
-  moveWithinSentence(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-    }
+  moveWithinSentence(event: CdkDragDrop<string[]>, i: number) {
+    moveItemInArray(this.sentences[i], event.previousIndex, event.currentIndex);
   }
 
 }

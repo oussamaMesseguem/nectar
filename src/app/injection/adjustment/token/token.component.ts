@@ -19,7 +19,7 @@ export class TokenComponent implements OnInit {
   }
 
   duplicate() {
-    this.injectionService.duplicate(this.isent, this.itok);
+    this.injectionService.duplicateTok(this.isent, this.itok);
   }
 
   newLeft() {
@@ -35,6 +35,6 @@ export class TokenComponent implements OnInit {
   }
 
   delete() {
-    this.injectionService.delete(this.isent, this.itok);
+    this.injectionService.deleteTok(this.isent, this.itok);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { InjectionService } from '../../injection.service';
 
 @Component({
   selector: 'app-sentence',
@@ -13,7 +14,7 @@ export class SentenceComponent implements OnInit {
 
   expand = false;
 
-  constructor() { }
+  constructor(private injectionService: InjectionService) { }
 
   ngOnInit(): void {
     console.log(this.sentence);
@@ -22,6 +23,20 @@ export class SentenceComponent implements OnInit {
 
   moveWithinSentence(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.sentence, event.previousIndex, event.currentIndex);
+  }
+
+  duplicate() {
+    this.injectionService.duplicateSent(this.isent);
+  }
+
+  delete() {
+    this.injectionService.deleteSent(this.isent);
+  }
+  newAbove() {
+    this.injectionService.newAbove(this.isent);
+  }
+  newBelow() {
+    this.injectionService.newBelow(this.isent);
   }
 
 }

@@ -106,30 +106,44 @@ export class InjectionService implements AdjustmentService {
       );
   }
 
-  duplicate(isent: number, itok: number) {
+  duplicateSent(isent: number) {
+    this.sentences2.splice(isent, 0, this.sentences2[isent]);
+
+  }
+  deleteSent(isent: number) {
+    this.sentences2.splice(isent, 1);
+  }
+  newAbove(isent: number) {
+    this.sentences2.splice(isent, 0, ['~']);
+  }
+  newBelow(isent: number) {
+    this.sentences2.splice(isent + 1, 0, ['~']);
+  }
+
+  duplicateTok(isent: number, itok: number) {
     const token = this.sentences2[isent][itok];
     this.sentences2[isent].splice(itok, 0, token);
   }
 
   newLeft(isent: number, itok: number) {
-    this.sentences2[isent].splice(itok, 0, '');
+    this.sentences2[isent].splice(itok, 0, '~');
   }
 
   newRight(isent: number, itok: number) {
-    this.sentences2[isent].splice(itok + 1, 0, '');
+    this.sentences2[isent].splice(itok + 1, 0, '~');
   }
 
   changeValue(isent: number, itok: number, value: string) {
     this.sentences2[isent].splice(itok, 1, value);
   }
 
-  delete(isent: number, itok: number) {
+  deleteTok(isent: number, itok: number) {
     console.log(this.sentences2[isent]);
 
     this.sentences2[isent].splice(itok, 1);
-    console.log(this.sentences2[isent]);
-
-
+    if (this.sentences2[isent].length === 0) {
+      this.deleteSent(isent);
+    }
   }
 
 }
@@ -202,7 +216,12 @@ export class Raw implements IParser {
 
 export interface AdjustmentService {
 
-  duplicate(isent: number, itok: number);
+  duplicateSent(isent: number);
+  deleteSent(isent: number);
+  newAbove(isent: number);
+  newBelow(isent: number);
+
+  duplicateTok(isent: number, itok: number);
 
   newLeft(isent: number, itok: number);
 
@@ -210,5 +229,5 @@ export interface AdjustmentService {
 
   changeValue(isent: number, itok: number, value: string);
 
-  delete(isent: number, itok: number);
+  deleteTok(isent: number, itok: number);
 }

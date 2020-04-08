@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { HttpClientModule } from '@angular/common/http';
 import { AdjustmentComponent } from './adjustment/adjustment.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -41,6 +42,7 @@ import { SentenceComponent } from './adjustment/sentence/sentence.component';
     MatProgressSpinnerModule,
     DragDropModule,
     MatMenuModule,
+    MatTooltipModule,
     InjectionRoutingModule
   ]
 })

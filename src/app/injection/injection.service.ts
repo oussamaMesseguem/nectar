@@ -22,6 +22,8 @@ export class InjectionService implements AdjustmentService {
   injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
     this.lang = lang;
     this.annotation = annotation;
+    // New Behaviour might have been destroyed by an unsubscribing
+    this.isInProgress = new BehaviorSubject(true);
 
     switch (annotation) {
       case Annotation.conllu:
@@ -40,12 +42,22 @@ export class InjectionService implements AdjustmentService {
         throw this.assertAnnotationType(annotation);
     }
 
-    // New Behaviour might have been destroyed by an unsubscribing
-    this.isInProgress = new BehaviorSubject(true);
-
     // Parsing warpped in a promise
     // Once done the isInProgress subject completes and unsubscribe
-    const promise: Promise<boolean> = new Promise((resolve, reject) => {
+    const promise: Promise<boolean> = new Promise(async (resolve, reject) => {
+
+      if (annotation === Annotation.raw) {
+        const response: CoreNLPResponse = await this.corenlp(content);
+        const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
+        console.log(r);
+        r[0].splice(0, 6);
+        const lastPosition = r[r.length - 1].length;
+        r[r.length - 1].splice(lastPosition - 2, 2);
+        console.log(r);
+        content = r.map(tab => tab.join('\n')).join('\n\n');
+
+      }
+
       this.parser.sentences = this.parse(content);
 
       if (this.parser.sentences.length === 0) {
@@ -104,6 +116,13 @@ export class InjectionService implements AdjustmentService {
         .filter(tab => tab[0].length > 0)
         .map(line => this.parser.ofToken(line))
       );
+  }
+
+  private async corenlp(content: string): Promise<any> {
+    return await this.http.post<any>(
+      'https://cors-anywhere.herokuapp.com/http://corenlp.run/?properties={"annotators":"tokenize,ssplit","outputFormat":"json"}',
+      { data: content }
+    ).toPromise();
   }
 
   duplicateSent(isent: number) {
@@ -187,29 +206,22 @@ export interface IParser {
  */
 export class Raw implements IParser {
   annotation: Annotation.raw;
-  private privateSentences: any = [];
+  sentences: string[][] = [];
   stopInjecting: boolean;
 
-  splitPattern: RegExp = new RegExp(/\n/);
+  splitPattern: RegExp = new RegExp(/\n\s*\n/);
   tokenPattern: RegExp = new RegExp(/\s/);
   ignoreLinePattern: RegExp = new RegExp('#');
 
   constructor() { }
 
-  get sentences(): string[][] {
-    return Array.from(this.privateSentences.filter((tab: string[][]) => tab.length > 0).map((tab: string[][]) => tab[0]));
-  }
-
-  set sentences(sentences: string[][]) {
-    this.privateSentences = sentences;
-  }
   // TODO Needs to be fixed for async call
   tokens(): string[][] {
     return this.sentences;
   }
 
-  ofToken(tokenAndAnnotation: string[]): string[] {
-    return tokenAndAnnotation;
+  ofToken(tokenAndAnnotation: string[]): string {
+    return tokenAndAnnotation[0];
   }
 }
 
@@ -230,4 +242,18 @@ export interface AdjustmentService {
   changeValue(isent: number, itok: number, value: string);
 
   deleteTok(isent: number, itok: number);
+}
+
+
+interface CoreNLPResponse {
+  docDate: any;
+  sentences: CoreNLPSentence[];
+}
+interface CoreNLPSentence {
+  index: number;
+  tokens: CoreNLPToken[];
+}
+
+interface CoreNLPToken {
+  originalText: string;
 }

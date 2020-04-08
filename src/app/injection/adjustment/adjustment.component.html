@@ -6,6 +6,6 @@
     </div>
 
     <div class="sentences-container">
-        <app-sentence *ngFor="let sent of sentences" [sentence]="sent"></app-sentence>
+        <app-sentence *ngFor="let sent of sentences; let i = index" [sentence]="sent" [isent]="i"></app-sentence>
     </div>
 </div>

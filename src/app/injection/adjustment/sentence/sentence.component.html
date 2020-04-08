@@ -1,7 +1,7 @@
 <div class="sentence-card">
     <mat-card cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)">
         <mat-chip-list>
-            <app-token *ngFor="let token of sentence" [token]="token" cdkDrag></app-token>
+            <app-token *ngFor="let token of sentence; let i = index" [token]="token" [itok]="i" [isent]="isent" cdkDrag></app-token>
         </mat-chip-list>
     </mat-card>
 

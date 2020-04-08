@@ -9,11 +9,11 @@ import { Subject, BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class InjectionService {
+export class InjectionService implements AdjustmentService {
 
   lang: string;
   annotation: string;
-
+  sentences2: string[][];
   private parser: IParser;
   private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
@@ -105,6 +105,33 @@ export class InjectionService {
         .map(line => this.parser.ofToken(line))
       );
   }
+
+  duplicate(isent: number, itok: number) {
+    const token = this.sentences2[isent][itok];
+    this.sentences2[isent].splice(itok, 0, token);
+  }
+
+  newLeft(isent: number, itok: number) {
+    this.sentences2[isent].splice(itok, 0, '');
+  }
+
+  newRight(isent: number, itok: number) {
+    this.sentences2[isent].splice(itok + 1, 0, '');
+  }
+
+  changeValue(isent: number, itok: number, value: string) {
+    this.sentences2[isent].splice(itok, 1, value);
+  }
+
+  delete(isent: number, itok: number) {
+    console.log(this.sentences2[isent]);
+
+    this.sentences2[isent].splice(itok, 1);
+    console.log(this.sentences2[isent]);
+
+
+  }
+
 }
 
 /**
@@ -170,4 +197,18 @@ export class Raw implements IParser {
   ofToken(tokenAndAnnotation: string[]): string[] {
     return tokenAndAnnotation;
   }
+}
+
+
+export interface AdjustmentService {
+
+  duplicate(isent: number, itok: number);
+
+  newLeft(isent: number, itok: number);
+
+  newRight(isent: number, itok: number);
+
+  changeValue(isent: number, itok: number, value: string);
+
+  delete(isent: number, itok: number);
 }

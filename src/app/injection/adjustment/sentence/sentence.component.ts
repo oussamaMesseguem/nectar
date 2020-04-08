@@ -9,6 +9,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class SentenceComponent implements OnInit {
 
   @Input() sentence: string[];
+  @Input() isent: number;
+
   expand = false;
 
   constructor() { }

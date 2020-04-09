@@ -13,6 +13,8 @@ export class TokenComponent implements OnInit {
   @Input() isent: number;
   @Input() itok: number;
 
+  inEditing = false;
+
   constructor(private injectionService: InjectionService) { }
 
   ngOnInit(): void {
@@ -30,8 +32,9 @@ export class TokenComponent implements OnInit {
     this.injectionService.newRight(this.isent, this.itok);
   }
 
-  changeValue() {
-    this.injectionService.changeValue(this.isent, this.itok, 'new item');
+  edit() {
+    this.injectionService.edit(this.isent, this.itok, this.token);
+    this.inEditing = !this.inEditing;
   }
 
   delete() {

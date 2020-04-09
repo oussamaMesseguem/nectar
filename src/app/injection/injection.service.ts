@@ -13,7 +13,9 @@ export class InjectionService implements AdjustmentService {
 
   lang: string;
   annotation: string;
-  sentences2: string[][];
+  sentences2: string[][] = [
+    ['je', 'suis', 'le', 'roi', '.'],
+    ['je', 'suis', 'le', 'roi', '.']];
   private parser: IParser;
   private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
@@ -93,7 +95,8 @@ export class InjectionService implements AdjustmentService {
   }
 
   sentences() {
-    return this.parser.sentences;
+    // return this.parser.sentences;
+    return this.sentences2;
   }
 
   tokens() {
@@ -126,41 +129,41 @@ export class InjectionService implements AdjustmentService {
   }
 
   duplicateSent(isent: number) {
-    this.sentences2.splice(isent, 0, this.sentences2[isent]);
+    this.sentences().splice(isent, 0, this.sentences()[isent]);
 
   }
   deleteSent(isent: number) {
-    this.sentences2.splice(isent, 1);
+    this.sentences().splice(isent, 1);
   }
   newAbove(isent: number) {
-    this.sentences2.splice(isent, 0, ['~']);
+    this.sentences().splice(isent, 0, ['~']);
   }
   newBelow(isent: number) {
-    this.sentences2.splice(isent + 1, 0, ['~']);
+    this.sentences().splice(isent + 1, 0, ['~']);
   }
 
   duplicateTok(isent: number, itok: number) {
-    const token = this.sentences2[isent][itok];
-    this.sentences2[isent].splice(itok, 0, token);
+    const token = this.sentences()[isent][itok];
+    this.sentences()[isent].splice(itok, 0, token);
   }
 
   newLeft(isent: number, itok: number) {
-    this.sentences2[isent].splice(itok, 0, '~');
+    this.sentences()[isent].splice(itok, 0, '~');
   }
 
   newRight(isent: number, itok: number) {
-    this.sentences2[isent].splice(itok + 1, 0, '~');
+    this.sentences()[isent].splice(itok + 1, 0, '~');
   }
 
-  changeValue(isent: number, itok: number, value: string) {
-    this.sentences2[isent].splice(itok, 1, value);
+  edit(isent: number, itok: number, value: string) {
+    this.sentences()[isent].splice(itok, 1, value);
   }
 
   deleteTok(isent: number, itok: number) {
-    console.log(this.sentences2[isent]);
+    console.log(this.sentences()[isent]);
 
-    this.sentences2[isent].splice(itok, 1);
-    if (this.sentences2[isent].length === 0) {
+    this.sentences()[isent].splice(itok, 1);
+    if (this.sentences()[isent].length === 0) {
       this.deleteSent(isent);
     }
   }
@@ -239,7 +242,7 @@ export interface AdjustmentService {
 
   newRight(isent: number, itok: number);
 
-  changeValue(isent: number, itok: number, value: string);
+  edit(isent: number, itok: number, value: string);
 
   deleteTok(isent: number, itok: number);
 }

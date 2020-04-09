@@ -1,4 +1,4 @@
-<mat-chip class="mat-chip-token" #chipToken [matMenuTriggerFor]="menu" [value]="token">{{ token }}
+<mat-chip class="mat-chip-token" #chipToken [matMenuTriggerFor]="menu" [value]="token" *ngIf="!inEditing">{{ token }}
     <mat-menu #menu="matMenu" yPosition="above">
         <button mat-icon-button matTooltip="Duplicate the token" matTooltipPosition="above" matTooltipShowDelay="500"
             (click)="duplicate()">
@@ -13,7 +13,7 @@
             <mat-icon>arrow_right</mat-icon>
         </button>
         <button mat-icon-button matTooltip="Edit the token" matTooltipPosition="above" matTooltipShowDelay="500"
-            (click)="changeValue()">
+            (click)="inEditing = ! inEditing">
             <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button matTooltip="Delete the token from the sentence" matTooltipPosition="above"
@@ -22,3 +22,8 @@
         </button>
     </mat-menu>
 </mat-chip>
+
+<mat-form-field appearance="outline" color="purple" *ngIf="inEditing">
+    <mat-label>new token</mat-label>
+    <input matInput [(ngModel)]="token" (keydown.enter)="edit()">
+  </mat-form-field>

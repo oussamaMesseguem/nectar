@@ -30,7 +30,8 @@ export class AdjustmentComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      this.injectionService.sentences2 = this.sentences;
+      // this.injectionService.sentences2 = this.sentences;
+      this.sentences = this.injectionService.sentences();
     } catch (error) {
     }
   }

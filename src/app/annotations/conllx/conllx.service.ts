@@ -1,5 +1,5 @@
 
-import { ConllToken } from './conllu.model';
+import { ConllXToken } from './conllx.model';
 import { IParser } from 'src/app/injection/injection.service';
 import { Annotation } from '../annotations';
 import { Injectable } from '@angular/core';
@@ -7,10 +7,10 @@ import { Injectable } from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-export class Conllu implements IParser {
+export class Conllx implements IParser {
 
-    annotation: Annotation = Annotation.conllu;
-    sentences: ConllToken[][] = [];
+    annotation: Annotation = Annotation.conllx;
+    sentences: ConllXToken[][] = [];
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\t/);
@@ -22,7 +22,7 @@ export class Conllu implements IParser {
         return this.sentences.map(sent => sent.map(token => token.token));
     }
 
-    ofToken(tokenAndAnnotation: string[]): ConllToken {
-        return ConllToken.fromTab(tokenAndAnnotation);
+    ofToken(tokenAndAnnotation: string[]): ConllXToken {
+        return ConllXToken.fromTab(tokenAndAnnotation);
     }
 }

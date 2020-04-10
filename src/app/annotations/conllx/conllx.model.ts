@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 /**
  * Conll-u tags for one token
  */
-export class ConllToken {
+export class ConllXToken {
 
     index: number;
     token: string;
@@ -34,21 +34,21 @@ export class ConllToken {
         this.misc = misc;
     }
 
-    static of(conllToken: ConllToken | null) {
-        if (conllToken) {
+    static of(conllXToken: ConllXToken | null) {
+        if (conllXToken) {
 
-            return new ConllToken(
+            return new ConllXToken(
                 {
-                    index: conllToken.index, token: conllToken.token, lemma: conllToken.lemma, upos: conllToken.upos,
-                    xpos: conllToken.xpos, feat: conllToken.feat, head: conllToken.head, deprel: conllToken.deprel,
-                    deps: conllToken.deps, misc: conllToken.misc
+                    index: conllXToken.index, token: conllXToken.token, lemma: conllXToken.lemma, upos: conllXToken.upos,
+                    xpos: conllXToken.xpos, feat: conllXToken.feat, head: conllXToken.head, deprel: conllXToken.deprel,
+                    deps: conllXToken.deps, misc: conllXToken.misc
                 });
         }
-        return new ConllToken();
+        return new ConllXToken();
     }
 
     static fromTab(content: string[]) {
-        const conll = new ConllToken(
+        const conll = new ConllXToken(
             {
                 // tslint:disable-next-line: radix
                 index: Number.parseInt(
@@ -61,7 +61,7 @@ export class ConllToken {
     }
 }
 
-export class ConllTokenForm {
+export class ConllXTokenForm {
     index = new FormControl();
     token = new FormControl();
     lemma = new FormControl();
@@ -73,7 +73,7 @@ export class ConllTokenForm {
     deps = new FormControl();
     misc = new FormControl();
 
-    constructor(conll: ConllToken) {
+    constructor(conll: ConllXToken) {
         this.index.setValue(conll.index);
         this.token.setValue(conll.token);
         this.lemma.setValue(conll.lemma);
@@ -85,57 +85,4 @@ export class ConllTokenForm {
         this.deps.setValue(conll.deps);
         this.misc.setValue(conll.misc);
     }
-}
-
-export interface UPos {
-    tag: string;
-    name: string;
-    definition: string;
-    link: string;
-    examples: string[];
-}
-
-export interface XPos {
-    tag: string;
-    name: string;
-    definition: string;
-    link: string;
-    examples: string[];
-}
-export interface UDeprel {
-    tag: string;
-    name: string;
-    link: string;
-}
-
-export interface UFeats {
-    tag: string;
-    name: string;
-    link: string;
-    values: Feat[];
-}
-
-interface Feat {
-    tag: string;
-    name: string;
-    link: string;
-}
-
-export interface UDeps {
-    head: number[];
-    values: UDeprel[];
-}
-
-interface DepsPair {
-    index: number;
-    deprel: UDeprel;
-}
-
-export interface ConlluTags {
-    upos: UPos[];
-    xpos: XPos[];
-    feat: UFeats[];
-    head: number[];
-    deprel: UDeprel[];
-    deps: UDeps;
 }

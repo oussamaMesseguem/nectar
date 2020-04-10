@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { ContentUploadService } from './content-upload.service';
-import { Annotation } from '../../annotations/annotations';
+import { Annotation, Language } from '../../annotations/annotations';
 import { Router } from '@angular/router';
+import { InjectionService } from '../injection.service';
 
 @Component({
   selector: 'app-content-upload',
@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 })
 export class ContentUploadComponent implements OnInit {
 
-  languages: string[] = ['English', 'French', 'Spanish'];
+  languages: string[] = Object.values(Language);
   types: string[] = Object.values(Annotation);
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
@@ -36,7 +36,7 @@ export class ContentUploadComponent implements OnInit {
 
   files: Array<FileUploadModel> = [];
 
-  constructor(private formBuilder: FormBuilder, private contentUploadService: ContentUploadService,
+  constructor(private formBuilder: FormBuilder, private injectionService: InjectionService,
               private router: Router) { }
 
   ngOnInit(): void { }
@@ -107,6 +107,7 @@ export class ContentUploadComponent implements OnInit {
    */
   adjust() {
     console.log(this.contentUploadFormGroup.value);
+    this.router.navigateByUrl('adjust');
   }
 
   /**
@@ -128,26 +129,20 @@ export class ContentUploadComponent implements OnInit {
       // Once the content has been read, it's sent to the service
       // for parsing.
       reader.onload = _ => {
-        this.contentUploadService.parseContent(
-          this.lang.value, this.type.value, reader.result.toString())
+        this.injectionService.injectContent(this.lang.value, this.type.value, reader.result.toString())
           .subscribe(
-            {
-              next: nextValue => {
-                this.contentValidationInProgress = nextValue;
-                console.log(`The content is being parsed: ${nextValue}`);
-              },
-              error: err => {
-                this.contentValidationInProgress = false;
-                console.error(`An error occured while parsing the content: ${err}`);
-              },
-              complete: () => {
-                this.contentValidationInProgress = false;
-                // The upload is valid when the parsing has been done successfully.
-                this.isValid = true;
-                console.log(`The content has been parsed successfully.`);
-              }
-            }
-          );
+            next => {
+              this.contentValidationInProgress = next;
+            },
+            error => {
+              this.contentValidationInProgress = false;
+              console.error(`An error occured while parsing the content: ${error}`);
+            },
+            () => {
+              this.contentValidationInProgress = false;
+              this.isValid = true;
+              console.log(this.injectionService.sentences());
+            });
       };
 
     }
@@ -156,7 +151,7 @@ export class ContentUploadComponent implements OnInit {
 
   cancelFile() {
     // Stop the parsing of the content
-    this.contentUploadService.stopParsing();
+    this.injectionService.cancelContentInjection();
     // No file uploaded, hence empty array
     this.files = [];
     // No parsing running

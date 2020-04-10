@@ -1,0 +1,35 @@
+<div class="sentence-card">
+    <mat-card cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="moveWithinSentence($event)">
+        <mat-chip-list>
+            <app-token *ngFor="let token of sentence; let i = index" [token]="token" [itok]="i" [isent]="isent" cdkDrag>
+            </app-token>
+        </mat-chip-list>
+    </mat-card>
+
+    <div *ngIf="!expand">
+        <button mat-icon-button matTooltip="More actions" matTooltipPosition="right" matTooltipShowDelay="500" (click)="expand = !expand">
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+    </div>
+    <div class="btns-grid" *ngIf="expand">
+        <button mat-icon-button matTooltip="Duplicate the entire sentence" matTooltipPosition="above"
+            matTooltipShowDelay="500" (click)="duplicate(); expand = !expand">
+            <mat-icon>autorenew</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Delete the entire sentence" matTooltipPosition="above"
+            matTooltipShowDelay="500" (click)="delete(); expand = !expand">
+            <mat-icon>clear</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Insert a new sentence above" matTooltipPosition="above"
+            matTooltipShowDelay="500" (click)="newAbove(); expand = !expand">
+            <mat-icon>arrow_drop_up</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Insert a new sentence below" matTooltipPosition="above"
+            matTooltipShowDelay="500" (click)="newBelow(); expand = !expand">
+            <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Expand less" matTooltipPosition="right" matTooltipShowDelay="500" (click)="expand = !expand">
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+    </div>
+</div>

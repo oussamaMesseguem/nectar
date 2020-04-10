@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { InjectionService } from '../injection.service';
 
 
 @Component({
@@ -9,6 +10,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 })
 export class AdjustmentComponent implements OnInit {
 
+  // sentences: string[][];
   sentences: string[][] = [
     ['je', 'suis', 'le', 'roi', '.'],
     ['je', 'suis', 'le', 'roi', '.'],
@@ -18,23 +20,19 @@ export class AdjustmentComponent implements OnInit {
     ['je', 'suis', 'le', 'roi', '.'],
     ['je', 'suis', 'le', 'roi', '.'],
     ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
-      'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
+    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
+      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
+      'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
+      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
   ];
 
-  constructor() { }
+  constructor(private injectionService: InjectionService) { }
 
   ngOnInit(): void {
-  }
-
-  moveWithinSentence(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
+    try {
+      // this.injectionService.sentences2 = this.sentences;
+      this.sentences = this.injectionService.sentences();
+    } catch (error) {
     }
   }
 

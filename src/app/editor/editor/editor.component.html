@@ -5,7 +5,7 @@
         </div>
 
         <div style="padding: 15px;">
-            <app-annotation-list></app-annotation-list>
+            <app-annotation-list (selectedAnnotation)="setSelectedAnnotation($event)"></app-annotation-list>
         </div>
 
         <div class="mat-elevation-z1">

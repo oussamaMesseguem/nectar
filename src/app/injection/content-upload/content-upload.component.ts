@@ -98,7 +98,7 @@ export class ContentUploadComponent implements OnInit {
    */
   annotate() {
     console.log(this.contentUploadFormGroup.value);
-    this.router.navigateByUrl('adjust');
+    this.router.navigateByUrl('edit');
 
   }
 

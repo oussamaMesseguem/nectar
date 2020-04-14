@@ -8,6 +8,7 @@ import { InjectionModule } from './injection/injection.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { EditorModule } from './editor/editor.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatIconModule,
     MatGridListModule,
     InjectionModule,
+    EditorModule,
     AppRoutingModule
   ],
   providers: [],

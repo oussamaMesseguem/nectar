@@ -1,0 +1,28 @@
+<mat-form-field class="example-chip-list mat-elevation-z1">
+    <mat-chip-list #chipList [multiple]="false" aria-label="Annotation selection">
+      <mat-chip
+        *ngFor="let annot of annotations"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(annot)"
+        (selectionChange)="hasChanged($event)">
+        {{annot}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+
+      <input
+        placeholder="New annot..."
+        #annotInput
+        [formControl]="annotCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let annot of filteredAnnots | async" [value]="annot">
+        {{annot}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>

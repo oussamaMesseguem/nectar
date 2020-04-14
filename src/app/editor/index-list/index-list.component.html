@@ -1,5 +1,4 @@
 <div class="mat-elevation-z1" style="text-align: center;">
-    <!-- <mat-card-content> -->
     <button mat-icon-button (click)=previous()>
         <mat-icon>chevron_left</mat-icon>
     </button>
@@ -7,15 +6,19 @@
     <button mat-icon-button (click)="move(displayedRange[0])">
         {{displayedRange[0]}}
     </button>
+
     <button mat-icon-button (click)="move(displayedRange[1])">
         {{displayedRange[1]}}
     </button>
-    <button mat-icon-button color="accent">
+
+    <button mat-icon-button color="primary">
         {{displayedRange[2]}}
     </button>
+
     <button mat-icon-button (click)="move(displayedRange[3])">
         {{displayedRange[3]}}
     </button>
+
     <button mat-icon-button (click)="move(displayedRange[4])">
         {{displayedRange[4]}}
     </button>
@@ -23,6 +26,4 @@
     <button mat-icon-button (click)=next()>
         <mat-icon>chevron_right</mat-icon>
     </button>
-    <!-- </mat-card-content> -->
-    
 </div>

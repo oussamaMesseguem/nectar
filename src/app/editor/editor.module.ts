@@ -15,6 +15,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { IndexListComponent } from './index-list/index-list.component';
 import { AnnotationListComponent } from './annotation-list/annotation-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
+    MatMenuModule,
     MatOptionModule,
     MatTooltipModule,
     EditorRoutingModule

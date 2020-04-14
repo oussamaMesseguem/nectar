@@ -1,28 +1,17 @@
 <mat-form-field class="example-chip-list mat-elevation-z1">
-    <mat-chip-list #chipList [multiple]="false" aria-label="Annotation selection">
-      <mat-chip
-        *ngFor="let annot of annotations"
-        [selectable]="selectable"
-        [removable]="removable"
-        (removed)="remove(annot)"
-        (selectionChange)="hasChanged($event)">
-        {{annot}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-      </mat-chip>
+  <mat-chip-list #chipList multiple=false ariaOrientation="horizontal" [formControl]="annotCtrl"
+    aria-label="Annotation selection">
+    <mat-chip *ngFor="let annot of annotations" [selectable]="true" [removable]="true" [value]="annot"
+      (removed)="remove(annot)" (click)="annotCtrl.setValue(annot)">
+      {{annot}}
+      <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+    </mat-chip>
 
-      <input
-        placeholder="New annot..."
-        #annotInput
-        [formControl]="annotCtrl"
-        [matAutocomplete]="auto"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="add($event)">
-    </mat-chip-list>
-
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let annot of filteredAnnots | async" [value]="annot">
-        {{annot}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations" matTooltipPosition="above" matTooltipShowDelay="500" *ngIf="annotations.length !== allAnnotations.length">
+      <mat-icon>add_circle_outlined</mat-icon>
+      <mat-menu #menu="matMenu" yPosition="below">
+        <button *ngFor="let annot of filteredAnnotations" mat-menu-item (click)="add(annot)">{{annot}}</button>
+      </mat-menu>
+    </button>
+  </mat-chip-list>
+</mat-form-field>

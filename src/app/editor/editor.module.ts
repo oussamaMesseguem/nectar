@@ -16,12 +16,16 @@ import { IndexListComponent } from './index-list/index-list.component';
 import { AnnotationListComponent } from './annotation-list/annotation-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
+import { ConlluModule } from '../annotations/conllu/conllu.module';
+import { NerModule } from '../annotations/ner/ner.module';
 
 
 @NgModule({
   declarations: [EditorComponent, IndexListComponent, AnnotationListComponent],
   imports: [
     CommonModule,
+    ConlluModule,
+    NerModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatButtonModule,

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Annotation } from 'src/app/annotations/annotations';
 
 @Component({
   selector: 'app-editor',
@@ -23,6 +24,8 @@ export class EditorComponent implements OnInit {
     this.indexes = [...Array(25).keys()];
     this.currentIndex = 0;
   }
+
+  get annotations() { return Annotation; }
 
   setSelectedAnnotation(annotation: string) {
     this.selectedAnnotation = annotation;

@@ -13,9 +13,9 @@
         </div>
     </div>
 
-
-    <div style="background-color: cornsilk;">
-        <span>third row</span>
-
+    <div style="background-color: cornsilk;" [ngSwitch]="selectedAnnotation">
+        <app-conllu *ngSwitchCase="annotations.conllu"></app-conllu>
+        <app-ner *ngSwitchCase="annotations.ner"></app-ner>
+        <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>
     </div>
 </div>

@@ -139,3 +139,118 @@ export interface ConlluTags {
     deprel: UDeprel[];
     deps: UDeps;
 }
+
+export const UPOS: UPos[] = [
+    {
+        tag: 'ADJ',
+        name: 'adjective',
+        definition: '',
+        link: '',
+        examples: []
+    },
+     {
+        tag: 'ADP',
+        name: 'adposition',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'ADV',
+        name: 'adverb',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'AUX',
+        name: 'auxiliary',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'CCONJ',
+        name: 'coordinating conjunction',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'DET',
+        name: 'determiner',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'INTJ',
+        name: 'interjection',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'NOUN',
+        name: 'noun',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'NUM',
+        name: 'numeral',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'PART',
+        name: 'particle',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'PRON',
+        name: 'pronoun',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'PROPN',
+        name: 'proper noun',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'PUNCT',
+        name: 'punctuation',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'SCONJ',
+        name: 'subordinating conjunction',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'SYM',
+        name: 'symbol',
+        definition: '',
+        link: '',
+        examples: []
+    },
+    {
+        tag: 'VERB',
+        name: 'verb',
+        definition: '',
+        link: '',
+        examples: []
+    },
+];

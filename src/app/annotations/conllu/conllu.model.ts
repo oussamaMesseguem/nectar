@@ -254,3 +254,193 @@ export const UPOS: UPos[] = [
         examples: []
     },
 ];
+
+export const UDEPREL: UDeprel[] = [
+
+    {
+        tag: 'acl',
+        name: 'clausal modifier of noun (adjectival clause)',
+        link: 'http://universaldependencies.org/u/dep/acl.html',
+    },
+    {
+        tag: 'advcl',
+        name: 'adverbial clause modifier',
+        link: 'http://universaldependencies.org/u/dep/advcl.html',
+    },
+    {
+        tag: 'advmod',
+        name: 'clausal modifier of noun (adjectival clause)',
+        link: 'http://universaldependencies.org/u/dep/acl.html',
+    },
+    {
+        tag: 'amod',
+        name: 'adjectival modifier',
+        link: 'http://universaldependencies.org/u/dep/amod.html',
+    },
+    {
+        tag: 'appos',
+        name: 'appositional modifier',
+        link: 'http://universaldependencies.org/u/dep/appos.html',
+    },
+    {
+        tag: 'aux',
+        name: 'auxiliary',
+        link: 'http://universaldependencies.org/u/dep/aux.html',
+    },
+    {
+        tag: 'case',
+        name: 'case marking',
+        link: 'http://universaldependencies.org/u/dep/case.html',
+    },
+    {
+        tag: 'cc',
+        name: 'coordinating conjunction',
+        link: 'http://universaldependencies.org/u/dep/cc.html',
+    },
+    {
+        tag: 'ccomp',
+        name: 'clausal complement',
+        link: 'http://universaldependencies.org/u/dep/ccomp.html',
+    },
+    {
+        tag: 'clf',
+        name: 'classifier',
+        link: 'http://universaldependencies.org/u/dep/clf.html',
+    },
+    {
+        tag: 'compound',
+        name: 'compound',
+        link: 'http://universaldependencies.org/u/dep/compound.html',
+    },
+    {
+        tag: 'conj',
+        name: 'conjunct',
+        link: 'http://universaldependencies.org/u/dep/conj.html',
+    },
+    {
+        tag: 'cop',
+        name: 'copula',
+        link: 'http://universaldependencies.org/u/dep/cop.html',
+    },
+    {
+        tag: 'csubj',
+        name: 'clausal subject',
+        link: 'http://universaldependencies.org/u/dep/csubj.html',
+    },
+    {
+        tag: 'dep',
+        name: 'unspecified dependency',
+        link: 'http://universaldependencies.org/u/dep/dep.html',
+    },
+    {
+        tag: 'det',
+        name: 'determiner',
+        link: 'http://universaldependencies.org/u/dep/det.html',
+    },
+    {
+        tag: 'discourse',
+        name: 'discourse element',
+        link: 'http://universaldependencies.org/u/dep/discourse.html',
+    },
+    {
+        tag: 'dislocated',
+        name: 'dislocated elements',
+        link: 'http://universaldependencies.org/u/dep/dislocated.html',
+    },
+    {
+        tag: 'expl',
+        name: 'expletive',
+        link: 'http://universaldependencies.org/u/dep/expl.html',
+    },
+    {
+        tag: 'fixed',
+        name: 'fixed multiword expression',
+        link: 'http://universaldependencies.org/u/dep/fixed.html',
+    },
+    {
+        tag: 'flat',
+        name: 'flat multiword expression',
+        link: 'http://universaldependencies.org/u/dep/flat.html',
+    },
+    {
+        tag: 'goeswith',
+        name: 'goes with',
+        link: 'http://universaldependencies.org/u/dep/goeswith.html',
+    },
+    {
+        tag: 'iobj',
+        name: 'indirect object',
+        link: 'http://universaldependencies.org/u/dep/iobj.html',
+    },
+    {
+        tag: 'list',
+        name: 'list',
+        link: 'http://universaldependencies.org/u/dep/list.html',
+    },
+    {
+        tag: 'mark',
+        name: 'marker',
+        link: 'http://universaldependencies.org/u/dep/mark.html',
+    },
+    {
+        tag: 'nsubj',
+        name: 'nominal modifier',
+        link: 'http://universaldependencies.org/u/dep/nsubj.html',
+    },
+    {
+        tag: 'nsubj',
+        name: 'nominal subject',
+        link: 'http://universaldependencies.org/u/dep/nsubj.html',
+    },
+    {
+        tag: 'nummod',
+        name: 'numeric modifier',
+        link: 'http://universaldependencies.org/u/dep/nummod.html',
+    },
+    {
+        tag: 'obj',
+        name: 'object',
+        link: 'http://universaldependencies.org/u/dep/obj.html',
+    },
+    {
+        tag: 'obl',
+        name: 'oblique nominal',
+        link: 'http://universaldependencies.org/u/dep/obl.html',
+    },
+    {
+        tag: 'orphan',
+        name: 'orphan',
+        link: 'http://universaldependencies.org/u/dep/orphan.html',
+    },
+    {
+        tag: 'parataxis',
+        name: 'parataxis',
+        link: 'http://universaldependencies.org/u/dep/parataxis.html',
+    },
+    {
+        tag: 'punct',
+        name: 'punctuation',
+        link: 'http://universaldependencies.org/u/dep/punct.html',
+    },
+    {
+        tag: 'reparandum',
+        name: 'overridden disfluency',
+        link: 'http://universaldependencies.org/u/dep/reparandum.html',
+    },
+    {
+        tag: 'root',
+        name: 'root',
+        link: 'http://universaldependencies.org/u/dep/root.html',
+    },
+    {
+        tag: 'vocative',
+        name: 'vocative',
+        link: 'http://universaldependencies.org/u/dep/vocative.html',
+    },
+    {
+        tag: 'xcomp',
+        name: 'open clausal complement',
+        link: 'http://universaldependencies.org/u/dep/xcomp.html',
+    },
+
+]

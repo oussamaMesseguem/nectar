@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConllToken, ConllTokenForm, UPos, UPOS } from './conllu.model';
+import { ConllToken, ConllTokenForm, UPos, UPOS, UDeprel, UDEPREL } from './conllu.model';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -17,6 +17,7 @@ export class ConlluComponent implements OnInit {
   conllTokensArrayForm: FormArray;
 
   uposList: UPos[] = UPOS;
+  udeprelList: UDeprel[] = UDEPREL;
   sentencesLength: number[];
 
   constructor(private fb: FormBuilder, private conlluService: Conllu) { }

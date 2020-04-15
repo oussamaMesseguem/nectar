@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConllToken, ConllTokenForm, UPos, UPOS, UDeprel, UDEPREL } from './conllu.model';
+import { ConllToken, ConllTokenForm, UPos, UPOS, UDeprel, UDEPREL, UFeats, UFEATS } from './conllu.model';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -20,6 +20,8 @@ export class ConlluComponent implements OnInit {
 
   uposList: UPos[] = UPOS;
   udeprelList: UDeprel[] = UDEPREL;
+  ufeatList: UFeats[] = UFEATS;
+
   sentencesLength: number[];
 
   constructor(private fb: FormBuilder, private conlluService: Conllu, public dialog: MatDialog) { }
@@ -41,7 +43,7 @@ export class ConlluComponent implements OnInit {
   openFeatDialog(tags: string): void {
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
-      data: { tags, keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: '=' }
+      data: { tags, keys: this.ufeatList.map(c => c.tag), values: this.ufeatList.map(c => c.values), separator: '|', equality: '=' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -52,7 +54,7 @@ export class ConlluComponent implements OnInit {
   openDepsDialog(tags: string): void {
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
-      data: { tags, keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: ':' }
+      data: { tags, keys: this.sentencesLength, values: this.udeprelList.map(c => c.tag), separator: '|', equality: ':' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

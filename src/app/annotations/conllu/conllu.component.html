@@ -14,7 +14,7 @@
         <ng-container matColumnDef="lemma">
             <th mat-header-cell *matHeaderCellDef> Lemma </th>
             <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field color="purple" style="max-width:130px !important;">
+                <mat-form-field style="max-width:130px !important;" appearance="none">
                     <input matInput formControlName="lemma">
                 </mat-form-field>
             </td>
@@ -52,7 +52,7 @@
             <th mat-header-cell *matHeaderCellDef> Feat </th>
             <td mat-cell *matCellDef="let element">
                 <button
-                    style="max-width:120px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                    style="max-width:120px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: normal !important;"
                     mat-button (click)="openFeatDialog(element.feat)">{{element.feat}}</button>
             </td>
         </ng-container>
@@ -88,7 +88,7 @@
         <ng-container matColumnDef="deps">
             <th mat-header-cell *matHeaderCellDef> Deps </th>
             <td mat-cell *matCellDef="let element">
-                <button style="max-width:30px !important;" mat-button
+                <button style="max-width:30px !important; font-weight: normal !important;" mat-button
                     (click)="openDepsDialog(element.deps)">{{element.deps}}</button></td>
         </ng-container>
 

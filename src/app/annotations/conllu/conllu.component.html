@@ -90,7 +90,10 @@
 
         <ng-container matColumnDef="misc">
             <th mat-header-cell *matHeaderCellDef> Misc </th>
-            <td mat-cell *matCellDef="let element"> {{element.misc}} </td>
+            <td style="max-width:100px !important;" mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
+                <mat-form-field>
+                    <input matInput formControlName="misc">
+                </mat-form-field></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

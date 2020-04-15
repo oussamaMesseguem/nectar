@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Conllu } from './conllu.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ValueListComponent } from './value-list/value-list.component';
 
 @Component({
   selector: 'app-conllu',
@@ -20,7 +22,7 @@ export class ConlluComponent implements OnInit {
   udeprelList: UDeprel[] = UDEPREL;
   sentencesLength: number[];
 
-  constructor(private fb: FormBuilder, private conlluService: Conllu) { }
+  constructor(private fb: FormBuilder, private conlluService: Conllu, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.conllTokensArrayForm = this.fb.array([]);
@@ -34,6 +36,17 @@ export class ConlluComponent implements OnInit {
     this.sentencesLength = [...Array(this.dataSource.length).keys()].map(n => n + 1);
     console.log(this.sentencesLength);
 
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ValueListComponent, {
+      width: '600px',
+      data: { keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: ':' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 }
 

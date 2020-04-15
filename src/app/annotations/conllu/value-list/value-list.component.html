@@ -1,0 +1,37 @@
+<form [formGroup]="form">
+    <div mat-dialog-content>
+        <div formArrayName="rows" *ngFor="let field of fields.controls; let i = index;">
+            <div class="row" [formGroupName]="i">
+                <mat-form-field>
+                    <input matInput type="text" style="text-align: center;" formControlName="key"
+                        [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let key of data.keys" [value]="key">
+                            {{key}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-divider [vertical]="true"></mat-divider>
+
+                <mat-form-field>
+                    <input matInput type="text" style="text-align: center;" formControlName="val"
+                        [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let v of data.values" [value]="v">
+                            {{v}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <button mat-icon-button (click)="remove(i)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-icon-button (click)="add()"><mat-icon>add</mat-icon></button>
+        <button mat-button [mat-dialog-close]="format()" cdkFocusInitial>Ok</button>
+    </div>
+</form>

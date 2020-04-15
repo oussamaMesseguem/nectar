@@ -1,6 +1,6 @@
-<form [formGroup]="form">
+<form [formGroup]="fields">
     <div mat-dialog-content>
-        <div formArrayName="rows" *ngFor="let field of fields.controls; let i = index;">
+        <div *ngFor="let field of fields.controls; let i = index;">
             <div class="row" [formGroupName]="i">
                 <mat-form-field>
                     <input matInput type="text" style="text-align: center;" formControlName="key"

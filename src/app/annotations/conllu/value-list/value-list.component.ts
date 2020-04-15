@@ -19,7 +19,6 @@ export interface DialogData {
 export class ValueListComponent implements OnInit {
 
   fields: FormArray = this.fb.array([]);
-  form: FormGroup = this.fb.group({ rows: this.fields });
 
   constructor(public dialogRef: MatDialogRef<ValueListComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData,

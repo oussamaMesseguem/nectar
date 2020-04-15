@@ -38,10 +38,21 @@ export class ConlluComponent implements OnInit {
 
   }
 
-  openDialog(): void {
+  openFeatDialog(tags: string): void {
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
-      data: { keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: ':' }
+      data: { tags, keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: '=' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
+
+  openDepsDialog(tags: string): void {
+    const dialogRef = this.dialog.open(ValueListComponent, {
+      width: '600px',
+      data: { tags, keys: this.uposList.map(c => c.tag), values: this.uposList.map(c => c.tag), separator: '|', equality: ':' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 
 export interface DialogData {
+  tags: string;
   keys: string[];
   values: string[];
   separator: string;
@@ -26,18 +27,15 @@ export class ValueListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.fields.push(this.fb.group({
-      key: 'key',
-      val: 'val'
-    }));
-    this.fields.push(this.fb.group({
-      key: 'key',
-      val: 'val'
-    }));
-    this.fields.push(this.fb.group({
-      key: 'key',
-      val: 'val'
-    }));
+    if (this.data.tags) {
+      this.data.tags.split(this.data.separator).forEach(pair => {
+        const pairs = pair.split(this.data.equality);
+        this.fields.push(this.fb.group({
+          key: pairs[0],
+          val: pairs[1]
+        }));
+      });
+    }
   }
 
   /**

@@ -13,11 +13,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { PairComponent } from './value-list/pair/pair.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
 @NgModule({
-  declarations: [ConlluComponent, ValueListComponent],
+  declarations: [ConlluComponent, ValueListComponent, PairComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -31,7 +33,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatListModule,
     MatOptionModule,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
   exports: [ConlluComponent]
 })

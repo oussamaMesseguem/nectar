@@ -1,33 +1,6 @@
 <form [formGroup]="fields">
     <div mat-dialog-content>
-        <div *ngFor="let field of fields.controls; let i = index;">
-            <div class="row" [formGroupName]="i">
-                <mat-form-field>
-                    <input matInput type="text" style="text-align: center;" formControlName="key"
-                        [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let key of data.keys" [value]="key">
-                            {{key}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-
-                <mat-divider [vertical]="true"></mat-divider>
-
-                <mat-form-field>
-                    <input matInput type="text" style="text-align: center;" formControlName="val"
-                        [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let v of data.values" [value]="v">
-                            {{v}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <button mat-icon-button (click)="remove(i)">
-                    <mat-icon>clear</mat-icon>
-                </button>
-            </div>
-        </div>
+        <app-pair *ngFor="let field of fields.controls; let i = index;" [ctrl]=field [tags]="data.tags" (removed)=remove(i)></app-pair>
     </div>
 
     <div mat-dialog-actions>

@@ -40,10 +40,10 @@ export class ConlluComponent implements OnInit {
 
   }
 
-  openFeatDialog(tags: string): void {
+  openFeatDialog(tag: string): void {
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
-      data: { tags, keys: this.ufeatList.map(c => c.tag), values: this.ufeatList.map(c => c.values), separator: '|', equality: '=' }
+      data: { tag, tags: this.ufeatList, separator: '|', equality: '=' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -51,10 +51,12 @@ export class ConlluComponent implements OnInit {
     });
   }
 
-  openDepsDialog(tags: string): void {
+  openDepsDialog(tag: string): void {
+    const tags = [];
+    this.sentencesLength.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
-      data: { tags, keys: this.sentencesLength, values: this.udeprelList.map(c => c.tag), separator: '|', equality: ':' }
+      data: { tag, tags, separator: '|', equality: ':' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

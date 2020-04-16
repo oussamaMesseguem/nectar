@@ -1,0 +1,26 @@
+<form class="row" [formGroup]="ctrl">
+    <mat-form-field>
+        <input matInput type="text" style="text-align: center;" formControlName="key"
+            [matAutocomplete]="keyOptionsAutocomplete">
+        <mat-autocomplete #keyOptionsAutocomplete="matAutocomplete">
+            <mat-option *ngFor="let key of tags" [value]="key.tag" matTooltip="{{key.name}}" matTooltipPosition="right">
+                {{key.tag}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <mat-form-field>
+        <input matInput type="text" style="text-align: center;" formControlName="val"
+            [matAutocomplete]="valueOptionsAutocomplete">
+        <mat-autocomplete #valueOptionsAutocomplete="matAutocomplete">
+            <mat-option *ngFor="let v of values$ | async" [value]="v.tag" matTooltip="{{v.name}}" matTooltipPosition="right">
+                {{v.tag}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <button mat-icon-button (click)="remove()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</form>

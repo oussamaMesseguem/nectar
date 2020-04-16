@@ -1,12 +1,20 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, AbstractControl } from '@angular/forms';
+import { merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 
 export interface DialogData {
-  tags: string;
-  keys: string[];
-  values: any;
+  tag: string;
+  tags: [
+    {
+      tag: string;
+      values: [
+        { tag: string, name: string }
+      ]
+    }
+  ];
   separator: string;
   equality: string;
 }
@@ -19,7 +27,6 @@ export interface DialogData {
 export class ValueListComponent implements OnInit {
 
   fields: FormArray = this.fb.array([]);
-  values: string[];
 
   constructor(public dialogRef: MatDialogRef<ValueListComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -27,10 +34,10 @@ export class ValueListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this.data);
-    
-    if (this.data.tags) {
-      this.data.tags.split(this.data.separator).forEach(pair => {
+    console.log(this.data.tags);
+
+    if (this.data.tag) {
+      this.data.tag.split(this.data.separator).forEach(pair => {
         const pairs = pair.split(this.data.equality);
         this.fields.push(this.fb.group({
           key: pairs[0],
@@ -38,11 +45,6 @@ export class ValueListComponent implements OnInit {
         }));
       });
     }
-
-    this.fields.valueChanges.subscribe(v => {
-      console.log(v);
-      
-    });
   }
 
   /**

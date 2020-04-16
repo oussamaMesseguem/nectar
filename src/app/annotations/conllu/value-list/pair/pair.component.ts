@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, startWith, tap, map } from 'rxjs/operators';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith, tap, map, takeUntil } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
 /**
  * Manages the proposed keys and values for pairs
@@ -14,7 +14,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
   templateUrl: './pair.component.html',
   styleUrls: ['./pair.component.scss']
 })
-export class PairComponent implements OnInit {
+export class PairComponent implements OnInit, OnDestroy {
 
   /**
    * The form control for one row
@@ -40,6 +40,11 @@ export class PairComponent implements OnInit {
   values: BehaviorSubject<any[]> = new BehaviorSubject([]);
   values$: Observable<any[]> = this.values.asObservable();
 
+  /**
+   * Private field used to unsubscribe to the formcontrol when component no longer exist
+   */
+  private componentDestroyed: Subject<any[]> = new Subject();
+
   constructor() { }
 
   ngOnInit(): void {
@@ -47,13 +52,21 @@ export class PairComponent implements OnInit {
     this.ctrl.valueChanges
       .pipe(
         debounceTime(300),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntil(this.componentDestroyed)
       )
       .subscribe(tag => {
         this.values.next(this.tags.filter(t => t.tag === tag.key).map(t => t.values)[0]);
       });
   }
 
+  /**
+   * Cleans the subscibers
+   */
+  ngOnDestroy(): void {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
+  }
   /**
    * Emits the signal to remove self
    */

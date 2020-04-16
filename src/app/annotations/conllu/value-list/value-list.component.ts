@@ -1,10 +1,20 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, FormArray, AbstractControl } from '@angular/forms';
-import { merge } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormArray } from '@angular/forms';
 
 
+/**
+ * Data accepted by the modal
+ * * equality: The character which separates key from val
+ * * separator: The character which separates pairs
+ * * tag: The string value as unerversal dependencies defines it.
+ * * tags: The list of possible tags.
+ *   * tag: The left tag, also named key.
+ *   * name: Associated tooltip.
+ *   * values: Associated values to the tag.
+ *     * tag: The right tag, also named value
+ *     * name: Associated tooltip.
+ */
 export interface DialogData {
   tag: string;
   tags: [
@@ -34,8 +44,8 @@ export class ValueListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this.data.tags);
-
+    // Init of the injected tag string
+    // Must be split and converted into pairs
     if (this.data.tag) {
       this.data.tag.split(this.data.separator).forEach(pair => {
         const pairs = pair.split(this.data.equality);

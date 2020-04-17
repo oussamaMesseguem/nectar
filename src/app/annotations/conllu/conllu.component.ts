@@ -31,16 +31,11 @@ export class ConlluComponent implements OnInit {
     this.dataSource.forEach((conlltoken: ConllToken) => {
       this.conllTokensArrayForm.push(this.fb.group(new ConllTokenForm(conlltoken)));
     });
-    console.log(this.conllTokensArrayForm.value);
     this.conllTokensArrayForm.valueChanges.subscribe(v => console.log(v));
-    console.log(Object.keys(new ConllToken()));
-
     this.sentencesLength = [...Array(this.dataSource.length).keys()].map(n => n + 1);
-    console.log(this.sentencesLength);
-
   }
 
-  openFeatDialog(tag: string): void {
+  openFeatDialog(tag: string, index: number): void {
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
       data: { tag, tags: this.ufeatList, separator: '|', equality: '=' }
@@ -48,10 +43,12 @@ export class ConlluComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
+      result = result === undefined ? tag : result;
+      this.conllTokensArrayForm.at(index).get('feat').patchValue(result);
     });
   }
 
-  openDepsDialog(tag: string): void {
+  openDepsDialog(tag: string, index: number): void {
     const tags = [];
     this.sentencesLength.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
@@ -61,6 +58,8 @@ export class ConlluComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
+      result = result === undefined ? tag : result;
+      this.conllTokensArrayForm.at(index).get('deps').patchValue(result);
     });
   }
 }

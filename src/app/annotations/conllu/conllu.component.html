@@ -50,10 +50,10 @@
 
         <ng-container matColumnDef="feat">
             <th mat-header-cell *matHeaderCellDef> Feat </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                 <button
                     style="max-width:120px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: normal !important;"
-                    mat-button (click)="openFeatDialog(element.feat)">{{element.feat}}</button>
+                    mat-button (click)="openFeatDialog(element.feat, index)">{{conllTokensArrayForm.at(index).get('feat').value}}</button>
             </td>
         </ng-container>
 
@@ -87,9 +87,9 @@
 
         <ng-container matColumnDef="deps">
             <th mat-header-cell *matHeaderCellDef> Deps </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element; let index = index"  [formGroupName]="index">
                 <button style="max-width:30px !important; font-weight: normal !important;" mat-button
-                    (click)="openDepsDialog(element.deps)">{{element.deps}}</button></td>
+                    (click)="openDepsDialog(element.deps, index)">{{conllTokensArrayForm.at(index).get('deps').value}}</button></td>
         </ng-container>
 
         <ng-container matColumnDef="misc">

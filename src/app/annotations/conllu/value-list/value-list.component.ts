@@ -74,10 +74,7 @@ export class ValueListComponent implements OnInit {
   remove(i: number) {
     this.fields.removeAt(i);
     if (this.fields.length === 0) {
-      this.fields.push(this.fb.group({
-        key: '',
-        val: ''
-      }));
+      this.add();
     }
   }
 
@@ -94,11 +91,9 @@ export class ValueListComponent implements OnInit {
         values.push(v);
       }
     });
-
     if (values.length > 0) {
       return values.join(this.data.separator);
     }
-
-    return '_';
+    return this.data.tag;
   }
 }

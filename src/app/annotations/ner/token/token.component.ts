@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NerToken, NerTags, NerTypes } from '../ner.model';
+import { NerToken, NerTags, NerTypes, NER_TAG_COLOR } from '../ner.model';
 
 @Component({
   selector: 'app-token',
@@ -13,6 +13,11 @@ export class TokenComponent implements OnInit {
    * Temporary type. Used to save what menu type has been opened
    */
   tmpType: string;
+
+  /**
+   * The color changes when type and tag are selected
+   */
+  labelColor: string;
 
   constructor() { }
 
@@ -35,6 +40,7 @@ export class TokenComponent implements OnInit {
   setTag(tag: string) {
     this.token.tag = tag;
     this.token.type = this.tmpType;
+    this.labelColor = NER_TAG_COLOR[this.token.type];
   }
 
   /**

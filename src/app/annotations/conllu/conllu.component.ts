@@ -14,7 +14,6 @@ import { ValueListComponent } from './value-list/value-list.component';
 })
 export class ConlluComponent implements OnInit {
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc'];
-  dataSource = ELEMENT_DATA;
 
   conllTokensArrayForm: FormArray;
 
@@ -28,11 +27,11 @@ export class ConlluComponent implements OnInit {
 
   ngOnInit(): void {
     this.conllTokensArrayForm = this.fb.array([]);
-    this.dataSource.forEach((conlltoken: ConllToken) => {
+    ELEMENT_DATA.forEach((conlltoken: ConllToken) => {
       this.conllTokensArrayForm.push(this.fb.group(new ConllTokenForm(conlltoken)));
     });
     this.conllTokensArrayForm.valueChanges.subscribe(v => console.log(v));
-    this.sentencesLength = [...Array(this.dataSource.length).keys()].map(n => n + 1);
+    this.sentencesLength = [...Array(ELEMENT_DATA.length).keys()].map(n => n + 1);
   }
 
   openFeatDialog(tag: string, index: number): void {

@@ -1,20 +1,30 @@
 <div class="editor-container">
     <div class="manager">
-        <div style="padding: 15px;">
-            <app-index-list [indexes]=indexes [currentIndex]=currentIndex></app-index-list>
+        <div>
+            <button mat-icon-button (click)=previous()>
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+        
+            <button mat-icon-button color="primary">
+                {{currentIndex + 1}}
+            </button>
+        
+            <button mat-icon-button (click)=next()>
+                <mat-icon>chevron_right</mat-icon>
+            </button>
         </div>
 
-        <div style="padding: 15px;">
+        <div>
             <app-annotation-list (selectedAnnotation)="setSelectedAnnotation($event)"></app-annotation-list>
         </div>
 
-        <div class="mat-elevation-z1">
+        <div>
 
         </div>
     </div>
 
     <ng-container  style="background-color: cornsilk;" [ngSwitch]="selectedAnnotation">
-        <app-conllu *ngSwitchCase="annotations.conllu"></app-conllu>
+        <app-conllu [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.conllu"></app-conllu>
         <app-ner *ngSwitchCase="annotations.ner"></app-ner>
         <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>
     </ng-container>

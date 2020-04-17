@@ -12,7 +12,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
-import { IndexListComponent } from './index-list/index-list.component';
 import { AnnotationListComponent } from './annotation-list/annotation-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
@@ -21,7 +20,7 @@ import { NerModule } from '../annotations/ner/ner.module';
 
 
 @NgModule({
-  declarations: [EditorComponent, IndexListComponent, AnnotationListComponent],
+  declarations: [EditorComponent, AnnotationListComponent],
   imports: [
     CommonModule,
     ConlluModule,

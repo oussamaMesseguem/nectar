@@ -63,7 +63,7 @@
                 <mat-form-field style="max-width:50px !important;">
                     <input type="text" matInput formControlName="head" [matAutocomplete]="auto" required>
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let nb of sentencesLength" [value]="nb">
+                        <mat-option *ngFor="let nb of sentenceLengthIndexes" [value]="nb">
                             {{nb}}
                         </mat-option>
                     </mat-autocomplete>

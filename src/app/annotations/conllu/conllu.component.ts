@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ConllToken, ConllTokenForm, UPos, UPOS, UDeprel, UDEPREL, UFeats, UFEATS } from './conllu.model';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
@@ -18,6 +18,7 @@ import { ValueListComponent } from './value-list/value-list.component';
   styleUrls: ['./conllu.component.scss']
 })
 export class ConlluComponent implements OnInit, OnDestroy {
+
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc'];
 
   conllTokensArrayForm: FormArray;
@@ -26,29 +27,36 @@ export class ConlluComponent implements OnInit, OnDestroy {
   udeprelList: UDeprel[] = UDEPREL;
   ufeatList: UFeats[] = UFEATS;
 
-  sentencesLength: number[];
+  sentenceLength: number;
+  sentenceLengthIndexes: number[];
 
   private ondestroy$: Subject<any> = new Subject();
 
   constructor(private fb: FormBuilder, private conlluService: Conllu, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.conllTokensArrayForm = this.fb.array([]);
-
     this.conlluService.sentence$.pipe(takeUntil(this.ondestroy$)).subscribe(sentence => {
-      this.sentencesLength = [...Array(sentence.length).keys()].map(n => n + 1);
+      this.sentenceLength = sentence.length;
+      this.sentenceLengthIndexes = [...Array(this.sentenceLength).keys()].map(i => i++);
+      this.conllTokensArrayForm = this.fb.array([]);
       sentence.forEach((conlltoken: ConllToken) => {
         this.conllTokensArrayForm.push(this.fb.group(new ConllTokenForm(conlltoken)));
       });
+      console.log('this.sentenceLength', this.sentenceLength);
+      console.log('this.sentenceLengthIndexes', this.sentenceLengthIndexes);
     });
-
-    this.conllTokensArrayForm.valueChanges.pipe(takeUntil(this.ondestroy$)).subscribe(v => console.log(v));
   }
 
   ngOnDestroy(): void {
     console.log(`unsubscribed ondestroyed`);
-    
+
     this.ondestroy$.next();
+  }
+
+  @Input() set currentSentenceIndex(sentenceIndex: number) {
+    console.log(sentenceIndex);
+
+    this.conlluService.moveSentence(sentenceIndex);
   }
 
   openFeatDialog(tag: string, index: number): void {
@@ -66,7 +74,7 @@ export class ConlluComponent implements OnInit, OnDestroy {
 
   openDepsDialog(tag: string, index: number): void {
     const tags = [];
-    this.sentencesLength.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
+    this.sentenceLengthIndexes.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
       data: { tag, tags, separator: '|', equality: ':' }

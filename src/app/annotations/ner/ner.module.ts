@@ -3,15 +3,20 @@ import { CommonModule } from '@angular/common';
 import { NerComponent } from './ner.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { TokenComponent } from './token/token.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
 @NgModule({
-  declarations: [NerComponent],
+  declarations: [NerComponent, TokenComponent],
   imports: [
     CommonModule,
     MatChipsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatMenuModule,
+    MatTooltipModule
   ],
   exports: [NerComponent]
 })

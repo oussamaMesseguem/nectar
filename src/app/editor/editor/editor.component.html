@@ -25,7 +25,7 @@
 
     <ng-container  style="background-color: cornsilk;" [ngSwitch]="selectedAnnotation">
         <app-conllu [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.conllu"></app-conllu>
-        <app-ner *ngSwitchCase="annotations.ner"></app-ner>
+        <app-ner [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.ner"></app-ner>
         <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>
     </ng-container>
 </div>

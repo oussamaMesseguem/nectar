@@ -1,1 +1,7 @@
-<p>ner works!</p>
+<div style="width: 100%; height: 100%;">
+    <mat-chip-list ariaOrientation="horizontal">
+        <mat-chip *ngFor="let token of sentence" [value]="token">
+            {{ token.token }}
+        </mat-chip>
+    </mat-chip-list>
+</div>

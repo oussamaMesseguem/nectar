@@ -1,16 +1,7 @@
-<mat-form-field appearance="outline" color="primary" [matMenuTriggerFor]="typesMenu"
+<mat-form-field *ngIf="isTagged" appearance="outline" color="primary"
     style="margin-left: 5px; margin-right: 5px;">
     <mat-label [ngStyle]="{'color': labelColor, 'font-weight': 500}">{{token.tag}} {{token.type}}</mat-label>
     <input [ngStyle]="{'color': labelColor}" matInput [(ngModel)]="token.token">
 </mat-form-field>
 
-
-<mat-menu #typesMenu="matMenu" yPosition="below" xPosition="after">
-    <button mat-menu-item *ngFor="let type of types" matTooltip="{{type.description}}" (menuOpened)="setType(type.tag)"
-        [matMenuTriggerFor]="tagsMenu" matTooltipPosition="left" matTooltipShowDelay="500">{{type.tag}}</button>
-</mat-menu>
-
-<mat-menu #tagsMenu="matMenu">
-    <button mat-menu-item *ngFor="let tag of tags" matTooltip="{{tag.description}}" matTooltipPosition="right"
-        matTooltipShowDelay="500" (click)="setTag(tag.tag)">{{tag.tag}}</button>
-</mat-menu>
+<button mat-stroked-button *ngIf="!isTagged">{{token.token}}</button>

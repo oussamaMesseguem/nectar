@@ -1,3 +1,14 @@
-<div style="width: 100%; height: 100%; overflow: auto;">
-    <app-token *ngFor="let token of sentence$ | async" [token]="token"></app-token>
+<div class="example-button-row" style="width: 100%; height: 100%; overflow: auto;">
+    <app-token *ngFor="let token of sentence$ | async; let i = index;" [token]="token" [labelColor]="labelColor"
+        [matMenuTriggerFor]="typesMenu" (click)="setCurrentIndex(i)"></app-token>
 </div>
+
+<mat-menu #typesMenu="matMenu" yPosition="below" xPosition="after">
+    <button mat-menu-item *ngFor="let type of types" matTooltip="{{type.description}}" (menuOpened)="setType(type.tag)"
+        [matMenuTriggerFor]="tagsMenu" matTooltipPosition="left" matTooltipShowDelay="500">{{type.tag}}</button>
+</mat-menu>
+
+<mat-menu #tagsMenu="matMenu">
+    <button mat-menu-item *ngFor="let tag of tags" matTooltip="{{tag.description}}" matTooltipPosition="right"
+        matTooltipShowDelay="500" (click)="setTag(tag.tag)">{{tag.tag}}</button>
+</mat-menu>

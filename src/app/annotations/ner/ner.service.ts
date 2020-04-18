@@ -36,6 +36,10 @@ export class Ner implements IParser {
     moveSentence(index: number) {
         this.sentence.next(this.sentences[index]);
     }
+
+    getTokenCurrentSentence(tokenIndex: number) {
+        return this.sentence.value[tokenIndex];
+    }
 }
 
 const sents: NerToken[][] = [

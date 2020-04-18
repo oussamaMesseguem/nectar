@@ -64,12 +64,15 @@ export class ConlluComponent implements OnInit, OnDestroy {
       data: { conlluToken: this.sentence.value[index], nbTokens: this.sentenceLengthIndexes }
     });
 
+    /**
+     * After closed if a value is sent:
+     * the array is updated
+     * and the subject notifies the change to the table
+     */
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        const sents: ConllToken[] = this.sentence.value;
-        sents[index] = result;
-        this.sentence.next(sents);
-        this.conlluService.setToken(this.sentenceIndex, index, result);
+        this.sentence.value[index] = result;
+        this.sentence.next(this.sentence.value);
       }
     });
   }

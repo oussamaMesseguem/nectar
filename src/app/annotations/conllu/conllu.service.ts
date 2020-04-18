@@ -37,10 +37,6 @@ export class Conllu implements IParser {
     this.sentence.next(this.sentences[index]);
   }
 
-  setToken(sentenceIndex: number, tokenIndex: number, sentence: ConllToken) {
-      this.sentences[sentenceIndex][tokenIndex] = sentence;
-  }
-
 }
 
 const sents: ConllToken[][] = [

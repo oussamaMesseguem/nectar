@@ -26,6 +26,7 @@ export class AnnotationListComponent implements OnInit {
   ngOnInit() {
     this.annotCtrl.valueChanges.subscribe(value => this.selectedAnnotation.emit(value));
     this.add(Annotation.conllu);
+    this.add(Annotation.ner);
   }
 
   /**

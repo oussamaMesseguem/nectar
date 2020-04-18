@@ -21,6 +21,7 @@ export class ConlluComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc', 'edit'];
   sentenceLengthIndexes: number[];
+  sentenceIndex: number;
 
   private sentence: BehaviorSubject<ConllToken[]> = new BehaviorSubject([]);
   sentence$: Observable<ConllToken[]> = this.sentence.asObservable();
@@ -47,6 +48,7 @@ export class ConlluComponent implements OnInit, OnDestroy {
    * Gets the sentence at the given index
    */
   @Input() set currentSentenceIndex(sentenceIndex: number) {
+    this.sentenceIndex = sentenceIndex;
     this.conlluService.moveSentence(sentenceIndex);
   }
 
@@ -67,6 +69,7 @@ export class ConlluComponent implements OnInit, OnDestroy {
         const sents: ConllToken[] = this.sentence.value;
         sents[index] = result;
         this.sentence.next(sents);
+        this.conlluService.setToken(this.sentenceIndex, index, result);
       }
     });
   }

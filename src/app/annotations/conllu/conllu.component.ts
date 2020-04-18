@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ConllToken } from './conllu.model';
-import { FormBuilder } from '@angular/forms';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 import { Conllu } from './conllu.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TokenComponent } from './token/token.component';
@@ -17,38 +15,22 @@ import { TokenComponent } from './token/token.component';
   templateUrl: './conllu.component.html',
   styleUrls: ['./conllu.component.scss']
 })
-export class ConlluComponent implements OnInit, OnDestroy {
+export class ConlluComponent implements OnInit {
 
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc', 'edit'];
-  sentenceLengthIndexes: number[];
-  sentenceIndex: number;
 
-  private sentence: BehaviorSubject<ConllToken[]> = new BehaviorSubject([]);
-  sentence$: Observable<ConllToken[]> = this.sentence.asObservable();
-
-  private ondestroy$: Subject<any> = new Subject();
+  sentence$: Observable<ConllToken[]>;
 
   constructor(private conlluService: Conllu, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.conlluService.sentence$.pipe(takeUntil(this.ondestroy$)).subscribe(sentence => {
-      this.sentence.next(sentence);
-      this.sentenceLengthIndexes = [...Array(sentence.length).keys()].map(i => i++);
-    });
-  }
-
-  /**
-   * Need to unsubscribe when the annoatation view changes
-   */
-  ngOnDestroy(): void {
-    this.ondestroy$.next();
+    this.sentence$ = this.conlluService.sentence$;
   }
 
   /**
    * Gets the sentence at the given index
    */
   @Input() set currentSentenceIndex(sentenceIndex: number) {
-    this.sentenceIndex = sentenceIndex;
     this.conlluService.moveSentence(sentenceIndex);
   }
 
@@ -61,7 +43,10 @@ export class ConlluComponent implements OnInit, OnDestroy {
     console.log(index);
     const dialogRef = this.dialog.open(TokenComponent, {
       width: '100%',
-      data: { conlluToken: this.sentence.value[index], nbTokens: this.sentenceLengthIndexes }
+      data: {
+        conlluToken: this.conlluService.getTokenCurrentSentence(index),
+        nbTokens: this.conlluService.currentSentenceLength()
+      }
     });
 
     /**
@@ -71,8 +56,7 @@ export class ConlluComponent implements OnInit, OnDestroy {
      */
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        this.sentence.value[index] = result;
-        this.sentence.next(this.sentence.value);
+        this.conlluService.updateTokenCurrentSentence(index, result);
       }
     });
   }

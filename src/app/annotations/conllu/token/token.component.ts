@@ -11,7 +11,7 @@ import { ValueListComponent } from '../value-list/value-list.component';
  */
 export interface ConlluDialog {
   conlluToken: ConllToken;
-  nbTokens: number[];
+  nbTokens: number;
 }
 
 @Component({
@@ -24,7 +24,7 @@ export class TokenComponent implements OnInit {
   uposList: UPos[] = UPOS;
   udeprelList: UDeprel[] = UDEPREL;
   ufeatList: UFeats[] = UFEATS;
-
+  nbTokens: number[];
   conlluTokenForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<TokenComponent>,
@@ -34,6 +34,7 @@ export class TokenComponent implements OnInit {
 
   ngOnInit(): void {
     this.conlluTokenForm = this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken));
+    this.nbTokens = [...Array(this.conlluDialog.nbTokens).keys()].map(i => i++);
   }
 
   openFeatDialog(): void {
@@ -52,7 +53,7 @@ export class TokenComponent implements OnInit {
   openDepsDialog(): void {
     const tags = [];
     const tag = this.conlluTokenForm.get('deps').value;
-    this.conlluDialog.nbTokens.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
+    this.nbTokens.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
       data: { tag, tags, separator: '|', equality: ':' }

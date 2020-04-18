@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { ConllToken, ConllTokenForm, UPos, UPOS, UDeprel, UDEPREL, UFeats, UFEATS } from './conllu.model';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { startWith, map, takeUntil } from 'rxjs/operators';
+import { ConllToken } from './conllu.model';
+import { FormBuilder } from '@angular/forms';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Conllu } from './conllu.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ValueListComponent } from './value-list/value-list.component';
 import { TokenComponent } from './token/token.component';
 
 /**
@@ -21,84 +20,54 @@ import { TokenComponent } from './token/token.component';
 export class ConlluComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc', 'edit'];
-
-  // conllTokensArrayForm: FormArray;
-
-  uposList: UPos[] = UPOS;
-  udeprelList: UDeprel[] = UDEPREL;
-  ufeatList: UFeats[] = UFEATS;
-
-  sentenceLength: number;
   sentenceLengthIndexes: number[];
 
-  sentence: ConllToken[];
+  private sentence: BehaviorSubject<ConllToken[]> = new BehaviorSubject([]);
+  sentence$: Observable<ConllToken[]> = this.sentence.asObservable();
 
   private ondestroy$: Subject<any> = new Subject();
 
-  constructor(private fb: FormBuilder, private conlluService: Conllu, public dialog: MatDialog) { }
+  constructor(private conlluService: Conllu, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.conlluService.sentence$.pipe(takeUntil(this.ondestroy$)).subscribe(sentence => {
-      this.sentence = sentence;
-      this.sentenceLength = sentence.length;
-      this.sentenceLengthIndexes = [...Array(this.sentenceLength).keys()].map(i => i++);
-      // this.conllTokensArrayForm = this.fb.array([]);
-      // sentence.forEach((conlltoken: ConllToken) => {
-      //   this.conllTokensArrayForm.push(this.fb.group(new ConllTokenForm(conlltoken)));
-      // });
-      console.log('this.sentenceLength', this.sentenceLength);
-      console.log('this.sentenceLengthIndexes', this.sentenceLengthIndexes);
+      this.sentence.next(sentence);
+      this.sentenceLengthIndexes = [...Array(sentence.length).keys()].map(i => i++);
     });
   }
 
+  /**
+   * Need to unsubscribe when the annoatation view changes
+   */
   ngOnDestroy(): void {
-    console.log(`unsubscribed ondestroyed`);
-
     this.ondestroy$.next();
   }
 
+  /**
+   * Gets the sentence at the given index
+   */
   @Input() set currentSentenceIndex(sentenceIndex: number) {
-    console.log(sentenceIndex);
-
     this.conlluService.moveSentence(sentenceIndex);
   }
 
-  editToken(index) {
+  /**
+   * Opens a dialog to fillform the token.
+   * The result may be undefined when closed from outside the button.
+   * @param index the index of the token in the sentence
+   */
+  editToken(index: number) {
     console.log(index);
     const dialogRef = this.dialog.open(TokenComponent, {
       width: '100%',
-      data: { conlluToken: this.sentence[index], nbTokens: this.sentenceLengthIndexes }
+      data: { conlluToken: this.sentence.value[index], nbTokens: this.sentenceLengthIndexes }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+      if (result !== undefined) {
+        const sents: ConllToken[] = this.sentence.value;
+        sents[index] = result;
+        this.sentence.next(sents);
+      }
     });
   }
-  // openFeatDialog(tag: string, index: number): void {
-  //   const dialogRef = this.dialog.open(ValueListComponent, {
-  //     width: '600px',
-  //     data: { tag, tags: this.ufeatList, separator: '|', equality: '=' }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log('The dialog was closed', result);
-  //     result = result === undefined ? tag : result;
-  //     this.conllTokensArrayForm.at(index).get('feat').patchValue(result);
-  //   });
-  // }
-
-  // openDepsDialog(tag: string, index: number): void {
-  //   const tags = [];
-  //   this.sentenceLengthIndexes.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
-  //   const dialogRef = this.dialog.open(ValueListComponent, {
-  //     width: '600px',
-  //     data: { tag, tags, separator: '|', equality: ':' }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log('The dialog was closed', result);
-  //     result = result === undefined ? tag : result;
-  //     this.conllTokensArrayForm.at(index).get('deps').patchValue(result);
-  //   });
-  // }
 }

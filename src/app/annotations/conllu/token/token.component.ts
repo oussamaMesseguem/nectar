@@ -4,6 +4,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ConllToken, UPos, UDeprel, UFeats, UPOS, UDEPREL, UFEATS, ConllTokenForm } from '../conllu.model';
 import { ValueListComponent } from '../value-list/value-list.component';
 
+/**
+ * The exchanged data to filform conllu token.
+ * * the conllu token itself.
+ * * An array of the number of tokens in the sentence.
+ */
 export interface ConlluDialog {
   conlluToken: ConllToken;
   nbTokens: number[];
@@ -16,13 +21,11 @@ export interface ConlluDialog {
 })
 export class TokenComponent implements OnInit {
 
-  displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc'];
-
   uposList: UPos[] = UPOS;
   udeprelList: UDeprel[] = UDEPREL;
   ufeatList: UFeats[] = UFEATS;
 
-  conllTokensArrayForm = this.fb.array([]);
+  conlluTokenForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<TokenComponent>,
               @Inject(MAT_DIALOG_DATA) public conlluDialog: ConlluDialog,
@@ -30,28 +33,25 @@ export class TokenComponent implements OnInit {
               private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    console.log(this.conlluDialog);
-    // this.conllTokensArrayForm = this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken));
-    this.conllTokensArrayForm.push(this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken)));
-    // this.conlluDialog.conlluToken.forEach((conlltoken: ConllToken) => {
-    // });
+    this.conlluTokenForm = this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken));
   }
 
-  openFeatDialog(tag: string, index: number): void {
+  openFeatDialog(): void {
+    const tag = this.conlluTokenForm.get('feat').value;
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
       data: { tag, tags: this.ufeatList, separator: '|', equality: '=' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       result = result === undefined ? tag : result;
-      this.conllTokensArrayForm.at(index).get('feat').patchValue(result);
+      this.conlluTokenForm.get('feat').setValue(result);
     });
   }
 
-  openDepsDialog(tag: string, index: number): void {
+  openDepsDialog(): void {
     const tags = [];
+    const tag = this.conlluTokenForm.get('deps').value;
     this.conlluDialog.nbTokens.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
@@ -59,10 +59,13 @@ export class TokenComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       result = result === undefined ? tag : result;
-      this.conllTokensArrayForm.at(index).get('deps').patchValue(result);
+      this.conlluTokenForm.get('deps').setValue(result);
     });
+  }
+
+  format(): ConllToken {
+    return this.conlluTokenForm.value;
   }
 
 }

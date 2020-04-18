@@ -15,11 +15,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { PairComponent } from './value-list/pair/pair.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TokenComponent } from './token/token.component';
 
 
 
 @NgModule({
-  declarations: [ConlluComponent, ValueListComponent, PairComponent],
+  declarations: [ConlluComponent, ValueListComponent, PairComponent, TokenComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -1,108 +1,64 @@
-<form class="example-container mat-elevation-z1" [formGroup]="conllTokensArrayForm">
-    <table mat-table [dataSource]="conllTokensArrayForm.controls">
+<!-- <form class="example-container mat-elevation-z1" [formGroup]="conllTokensArrayForm"> -->
+    <table class="example-container mat-elevation-z1" mat-table [dataSource]="sentence">
 
         <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef> Id </th>
-            <td mat-cell *matCellDef="let element; let index = index;"> {{conllTokensArrayForm.at(index).get('index').value}} </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.index}} </td>
         </ng-container>
 
         <ng-container matColumnDef="token">
             <th mat-header-cell *matHeaderCellDef> Form </th>
-            <td mat-cell *matCellDef="let element; let index = index;" style="max-width:130px !important;"> {{conllTokensArrayForm.at(index).get('token').value}} </td>
+            <td mat-cell *matCellDef="let element; let index = index;" style="max-width:130px !important;"> {{element.token}} </td>
         </ng-container>
 
         <ng-container matColumnDef="lemma">
             <th mat-header-cell *matHeaderCellDef> Lemma </th>
-            <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field style="max-width:130px !important;" appearance="none">
-                    <input matInput formControlName="lemma">
-                </mat-form-field>
-            </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.lemma}} </td>
         </ng-container>
 
         <ng-container matColumnDef="upos">
             <th mat-header-cell *matHeaderCellDef> Upos </th>
-            <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field style="max-width:80px !important;">
-                    <input type="text" matInput formControlName="upos" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let up of uposList" [value]="up.tag">
-                            {{up.tag}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.upos}} </td>
         </ng-container>
 
         <ng-container matColumnDef="xpos">
             <th mat-header-cell *matHeaderCellDef> Xpos </th>
-            <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field style="max-width:80px !important;">
-                    <input type="text" matInput formControlName="xpos" [matAutocomplete]="auto" required>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let up of uposList" [value]="up.tag">
-                            {{up.tag}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.xpos}} </td>
         </ng-container>
 
         <ng-container matColumnDef="feat">
-            <th mat-header-cell *matHeaderCellDef> Feat </th>
-            <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                <button
-                    style="max-width:120px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: normal !important;"
-                    mat-button (click)="openFeatDialog(element.feat, index)">{{conllTokensArrayForm.at(index).get('feat').value}}</button>
-            </td>
+            <th mat-header-cell *matHeaderCellDef style="max-width:100px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: normal !important;"> Feat </th>
+            <td mat-cell *matCellDef="let element; let index = index" style="max-width:100px !important; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: normal !important;"> {{element.feat}} </td>
         </ng-container>
 
         <ng-container matColumnDef="head">
             <th mat-header-cell *matHeaderCellDef> Head </th>
-            <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field style="max-width:50px !important;">
-                    <input type="text" matInput formControlName="head" [matAutocomplete]="auto" required>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let nb of sentenceLengthIndexes" [value]="nb">
-                            {{nb}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.head}} </td>
         </ng-container>
 
         <ng-container matColumnDef="deprel">
             <th mat-header-cell *matHeaderCellDef> Deprel </th>
-            <td mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <mat-form-field style="max-width:80px !important;">
-                    <input type="text" matInput formControlName="deprel" [matAutocomplete]="auto" required>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let deprel of udeprelList" [value]="deprel.tag">
-                            {{deprel.tag}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
+            <td mat-cell *matCellDef="let element; let index = index;"> {{element.deprel}} </td>
         </ng-container>
 
         <ng-container matColumnDef="deps">
             <th mat-header-cell *matHeaderCellDef> Deps </th>
-            <td mat-cell *matCellDef="let element; let index = index"  [formGroupName]="index">
-                <button style="max-width:30px !important; font-weight: normal !important;" mat-button
-                    (click)="openDepsDialog(element.deps, index)">{{conllTokensArrayForm.at(index).get('deps').value}}</button></td>
+            <td mat-cell *matCellDef="let element; let index = index"> {{element.deps}} </td>
         </ng-container>
 
         <ng-container matColumnDef="misc">
             <th mat-header-cell *matHeaderCellDef> Misc </th>
-            <td style="max-width:100px !important;" mat-cell *matCellDef="let element; let index = index;"
-                [formGroupName]="index">
-                <mat-form-field>
-                    <input matInput formControlName="misc">
-                </mat-form-field>
+            <td style="max-width:100px !important;" mat-cell *matCellDef="let element; let index = index;"> {{element.misc}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td style="max-width:50px !important;" mat-cell *matCellDef="let element; let index = index;">
+                <button mat-icon-button (click)="editToken(index)"><mat-icon>edit</mat-icon></button>
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-</form>
+<!-- </form> -->

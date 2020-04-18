@@ -22,6 +22,9 @@ export class TokenComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if (this.token.tag.length > 0) {
+      this.labelColor = NER_TAG_COLOR[this.token.type];
+    }
   }
 
   get tags() {

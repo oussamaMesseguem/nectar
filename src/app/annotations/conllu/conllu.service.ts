@@ -46,7 +46,7 @@ export class Conllu implements IParser {
      * @param tokenIndex the index of the token in the current sentence
      * @param token the new token
      */
-    updateTokenCurrentSentence(tokenIndex: number, token): void {
+    updateTokenCurrentSentence(tokenIndex: number, token: ConllToken): void {
         const conllToken = this.sentence.value[tokenIndex];
         conllToken.index = token.index;
         conllToken.token = token.token;

@@ -54,6 +54,7 @@ export class TokenComponent implements OnInit {
    * If so: close the input.
    */
   listenClick() {
+    this.inEditing = !this.inEditing;
     const source: Observable<Event> = fromEvent(document, 'click').pipe(skip(1));
     const s = source.subscribe(next => {
       if (!this.newinput.nativeElement.contains(next.target)) {

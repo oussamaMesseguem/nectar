@@ -4,11 +4,16 @@
 </div>
 
 <mat-menu #typesMenu="matMenu" yPosition="below" xPosition="after">
-    <button mat-menu-item *ngFor="let type of types" matTooltip="{{type.description}}" (menuOpened)="setType(type.tag)"
-        [matMenuTriggerFor]="tagsMenu" matTooltipPosition="left" matTooltipShowDelay="500">{{type.tag}}</button>
+    <ng-template matMenuContent>
+        <button mat-menu-item *ngFor="let type of types" matTooltip="{{type.description}}"
+            (menuOpened)="setType(type.tag)" [matMenuTriggerFor]="tagsMenu" matTooltipPosition="left"
+            matTooltipShowDelay="500">{{type.tag}}</button>
+    </ng-template>
 </mat-menu>
 
 <mat-menu #tagsMenu="matMenu">
-    <button mat-menu-item *ngFor="let tag of tags" matTooltip="{{tag.description}}" matTooltipPosition="right"
-        matTooltipShowDelay="500" (click)="setTag(tag.tag)">{{tag.tag}}</button>
+    <ng-template matMenuContent>
+        <button mat-menu-item *ngFor="let tag of tags" matTooltip="{{tag.description}}" matTooltipPosition="right"
+            matTooltipShowDelay="500" (click)="setTag(tag.tag)">{{tag.tag}}</button>
+    </ng-template>
 </mat-menu>

@@ -19,18 +19,18 @@
         </div>
 
         <div>
-            <mat-slide-toggle class="example-margin" color="primary">
+            <mat-slide-toggle class="margin-elt" color="primary">
                 Active Propostions
             </mat-slide-toggle>
         </div>
 
         <div>
-            <button mat-stroked-button color="primary">Export</button>
+            <button class="margin-elt" mat-stroked-button color="primary">Export</button>
         </div>
     </div>
 
     <mat-divider></mat-divider>
-    
+
     <ng-container [ngSwitch]="selectedAnnotation">
         <app-conllu [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.conllu"></app-conllu>
         <app-ner [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.ner"></app-ner>

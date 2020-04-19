@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: 'inject',
     loadChildren: () => import('./injection/injection.module').then(m => m.InjectionModule)
+  },
+  {
+    path: 'edit',
+    loadChildren: () => import('./editor/editor.module').then(m => m.EditorModule)
   }
 ];
 

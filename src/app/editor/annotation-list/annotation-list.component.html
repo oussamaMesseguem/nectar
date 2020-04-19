@@ -1,0 +1,18 @@
+<mat-form-field class="example-chip-list">
+  <mat-chip-list #chipList multiple=false ariaOrientation="horizontal" [formControl]="annotCtrl"
+    aria-label="Annotation selection">
+    <mat-chip *ngFor="let annot of annotationsChipList" [selectable]="true" [removable]="true" [value]="annot"
+      (removed)="remove(annot)" (click)="annotCtrl.setValue(annot)">
+      {{annot}}
+      <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+    </mat-chip>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations" matTooltipPosition="above"
+      matTooltipShowDelay="500" *ngIf="annotationsChipList.length !== allAnnotations.length">
+      <mat-icon>add_circle_outlined</mat-icon>
+      <mat-menu #menu="matMenu" yPosition="below">
+        <button *ngFor="let annot of filteredAnnotations" mat-menu-item (click)="add(annot)">{{annot}}</button>
+      </mat-menu>
+    </button>
+  </mat-chip-list>
+</mat-form-field>

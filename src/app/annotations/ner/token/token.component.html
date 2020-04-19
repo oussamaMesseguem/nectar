@@ -1,0 +1,7 @@
+<mat-form-field *ngIf="isTagged" appearance="outline" color="primary"
+    style="margin-left: 5px; margin-right: 5px;">
+    <mat-label [ngStyle]="{'color': labelColor, 'font-weight': 500}">{{token.tag}} {{token.type}}</mat-label>
+    <input [ngStyle]="{'color': labelColor}" matInput [(ngModel)]="token.token">
+</mat-form-field>
+
+<button mat-stroked-button *ngIf="!isTagged">{{token.token}}</button>

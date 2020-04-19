@@ -1,0 +1,10 @@
+<form [formGroup]="fields">
+    <div mat-dialog-content>
+        <app-pair *ngFor="let field of fields.controls; let i = index;" [ctrl]=field [tags]="data.tags" (removed)=remove(i)></app-pair>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-mini-fab (click)="add()" matTooltip="New pair"><mat-icon>add</mat-icon></button>
+        <button mat-fab matTooltip="Valid" [mat-dialog-close]="format()" cdkFocusInitial>Ok</button>
+    </div>
+</form>

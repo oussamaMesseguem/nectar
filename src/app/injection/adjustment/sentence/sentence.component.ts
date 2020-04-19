@@ -12,14 +12,9 @@ export class SentenceComponent implements OnInit {
   @Input() sentence: string[];
   @Input() isent: number;
 
-  expand = false;
-
   constructor(private injectionService: InjectionService) { }
 
-  ngOnInit(): void {
-    console.log(this.sentence);
-
-  }
+  ngOnInit(): void { }
 
   moveWithinSentence(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.sentence, event.previousIndex, event.currentIndex);

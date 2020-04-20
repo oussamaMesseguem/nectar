@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { InjectionService } from './injection.service';
+import { InjectionService } from './injector.service';
 
 describe('InjectionService', () => {
   let service: InjectionService;

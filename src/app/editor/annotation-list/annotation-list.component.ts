@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Annotation } from 'src/app/annotations/annotations';
+import { Annotation } from '../../annotators/annotations';
 
 @Component({
   selector: 'app-annotation-list',

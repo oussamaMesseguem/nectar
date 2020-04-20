@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Annotation, Language } from '../annotations/annotations';
-import { Conllu } from '../annotations/conllu/conllu.service';
+import { Annotation, Language } from '../annotators/annotations';
+import { Conllu } from '../annotators/conllu/conllu.service';
 import { HttpClient } from '@angular/common/http';
-import { Conllx } from '../annotations/conllx/conllx.service';
-import { Ner } from '../annotations/ner/ner.service';
+import { Conllx } from '../annotators/conllx/conllx.service';
+import { Ner } from '../annotators/ner/ner.service';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

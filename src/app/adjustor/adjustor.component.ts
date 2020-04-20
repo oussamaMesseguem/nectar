@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { InjectionService } from '../injection.service';
+import { InjectionService } from '../injector/injector.service';
 
 
 @Component({
-  selector: 'app-adjustment',
-  templateUrl: './adjustment.component.html',
-  styleUrls: ['./adjustment.component.scss']
+  selector: 'app-adjustor',
+  templateUrl: './adjustor.component.html',
+  styleUrls: ['./adjustor.component.scss']
 })
-export class AdjustmentComponent implements OnInit {
+export class AdjustorComponent implements OnInit {
 
   // sentences: string[][];
   sentences: string[][] = [

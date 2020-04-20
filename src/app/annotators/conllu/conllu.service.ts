@@ -1,6 +1,6 @@
 
 import { ConllToken } from './conllu.model';
-import { IParser } from 'src/app/injection/injection.service';
+import { IParser } from '../../injector/injector.service';
 import { Annotation } from '../annotations';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';

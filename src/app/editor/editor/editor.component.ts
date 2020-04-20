@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Annotation } from 'src/app/annotations/annotations';
+import { Annotation } from '../../annotators/annotations';
 
 @Component({
   selector: 'app-editor',

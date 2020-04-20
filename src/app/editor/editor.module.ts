@@ -16,8 +16,8 @@ import { AnnotationListComponent } from './annotation-list/annotation-list.compo
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ConlluModule } from '../annotations/conllu/conllu.module';
-import { NerModule } from '../annotations/ner/ner.module';
+import { ConlluModule } from '../annotators/conllu/conllu.module';
+import { NerModule } from '../annotators/ner/ner.module';
 
 
 @NgModule({

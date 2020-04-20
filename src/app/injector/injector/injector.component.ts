@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Annotation, Language } from '../../annotations/annotations';
+import { Annotation, Language } from '../../annotators/annotations';
 import { Router } from '@angular/router';
-import { InjectionService } from '../injection.service';
+import { InjectionService } from '../injector.service';
 
 @Component({
-  selector: 'app-content-upload',
-  templateUrl: './content-upload.component.html',
-  styleUrls: ['./content-upload.component.scss'],
+  selector: 'app-injector',
+  templateUrl: './injector.component.html',
+  styleUrls: ['./injector.component.scss'],
   animations: [
     trigger('fadeInOut', [
       state('in', style({ opacity: 100 })),
@@ -16,7 +16,7 @@ import { InjectionService } from '../injection.service';
     ])
   ]
 })
-export class ContentUploadComponent implements OnInit {
+export class InjectorComponent implements OnInit {
 
   languages: string[] = Object.values(Language);
   types: string[] = Object.values(Annotation);

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { InjectionService } from '../../injection.service';
+import { InjectionService } from '../../injector/injector.service';
 import { fromEvent, Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 

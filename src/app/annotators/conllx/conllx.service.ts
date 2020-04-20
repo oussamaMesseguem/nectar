@@ -1,6 +1,6 @@
 
 import { ConllXToken } from './conllx.model';
-import { IParser } from 'src/app/injection/injection.service';
+import { IParser } from 'src/app/injector/injector.service';
 import { Annotation } from '../annotations';
 import { Injectable } from '@angular/core';
 

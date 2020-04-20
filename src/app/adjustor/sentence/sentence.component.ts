@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { InjectionService } from '../../injection.service';
+import { InjectionService } from '../../injector/injector.service';
 
 @Component({
   selector: 'app-sentence',

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContentUploadComponent } from './content-upload.component';
+import { InjectorComponent } from './injector.component';
 
-describe('ContentUploadComponent', () => {
-  let component: ContentUploadComponent;
-  let fixture: ComponentFixture<ContentUploadComponent>;
+describe('InjectorComponent', () => {
+  let component: InjectorComponent;
+  let fixture: ComponentFixture<InjectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentUploadComponent ]
+      declarations: [ InjectorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContentUploadComponent);
+    fixture = TestBed.createComponent(InjectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

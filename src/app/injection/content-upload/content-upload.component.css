@@ -32,8 +32,8 @@
   padding-right: 25%;
   border: 1px solid green;
 }
-.type-mat-form-field {
-  display: block;
+.full-width {
+  width: 100%;
 }
 ul,
 li {
@@ -68,9 +68,6 @@ li {
 }
 ::ng-deep .mat-vertical-content {
   padding: 0 24px 14px 24px !important;
-}
-::ng-deep .mat-step-icon {
-  background-color: #7b1fa2 !important;
 }
 @media screen and (max-width: 860px) {
   .main-container {

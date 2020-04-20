@@ -38,9 +38,8 @@
   border: 1px solid green;
 }
 
-.type-mat-form-field {
-  // to get the chips in a line
-  display: block;
+.full-width {
+  width: 100%;
 }
 
 ul,
@@ -86,9 +85,6 @@ li {
   padding: 0 24px 14px 24px !important;
 }
 
-::ng-deep .mat-step-icon {
-  background-color: #7b1fa2 !important;
-}
 
 
 // Media screen

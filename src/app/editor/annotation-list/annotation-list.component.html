@@ -4,7 +4,7 @@
     <mat-chip *ngFor="let annot of annotationsChipList" [selectable]="true" [removable]="true" [value]="annot"
       (removed)="remove(annot)" (click)="annotCtrl.setValue(annot)">
       {{annot}}
-      <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+      <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
 
     <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations" matTooltipPosition="above"

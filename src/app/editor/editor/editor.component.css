@@ -1,12 +1,15 @@
 .editor-container {
   display: grid;
-  grid-template-rows: 15% 85%;
+  grid-template-rows: 15% 3% 1fr;
   height: 100%;
   width: 100%;
 }
 .manager {
   display: grid;
-  grid-template-columns: 25% 50% 25%;
+  grid-template-columns: 20% 40% 20% 20%;
   padding: 15px;
   text-align: center;
+}
+.margin-elt {
+  margin: 13px;
 }

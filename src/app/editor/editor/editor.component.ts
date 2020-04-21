@@ -46,20 +46,10 @@ export class EditorComponent implements OnInit {
    */
   get index() { return this.storeService.index; }
 
-
   /**
-   * Moves the current index to the left.
+   * Sets the new index value
    */
-  previous() {
-    this.storeService.nextSentence(false);
-  }
-
-  /**
-   * Moves the current index to the right.
-   */
-  next() {
-    this.storeService.nextSentence(true);
-  }
+  set index(index: number) { this.storeService.index = index; }
 
   /**
    * Updates the annotation list and changes the store consequently.

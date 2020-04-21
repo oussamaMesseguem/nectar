@@ -1,7 +1,7 @@
 <div class="editor-container">
     <div class="manager">
         <div>
-            <button mat-icon-button (click)=previous()>
+            <button mat-icon-button (click)="index = index - 1">
                 <mat-icon>chevron_left</mat-icon>
             </button>
 
@@ -9,7 +9,7 @@
                 {{index + 1}}
             </button>
 
-            <button mat-icon-button (click)=next()>
+            <button mat-icon-button (click)="index = index + 1">
                 <mat-icon>chevron_right</mat-icon>
             </button>
         </div>

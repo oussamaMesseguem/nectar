@@ -15,11 +15,11 @@ export class StoreService {
     /**
      * The current selected annotation. Affects the sentence observable as it changes its content.
      */
-    annotation: string;
+    private annotationValue: string;
     /**
      * The current sentence index among the sentences. Affects the sentence observable as it changes its content.
      */
-    index = 0;
+    private indexValue = 0;
     /**
      * the number of sentences. Used to move from a sentence to another.
      */
@@ -34,23 +34,39 @@ export class StoreService {
      * * Keys: are the annotations
      * * Values: are an array of the annotated content
      */
-    store = {};
+    private store = {};
 
     constructor() {
     }
 
     /**
-     * Moves the current index to the right. After the last one, back to 0.
-     * Moves the current index to the left. Before 0, back to the last sentence.
-     * @param toNext next or previous sentence
+     * Returns the current index of the sentence
      */
-    nextSentence(toNext: boolean) {
-        if (toNext) {
-            this.index = this.index === this.nbSentences - 1 ? 0 : this.index + 1;
+    get index(): number { return this.indexValue; }
+    /**
+     * Sets the current index of the sentence.
+     * * Moves the observable to the new index.
+     */
+    set index(index: number) {
+        if (index > this.indexValue) {
+            this.indexValue = this.indexValue === this.nbSentences - 1 ? 0 : this.indexValue + 1;
         } else {
-            this.index = this.index === 0 ? this.nbSentences - 1 : this.index - 1;
+            this.indexValue = this.indexValue === 0 ? this.nbSentences - 1 : this.indexValue - 1;
         }
-        this.sentence$.next(this.store[this.annotation][this.index]);
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+    /**
+     * Returns the current annotation.
+     */
+    get annotation(): string { return this.annotationValue; }
+    /**
+     * Sets the new current annotation.
+     * * Moves the observable to the new annotation.
+     */
+    set annotation(annotation: string) {
+        this.annotationValue = annotation;
+        console.log(annotation);
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
     /**
@@ -78,7 +94,7 @@ export class StoreService {
         if (annotation === 'Conll-U') {
             this.store[annotation] = conlluSents;
         }
-        this.sentence$.next(this.store[this.annotation][this.index]);
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
 }

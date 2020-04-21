@@ -16,18 +16,22 @@ export class StoreService {
      * The current selected annotation. Affects the sentence observable as it changes its content.
      */
     private annotationValue: string;
+
     /**
      * The current sentence index among the sentences. Affects the sentence observable as it changes its content.
      */
     private indexValue = 0;
+
     /**
      * the number of sentences. Used to move from a sentence to another.
      */
-    nbSentences: number = conlluSents.length;
+    private nbSentencesValue: number = conlluSents.length;
+
     /**
-     * The exposed sentence to display and tag
+     * The private observable sentence in readonly.
      */
-    sentence$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+    sentence$$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+
     /**
      * The store itself.
      * * Contains the content.
@@ -40,9 +44,27 @@ export class StoreService {
     }
 
     /**
+     * Returns the current annotation.
+     */
+    get annotation(): string { return this.annotationValue; }
+
+    /**
+     * Sets the new current annotation.
+     * * Moves the observable to the new annotation.
+     */
+    set annotation(annotation: string) {
+        this.annotationValue = annotation;
+        if (!Object.keys(this.store).includes(annotation)) {
+            this.add(annotation);
+        }
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
      * Returns the current index of the sentence
      */
     get index(): number { return this.indexValue; }
+
     /**
      * Sets the current index of the sentence.
      * * Moves the observable to the new index.
@@ -55,36 +77,23 @@ export class StoreService {
         }
         this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
-    /**
-     * Returns the current annotation.
-     */
-    get annotation(): string { return this.annotationValue; }
-    /**
-     * Sets the new current annotation.
-     * * Moves the observable to the new annotation.
-     */
-    set annotation(annotation: string) {
-        this.annotationValue = annotation;
-        console.log(annotation);
-        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
-    }
 
     /**
-     * Updates the store according to the list of annotations.
-     * * If an annotation is in the store but not in the array: gets removed
-     * * If an annotation is in the array but not in the store: gets added
-     * @param annotations the new list of annotations
+     * The number of sentences in the store.
      */
-    updateAnnotationList(annotations: string[]) {
-        const keys = Object.keys(this.store);
-        Object.values(Annotation).forEach(annotation => {
-            if (keys.includes(annotation) && !annotations.includes(annotation)) {
-                delete this.store[annotation];
-            } else if (!keys.includes(annotation) && annotations.includes(annotation)) {
-                // this.store[annotation] = [];
-                this.add(annotation);
-            }
-        });
+    get nbSentences(): number { return this.nbSentencesValue; }
+
+    /**
+     * The exposed sentence to display and tag
+     */
+    get sentence$(): BehaviorSubject<any[]> { return this.sentence$$; }
+
+    /**
+     * Deletes the annotation from the store.
+     * @param annotation The annotation to remove
+     */
+    removeAnnotation(annotation: string) {
+        delete this.store[annotation];
     }
 
     private add(annotation: string) {
@@ -94,7 +103,6 @@ export class StoreService {
         if (annotation === 'Conll-U') {
             this.store[annotation] = conlluSents;
         }
-        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
 }

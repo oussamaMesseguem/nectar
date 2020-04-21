@@ -52,10 +52,10 @@ export class EditorComponent implements OnInit {
   set index(index: number) { this.storeService.index = index; }
 
   /**
-   * Updates the annotation list and changes the store consequently.
-   * @param annotations The emitted annotations
+   * Removes the annotation form the store.
+   * @param annotation The emitted annotation
    */
-  updateAnnotationList(annotations: string[]) {
-    this.storeService.updateAnnotationList(annotations);
+  removeAnnotation(annotation: string) {
+    this.storeService.removeAnnotation(annotation);
   }
 }

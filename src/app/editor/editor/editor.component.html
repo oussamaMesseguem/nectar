@@ -16,7 +16,7 @@
 
         <div>
             <app-annotation-list (selectedAnnotation)="annotation = $event"
-                (annotationList)="updateAnnotationList($event)"></app-annotation-list>
+                (removedAnnotation)="removeAnnotation($event)"></app-annotation-list>
         </div>
 
         <div>

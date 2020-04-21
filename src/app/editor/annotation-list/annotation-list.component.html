@@ -1,8 +1,8 @@
 <mat-form-field class="example-chip-list">
-  <mat-chip-list multiple=false ariaOrientation="horizontal" [formControl]="annotCtrl"
+  <mat-chip-list multiple=false ariaOrientation="horizontal" [(ngModel)]="annotationValue"
     aria-label="Annotation selection">
     <mat-chip *ngFor="let annot of annotationsChipList" [selectable]="true" [removable]="true" [value]="annot"
-      (removed)="remove(annot)" (click)="annotCtrl.setValue(annot)">
+      (removed)="remove(annot)" (click)="annotation = annot">
       {{annot}}
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>

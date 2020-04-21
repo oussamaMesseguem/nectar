@@ -23,6 +23,13 @@ export class NerComponent implements OnInit {
    */
   labelColor: string;
 
+  /**
+   * Emitter to update the view after tags have been set.
+   * The value doesn't matter as children get notifed when
+   * the value changes.
+   */
+  update = false;
+
   constructor() { }
 
   ngOnInit(): void { }
@@ -44,11 +51,7 @@ export class NerComponent implements OnInit {
     const token = this.sentence$.value[this.currentTokenIndex];
     token.tag = tag;
     token.type = this.tmpType;
-    // token.color = NER_TAG_COLOR[token.type];
-    this.labelColor = NER_TAG_COLOR[token.type];
-    this.sentence$.next(this.sentence$.value);
-    console.log(this.sentence$.value);
-    
+    this.update = !this.update;
   }
 
   /**
@@ -66,8 +69,4 @@ export class NerComponent implements OnInit {
   setCurrentIndex(index: number) {
     this.currentTokenIndex = index;
   }
-}
-
-export interface NerTokenColor extends NerToken{
-  color: string;
 }

@@ -1,45 +1,43 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NerToken, NER_TAG_COLOR } from '../ner.model';
-import { NerTokenColor } from '../ner.component';
 
 @Component({
   selector: 'app-token',
   templateUrl: './token.component.html',
   styleUrls: ['./token.component.scss']
 })
-export class TokenComponent implements OnInit, OnChanges {
+export class TokenComponent implements OnInit {
 
   @Input() token: NerToken;
 
   /**
    * The color changes when type and tag are selected
    */
-  @Input() labelColor: string;
-
-  /**
-   * Either display button or input
-   * isTagged: input, so that label is displayed
-   */
-  isTagged = false;
+  labelColor: string;
 
   constructor() { }
 
 
   ngOnInit(): void {
-    if (this.token.tag !== undefined && this.token.tag.length > 0) {
+    if (this.isTagged) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
-      this.isTagged = true;
     }
   }
 
   /**
-   * Used to update the color after tagging
-   * @param changes the inputs
+   * Either display button or input
+   * isTagged: input, so that label is displayed colored
    */
-  ngOnChanges(changes: import('@angular/core').SimpleChanges): void {
-    if (this.token.tag !== undefined && this.token.tag.length > 0) {
+  get isTagged(): boolean { return this.token.tag !== undefined && this.token.tag.length > 0 ; }
+
+  /**
+   * Once the tag has been added to a token, parent notifies self.
+   * The value doesn't matter as the setter is used to update the view.
+   */
+  @Input() set update(b: boolean) {
+    if (this.isTagged) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
-      this.isTagged = true;
     }
   }
+
 }

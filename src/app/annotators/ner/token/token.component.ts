@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { NerToken, NER_TAG_COLOR } from '../ner.model';
+import { NerTokenColor } from '../ner.component';
 
 @Component({
   selector: 'app-token',
@@ -25,7 +26,7 @@ export class TokenComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
-    if (this.token.tag.length > 0) {
+    if (this.token.tag !== undefined && this.token.tag.length > 0) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
       this.isTagged = true;
     }
@@ -36,7 +37,7 @@ export class TokenComponent implements OnInit, OnChanges {
    * @param changes the inputs
    */
   ngOnChanges(changes: import('@angular/core').SimpleChanges): void {
-    if (this.token.tag.length > 0) {
+    if (this.token.tag !== undefined && this.token.tag.length > 0) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
       this.isTagged = true;
     }

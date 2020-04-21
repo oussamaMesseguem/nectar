@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Ner } from './ner.service';
 import { NerToken, NerTags, NerTypes, NER_TAG_COLOR } from './ner.model';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-ner',
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class NerComponent implements OnInit {
 
-  sentence$: Observable<NerToken[]>;
+  @Input() sentence$: BehaviorSubject<NerToken[]>;
 
   currentTokenIndex: number;
   /**
@@ -23,16 +23,9 @@ export class NerComponent implements OnInit {
    */
   labelColor: string;
 
-  constructor(private nerService: Ner) { }
+  constructor() { }
 
-  ngOnInit(): void {
-    this.sentence$ = this.nerService.sentence$;
-  }
-
-
-  @Input() set currentSentenceIndex(sentenceIndex: number) {
-    this.nerService.moveSentence(sentenceIndex);
-  }
+  ngOnInit(): void { }
 
   get tags() {
     return NerTags;
@@ -48,10 +41,14 @@ export class NerComponent implements OnInit {
    * @param tag The tag
    */
   setTag(tag: string) {
-    const token = this.nerService.getTokenCurrentSentence(this.currentTokenIndex);
+    const token = this.sentence$.value[this.currentTokenIndex];
     token.tag = tag;
     token.type = this.tmpType;
+    // token.color = NER_TAG_COLOR[token.type];
     this.labelColor = NER_TAG_COLOR[token.type];
+    this.sentence$.next(this.sentence$.value);
+    console.log(this.sentence$.value);
+    
   }
 
   /**
@@ -69,4 +66,8 @@ export class NerComponent implements OnInit {
   setCurrentIndex(index: number) {
     this.currentTokenIndex = index;
   }
+}
+
+export interface NerTokenColor extends NerToken{
+  color: string;
 }

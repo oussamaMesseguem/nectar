@@ -61,4 +61,11 @@ export class EditorComponent implements OnInit {
     this.storeService.nextSentence(true);
   }
 
+  /**
+   * Updates the annotation list and changes the store consequently.
+   * @param annotations The emitted annotations
+   */
+  updateAnnotationList(annotations: string[]) {
+    this.storeService.updateAnnotationList(annotations);
+  }
 }

@@ -15,6 +15,7 @@ export class AnnotationListComponent implements OnInit {
   @Output() selectedAnnotation: EventEmitter<string> = new EventEmitter();
 
   annotCtrl = new FormControl();
+  @Output() annotationList: EventEmitter<string[]> = new EventEmitter();
   annotationsChipList: string[] = [];
   allAnnotations: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
 
@@ -25,8 +26,8 @@ export class AnnotationListComponent implements OnInit {
    */
   ngOnInit() {
     this.annotCtrl.valueChanges.subscribe(value => this.selectedAnnotation.emit(value));
-    this.add(Annotation.conllu);
-    this.add(Annotation.ner);
+    // this.add(Annotation.conllu);
+    // this.add(Annotation.ner);
   }
 
   /**
@@ -43,6 +44,7 @@ export class AnnotationListComponent implements OnInit {
   add(value: string): void {
     this.annotationsChipList.push(value);
     this.annotCtrl.setValue(value);
+    this.annotationList.emit(this.annotationsChipList);
   }
 
   /**
@@ -59,5 +61,6 @@ export class AnnotationListComponent implements OnInit {
         this.annotCtrl.setValue(this.annotationsChipList[index - 1]);
       }
     }
+    this.annotationList.emit(this.annotationsChipList);
   }
 }

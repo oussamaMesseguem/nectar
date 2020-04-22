@@ -26,6 +26,10 @@ export class StoreService {
      */
     private nbSentencesValue: number = conlluSents.length;
 
+    /**
+     * Contains the tokens per sentences.
+     * Used to init new annotation objects
+     */
     rawContent: string[][];
 
     /**

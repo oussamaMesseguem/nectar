@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Ner } from './ner.service';
-import { NerToken, NerTags, NerTypes, NER_TAG_COLOR } from './ner.model';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { NerToken, NerTags, NerTypes } from './ner.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-ner',

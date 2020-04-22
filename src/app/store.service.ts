@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ConlluToken } from './annotators/conllu/conllu.model';
+import { ConlluToken, createConlluToken } from './annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
-import { NerToken } from './annotators/ner/ner.model';
+import { NerToken, createNerToken } from './annotators/ner/ner.model';
+import { Annotation } from './annotators/annotations';
 
 /**
  * The main service class that holds the content and serves it to view.
@@ -45,9 +46,7 @@ export class StoreService {
      */
     private store = {};
 
-    constructor() {
-        this.rawContent = nerSents.map(a => a.map(t => t.token));
-    }
+    constructor() { }
 
     /**
      * Returns the current annotation.
@@ -61,7 +60,7 @@ export class StoreService {
     set annotation(annotation: string) {
         this.annotationValue = annotation;
         if (!Object.keys(this.store).includes(annotation)) {
-            this.add(annotation);
+            this.init(annotation);
         }
         this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
@@ -95,11 +94,21 @@ export class StoreService {
     get sentence$(): BehaviorSubject<any[]> { return this.sentence$$; }
 
     /**
-     * Adds a new entry in the store.
+     * Adds a new entry in the store and sets the raw content array.
      * @param annotation new object property
      */
     addAnnotation(annotation: string, content: any[][]) {
-        this.store[annotation] = content;
+        console.log(annotation);
+        
+        if (annotation !== Annotation.raw) {
+            this.rawContent = content.map(l => l.map(t => t.token));
+            this.store[annotation] = content;
+            console.log(this.store);
+            console.log(this.rawContent);
+            
+        } else {
+            this.rawContent = content;
+        }
     }
 
     /**
@@ -110,13 +119,34 @@ export class StoreService {
         delete this.store[annotation];
     }
 
-    private add(annotation: string) {
-        if (annotation === 'Ner') {
-            this.store[annotation] = nerSents;
-        }
-        if (annotation === 'Conll-U') {
-            this.store[annotation] = conlluSents;
-        }
+    /**
+     * Iterates through the raw content and inits new tokens according to the given annotation.
+     * @param annotation The new annotation to add
+     */
+    private init(annotation: string) {
+        const annotationContent = [];
+        this.rawContent.forEach(sentence => {
+            const sent = [];
+            sentence.forEach((token: string, index: number) => {
+                switch (annotation) {
+                    case Annotation.conllu:
+                        sent.push(createConlluToken(index, token));
+                        break;
+                    case Annotation.raw:
+                        sent.push(createNerToken(token));
+                        break;
+                    default:
+                        break;
+                }
+            });
+            annotationContent.push(sent);
+        });
+        // if (annotation === Annotation.ner) {
+        //     this.store[annotation] = nerSents;
+        // }
+        // if (annotation === Annotation.conllu) {
+        //     this.store[annotation] = conlluSents;
+        // }
     }
 
 }

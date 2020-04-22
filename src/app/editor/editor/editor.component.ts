@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Annotation } from 'src/app/annotations/annotations';
+import { Annotation } from '../../annotators/annotations';
+import { StoreService } from 'src/app/store.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -8,39 +10,52 @@ import { Annotation } from 'src/app/annotations/annotations';
 })
 export class EditorComponent implements OnInit {
 
-  /**
-   * The selected annotation to display the form.
-   * Comes from the annotation-list component.
-   */
-  selectedAnnotation: string;
-  /**
-   * The number of sentences
-   */
-  maxIndex: number;
-  currentIndex = 0;
-
-  constructor() {
-    // The nb of sentences is set to local storage as it is needed by this component
-    // and there is no deps between it and the annotation services.
-    // The value is set by the injection service once the upload has been done.
-    // tslint:disable-next-line: radix
-    this.maxIndex = Number.parseInt(localStorage.getItem('nbOfSentences'));
-  }
+  constructor(private storeService: StoreService) { }
 
   ngOnInit(): void { }
 
+  /**
+   * The annotation list.
+   */
   get annotations() { return Annotation; }
 
-  setSelectedAnnotation(annotation: string) {
-    this.selectedAnnotation = annotation;
-  }
+  /**
+   * A view on the current sentence depending on the index and the annotation.
+   * A behaviour subject gives the possibility to subscribe to the content by async
+   * and to get the value if needed.
+   */
+  get sentence$(): BehaviorSubject<any[]> { return this.storeService.sentence$; }
 
-  previous() {
-    this.currentIndex = this.currentIndex === 0 ? this.maxIndex - 1 : this.currentIndex - 1;
-  }
+  /**
+   * The sentence length.
+   */
+  get sentenceLength(): number { return this.storeService.sentence$.value.length; }
 
-  next() {
-    this.currentIndex = this.currentIndex === this.maxIndex - 1 ? 0 : this.currentIndex + 1;
-  }
+  /**
+   * The current annotation.
+   */
+  get annotation(): string { return this.storeService.annotation; }
 
+  /**
+   * The current annotation. Set in the template by a <list-annotation> output
+   */
+  set annotation(annotation: string) { this.storeService.annotation = annotation; }
+
+  /**
+   * The index of the current sentence
+   */
+  get index() { return this.storeService.index; }
+
+  /**
+   * Sets the new index value
+   */
+  set index(index: number) { this.storeService.index = index; }
+
+  /**
+   * Removes the annotation form the store.
+   * @param annotation The emitted annotation
+   */
+  removeAnnotation(annotation: string) {
+    this.storeService.removeAnnotation(annotation);
+  }
 }

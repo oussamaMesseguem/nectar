@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Annotation } from 'src/app/annotations/annotations';
+import { Annotation } from '../../annotators/annotations';
 
 @Component({
   selector: 'app-annotation-list',
@@ -9,25 +8,32 @@ import { Annotation } from 'src/app/annotations/annotations';
 })
 export class AnnotationListComponent implements OnInit {
 
+
+  /**
+   * All the available annotations.
+   */
+  allAnnotations: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
+  /**
+   * The selected annotations by users.
+   */
+  annotationsChipList: string[] = [];
+  /**
+   * The current annotation value.
+   */
+  annotationValue: string;
+
+  /**
+   * Notifies when an annotations has been removed.
+   */
+  @Output() removedAnnotation: EventEmitter<string> = new EventEmitter();
   /**
    * Notifies the Editor View when the selected annotation changes
    */
   @Output() selectedAnnotation: EventEmitter<string> = new EventEmitter();
 
-  annotCtrl = new FormControl();
-  annotationsChipList: string[] = [];
-  allAnnotations: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
-
   constructor() { }
 
-  /**
-   * Subscribtion to the value of the selected annotation, when changed, the value gets emitted to edit component
-   */
-  ngOnInit() {
-    this.annotCtrl.valueChanges.subscribe(value => this.selectedAnnotation.emit(value));
-    this.add(Annotation.conllu);
-    this.add(Annotation.ner);
-  }
+  ngOnInit() { }
 
   /**
    * The remaining annotations that is possible to add to the chip-list
@@ -36,28 +42,37 @@ export class AnnotationListComponent implements OnInit {
     return this.allAnnotations.filter(annot => !this.annotationsChipList.includes(annot));
   }
 
+  get annotation(): string { return this.annotationValue; }
   /**
-   * Adds the slected annotation to the chip-list annotations
-   * @param value the annotation to add
+   * When the annotation is set, the value changes and an event is emitted.
    */
-  add(value: string): void {
-    this.annotationsChipList.push(value);
-    this.annotCtrl.setValue(value);
+  set annotation(annotation: string) {
+    this.annotationValue = annotation;
+    this.selectedAnnotation.emit(annotation);
   }
 
   /**
-   * Removes the wanted annotation from the chip-list
-   * @param annot the annotation to remmove
+   * Adds the slected annotation to the chip-list annotations
+   * * Move the current annotation to the new one
+   * @param value the annotation to add
    */
-  remove(annot: string): void {
-    const index = this.annotationsChipList.indexOf(annot);
+  add(annotation: string): void {
+    this.annotationsChipList.push(annotation);
+    this.annotation = annotation;
+  }
 
-    if (index >= 0) {
-      this.annotationsChipList.splice(index, 1);
-      // When the removed chip is the selected one, back to the previous one
-      if (index > 0 && annot === this.annotCtrl.value) {
-        this.annotCtrl.setValue(this.annotationsChipList[index - 1]);
-      }
+  /**
+   * Removes the annotation from the chip-list and notifies store.
+   * @param annotation the annotation to remove
+   */
+  remove(annotation: string): void {
+    const index = this.annotationsChipList.indexOf(annotation);
+    this.annotationsChipList.splice(index, 1);
+    // Sets the last annotation to the current
+    if (this.annotationsChipList.length > 0) {
+      const newAnnotation = this.annotationsChipList[this.annotationsChipList.length - 1];
+      this.annotation = newAnnotation;
     }
+    this.removedAnnotation.emit(annotation);
   }
 }

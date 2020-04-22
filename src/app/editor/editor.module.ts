@@ -13,11 +13,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { AnnotationListComponent } from './annotation-list/annotation-list.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ConlluModule } from '../annotations/conllu/conllu.module';
-import { NerModule } from '../annotations/ner/ner.module';
+import { ConlluModule } from '../annotators/conllu/conllu.module';
+import { NerModule } from '../annotators/ner/ner.module';
 
 
 @NgModule({
@@ -26,7 +26,7 @@ import { NerModule } from '../annotations/ner/ner.module';
     CommonModule,
     ConlluModule,
     NerModule,
-    ReactiveFormsModule,
+    FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,

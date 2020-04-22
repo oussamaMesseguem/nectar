@@ -1,25 +1,28 @@
 <div class="editor-container">
     <div class="manager">
         <div>
-            <button mat-icon-button (click)=previous()>
+            <button mat-icon-button (click)="index = index - 1">
                 <mat-icon>chevron_left</mat-icon>
             </button>
 
             <button mat-icon-button color="primary">
-                {{currentIndex + 1}}
+                {{index + 1}}
             </button>
 
-            <button mat-icon-button (click)=next()>
+            <button mat-icon-button (click)="index = index + 1">
                 <mat-icon>chevron_right</mat-icon>
             </button>
         </div>
 
         <div>
-            <app-annotation-list (selectedAnnotation)="setSelectedAnnotation($event)"></app-annotation-list>
+            <app-annotation-list (selectedAnnotation)="annotation = $event"
+                (removedAnnotation)="removeAnnotation($event)"></app-annotation-list>
         </div>
 
         <div>
-            <mat-slide-toggle class="margin-elt" color="primary"  matTooltip="Display propositions from an external service. Leave results as they are or modify them." matTooltipPosition="below" matTooltipShowDelay="500">
+            <mat-slide-toggle class="margin-elt" color="primary"
+                matTooltip="Display propositions from an external service. Leave results as they are or modify them."
+                matTooltipPosition="below" matTooltipShowDelay="500">
                 Active Propostions
             </mat-slide-toggle>
         </div>
@@ -31,9 +34,10 @@
 
     <mat-divider></mat-divider>
 
-    <ng-container [ngSwitch]="selectedAnnotation">
-        <app-conllu [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.conllu"></app-conllu>
-        <app-ner [currentSentenceIndex]="currentIndex" *ngSwitchCase="annotations.ner"></app-ner>
+    <ng-container [ngSwitch]="annotation">
+        <app-conllu [sentence$]="sentence$" [sentenceLength]="sentenceLength" *ngSwitchCase="annotations.conllu">
+        </app-conllu>
+        <app-ner [sentence$]="sentence$" *ngSwitchCase="annotations.ner"></app-ner>
         <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>
     </ng-container>
 </div>

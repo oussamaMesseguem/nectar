@@ -5,7 +5,11 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: 'inject',
-    loadChildren: () => import('./injection/injection.module').then(m => m.InjectionModule)
+    loadChildren: () => import('./injector/injector.module').then(m => m.InjectorModule)
+  },
+  {
+    path: 'adjust',
+    loadChildren: () => import('./adjustor/adjustor.module').then(m => m.AdjustorModule)
   },
   {
     path: 'edit',

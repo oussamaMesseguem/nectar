@@ -10,9 +10,13 @@ import { AdjustorService } from '../adjustor.service';
 })
 export class TokenComponent implements OnInit {
 
+  @Input() isentence: number;
+  @Input() itoken: number;
   @Input() token: string;
-  @Input() isent: number;
-  @Input() itok: number;
+  /**
+   * When editing the original token is displayed in the mat-label
+   */
+  originalToken: string;
 
   /**
    * The input to edit the token
@@ -29,24 +33,24 @@ export class TokenComponent implements OnInit {
   }
 
   duplicate() {
-    this.adjustorService.duplicateTok(this.isent, this.itok);
+    this.adjustorService.duplicateToken(this.isentence, this.itoken);
   }
 
-  newLeft() {
-    this.adjustorService.newLeft(this.isent, this.itok);
+  newBefore() {
+    this.adjustorService.newTokenBefore(this.isentence, this.itoken);
   }
 
-  newRight() {
-    this.adjustorService.newRight(this.isent, this.itok);
+  newAfter() {
+    this.adjustorService.newTokenAfter(this.isentence, this.itoken);
   }
 
   edit() {
-    this.adjustorService.edit(this.isent, this.itok, this.token);
+    this.adjustorService.editToken(this.isentence, this.itoken, this.token);
     this.inEditing = !this.inEditing;
   }
 
   delete() {
-    this.adjustorService.deleteTok(this.isent, this.itok);
+    this.adjustorService.deleteToken(this.isentence, this.itoken);
   }
 
   /**
@@ -54,6 +58,7 @@ export class TokenComponent implements OnInit {
    * If so: close the input.
    */
   listenClick() {
+    this.originalToken = this.token;
     this.inEditing = !this.inEditing;
     const source: Observable<Event> = fromEvent(document, 'click').pipe(skip(1));
     const s = source.subscribe(next => {

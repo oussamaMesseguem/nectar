@@ -141,7 +141,6 @@ export class InjectorComponent implements OnInit {
             () => {
               this.contentValidationInProgress = false;
               this.isValid = true;
-              console.log(this.injectionService.sentences());
             });
       };
 

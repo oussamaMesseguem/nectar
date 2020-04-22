@@ -98,14 +98,10 @@ export class StoreService {
      * @param annotation new object property
      */
     addAnnotation(annotation: string, content: any[][]) {
-        console.log(annotation);
-        
         if (annotation !== Annotation.raw) {
             this.rawContent = content.map(l => l.map(t => t.token));
             this.store[annotation] = content;
-            console.log(this.store);
-            console.log(this.rawContent);
-            
+            this.annotation = annotation;
         } else {
             this.rawContent = content;
         }
@@ -128,27 +124,17 @@ export class StoreService {
         this.rawContent.forEach(sentence => {
             const sent = [];
             sentence.forEach((token: string, index: number) => {
-                switch (annotation) {
-                    case Annotation.conllu:
-                        sent.push(createConlluToken(index, token));
-                        break;
-                    case Annotation.raw:
-                        sent.push(createNerToken(token));
-                        break;
-                    default:
-                        break;
+                if (annotation === Annotation.conllu) {
+                    sent.push(createConlluToken(index, token));
+                }
+                if (annotation === Annotation.ner) {
+                    sent.push(createNerToken(token));
                 }
             });
             annotationContent.push(sent);
         });
-        // if (annotation === Annotation.ner) {
-        //     this.store[annotation] = nerSents;
-        // }
-        // if (annotation === Annotation.conllu) {
-        //     this.store[annotation] = conlluSents;
-        // }
+        this.store[annotation] = annotationContent;
     }
-
 }
 
 const conlluSents: ConlluToken[][] = [

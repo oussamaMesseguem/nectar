@@ -1,16 +1,22 @@
-export class NerToken {
+import { IParser } from 'src/app/injector/injector.service';
+import { Annotation } from '../annotations';
+
+export interface NerToken {
     token: string;
     tag: string;
     type: string;
+}
 
-    constructor(token?: string, tag?: string, type?: string) {
-        this.token = token;
-        this.tag = tag;
-        this.type = type;
-    }
+export class NerParser implements IParser {
+    annotation: Annotation = Annotation.ner;
+    splitPattern: RegExp = new RegExp(/\n\s*\n/);
+    tokenPattern: RegExp = new RegExp(/\t/);
+    ignoreLinePattern: RegExp = new RegExp('#');
 
-    static fromTab(line: string[]): NerToken {
-        return new NerToken(line[0], line[1], line[2]);
+    constructor() {}
+
+    ofToken(value: string[]): NerToken {
+        return { token: value[0], tag: value[1], type: value[2]};
     }
 }
 

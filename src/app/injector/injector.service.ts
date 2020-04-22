@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Annotation, Language } from '../annotators/annotations';
 import { HttpClient } from '@angular/common/http';
-import { Conllx } from '../annotators/conllx/conllx.service';
-import { Ner } from '../annotators/ner/ner.service';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { ConlluParser } from '../annotators/conllu/conllu.model';
 import { StoreService } from '../store.service';
+import { NerParser } from '../annotators/ner/ner.model';
+import { ConllxParser } from '../annotators/conllx/conllx.model';
 
 @Injectable()
 export class InjectionService implements AdjustmentService {
@@ -31,10 +31,10 @@ export class InjectionService implements AdjustmentService {
         this.parser = new ConlluParser();
         break;
       case Annotation.conllx:
-        // this.parser = this.conllxService;
+        this.parser = new ConllxParser();
         break;
       case Annotation.ner:
-        // this.parser = this.nerService;
+        this.parser = new NerParser();
         break;
       case Annotation.raw:
         this.parser = new Raw();
@@ -42,8 +42,6 @@ export class InjectionService implements AdjustmentService {
       default:
         throw this.assertAnnotationType(annotation);
     }
-
-
 
     // Parsing warpped in a promise
     // Once done the isInProgress subject completes and unsubscribe

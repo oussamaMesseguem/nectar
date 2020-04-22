@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConlluToken } from './annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
-import { Annotation } from './annotators/annotations';
 import { NerToken } from './annotators/ner/ner.model';
 
 /**
@@ -27,6 +26,8 @@ export class StoreService {
      */
     private nbSentencesValue: number = conlluSents.length;
 
+    rawContent: string[][];
+
     /**
      * The private observable sentence in readonly.
      */
@@ -41,6 +42,7 @@ export class StoreService {
     private store = {};
 
     constructor() {
+        this.rawContent = nerSents.map(a => a.map(t => t.token));
     }
 
     /**

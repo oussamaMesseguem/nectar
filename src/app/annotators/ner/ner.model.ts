@@ -20,6 +20,10 @@ export class NerParser implements IParser {
     }
 }
 
+export function createNerToken(token: string, tag?: string, type?: string) {
+    return { token, tag: tag ? tag : '', type: type ? type : '' };
+}
+
 export const NerTags = [
     { tag: 'B', description: 'The first token of a multi-token entity' },
     { tag: 'I', description: 'An inner token of a multi-token entity' },

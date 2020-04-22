@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdjustorComponent } from './adjustor.component';
+import { AdjustorComponent } from './adjustor/adjustor.component';
 import { SentenceComponent } from './sentence/sentence.component';
 import { TokenComponent } from './token/token.component';
 import { FormsModule } from '@angular/forms';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AdjustorService } from './adjustor.service';
+import { AdjustorService } from '../adjustor.service';
 
 
 @Component({

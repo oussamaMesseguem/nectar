@@ -46,7 +46,6 @@ export class TokenComponent implements OnInit {
 
   edit() {
     this.adjustorService.editToken(this.isentence, this.itoken, this.token);
-    this.inEditing = !this.inEditing;
   }
 
   delete() {
@@ -57,13 +56,14 @@ export class TokenComponent implements OnInit {
    * Listen to a click aywhere in the document but the input
    * If so: close the input.
    */
-  listenClick() {
+  editing() {
     this.originalToken = this.token;
-    this.inEditing = !this.inEditing;
+    this.inEditing = true;
     const source: Observable<Event> = fromEvent(document, 'click').pipe(skip(1));
     const s = source.subscribe(next => {
       if (!this.newinput.nativeElement.contains(next.target)) {
         this.edit();
+        this.inEditing = false;
         s.unsubscribe();
       }
     });

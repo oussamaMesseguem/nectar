@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Annotation } from '../../annotators/annotations';
 
 @Component({
@@ -33,7 +33,12 @@ export class AnnotationListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    // If the annotation is not empty, it gets added to the array.
+    if (this.annotation) {
+      this.annotationsChipList.push(this.annotation);
+    }
+  }
 
   /**
    * The remaining annotations that is possible to add to the chip-list
@@ -46,7 +51,7 @@ export class AnnotationListComponent implements OnInit {
   /**
    * When the annotation is set, the value changes and an event is emitted.
    */
-  set annotation(annotation: string) {
+  @Input() set annotation(annotation: string) {
     this.annotationValue = annotation;
     this.selectedAnnotation.emit(annotation);
   }

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Annotation, Language } from '../annotators/annotations';
-import { Conllu } from '../annotators/conllu/conllu.service';
 import { HttpClient } from '@angular/common/http';
 import { Conllx } from '../annotators/conllx/conllx.service';
 import { Ner } from '../annotators/ner/ner.service';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { ConlluParser } from '../annotators/conllu/conllu.model';
+import { StoreService } from '../store.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class InjectionService implements AdjustmentService {
 
   lang: string;
@@ -19,7 +18,7 @@ export class InjectionService implements AdjustmentService {
   private parser: IParser;
   private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient, private conlluService: Conllu, private conllxService: Conllx, private nerService: Ner) { }
+  constructor(private http: HttpClient, private storeService: StoreService) { }
 
   injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
     this.lang = lang;
@@ -29,13 +28,13 @@ export class InjectionService implements AdjustmentService {
 
     switch (annotation) {
       case Annotation.conllu:
-        this.parser = this.conlluService;
+        this.parser = new ConlluParser();
         break;
       case Annotation.conllx:
-        this.parser = this.conllxService;
+        // this.parser = this.conllxService;
         break;
       case Annotation.ner:
-        this.parser = this.nerService;
+        // this.parser = this.nerService;
         break;
       case Annotation.raw:
         this.parser = new Raw();
@@ -43,6 +42,8 @@ export class InjectionService implements AdjustmentService {
       default:
         throw this.assertAnnotationType(annotation);
     }
+
+
 
     // Parsing warpped in a promise
     // Once done the isInProgress subject completes and unsubscribe
@@ -60,9 +61,11 @@ export class InjectionService implements AdjustmentService {
 
       }
 
-      this.parser.sentences = this.parse(content);
+      // Add new entry in the store
+      const parsedContent = this.parse(content);
+      this.storeService.addAnnotation(this.parser.annotation, parsedContent);
 
-      if (this.parser.sentences.length === 0) {
+      if (this.storeService.nbSentences === 0) {
         reject(new Error('Parsing has been asked to be stopped'));
       }
       resolve(true);
@@ -87,7 +90,7 @@ export class InjectionService implements AdjustmentService {
    */
   cancelContentInjection() {
     this.isInProgress.unsubscribe();
-    this.parser.sentences = [];
+    this.storeService.removeAnnotation(this.parser.annotation);
   }
 
   private assertAnnotationType(annotation: string): never {
@@ -97,10 +100,6 @@ export class InjectionService implements AdjustmentService {
   sentences() {
     // return this.parser.sentences;
     return this.sentences2;
-  }
-
-  tokens() {
-    return this.parser.tokens();
   }
 
   /**
@@ -176,7 +175,7 @@ export class InjectionService implements AdjustmentService {
 export interface IParser {
 
   annotation: Annotation;
-  sentences: any[][];
+  // sentences: any[][];
   /**
    * The pattern to split sentences on
    */
@@ -193,13 +192,13 @@ export interface IParser {
   /**
    * Returns the tokens only
    */
-  tokens(): string[][];
+  // tokens(): string[][];
 
   /**
    * Builds an Anootation Token
-   * @param tokenAndAnnotation the split array containing a token and its annotations
+   * @param value the split array containing a token and its annotations
    */
-  ofToken(tokenAndAnnotation: string[]): any;
+  ofToken(value: string[]): any;
 }
 
 /**

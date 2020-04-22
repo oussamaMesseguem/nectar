@@ -16,6 +16,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HttpClientModule } from '@angular/common/http';
+import { InjectionService } from './injector.service';
 
 @NgModule({
   declarations: [InjectorComponent],
@@ -36,6 +37,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatStepperModule,
     MatTooltipModule,
     InjectionRoutingModule
+  ],
+  providers: [
+    { provide: InjectionService, useClass: InjectionService}
   ]
 })
 export class InjectorModule { }

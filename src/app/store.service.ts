@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConllToken } from './annotators/conllu/conllu.model';
+import { ConlluToken } from './annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
 import { Annotation } from './annotators/annotations';
 import { NerToken } from './annotators/ner/ner.model';
@@ -89,6 +89,14 @@ export class StoreService {
     get sentence$(): BehaviorSubject<any[]> { return this.sentence$$; }
 
     /**
+     * Adds a new entry in the store.
+     * @param annotation new object property
+     */
+    addAnnotation(annotation: string, content: any[][]) {
+        this.store[annotation] = content;
+    }
+
+    /**
      * Deletes the annotation from the store.
      * @param annotation The annotation to remove
      */
@@ -107,7 +115,7 @@ export class StoreService {
 
 }
 
-const conlluSents: ConllToken[][] = [
+const conlluSents: ConlluToken[][] = [
     [
         {
             index: 1,

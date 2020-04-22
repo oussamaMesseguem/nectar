@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ConllToken, UPos, UDeprel, UFeats, UPOS, UDEPREL, UFEATS, ConllTokenForm } from '../conllu.model';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { ConlluToken, UPos, UDeprel, UFeats, UPOS, UDEPREL, UFEATS } from '../conllu.model';
 import { ValueListComponent } from '../value-list/value-list.component';
 
 /**
@@ -10,7 +10,7 @@ import { ValueListComponent } from '../value-list/value-list.component';
  * * An array of the number of tokens in the sentence.
  */
 export interface ConlluDialog {
-  conlluToken: ConllToken;
+  conlluToken: ConlluToken;
   nbTokens: number;
 }
 
@@ -65,8 +65,37 @@ export class TokenComponent implements OnInit {
     });
   }
 
-  format(): ConllToken {
+  format(): ConlluToken {
     return this.conlluTokenForm.value;
   }
 
+}
+
+/**
+ * A form for the Conllu Token
+ */
+class ConllTokenForm {
+  index = new FormControl();
+  token = new FormControl();
+  lemma = new FormControl();
+  upos = new FormControl();
+  xpos = new FormControl();
+  feat = new FormControl();
+  head = new FormControl();
+  deprel = new FormControl();
+  deps = new FormControl();
+  misc = new FormControl();
+
+  constructor(conll: ConlluToken) {
+      this.index.setValue(conll.index);
+      this.token.setValue(conll.token);
+      this.lemma.setValue(conll.lemma);
+      this.upos.setValue(conll.upos);
+      this.xpos.setValue(conll.xpos);
+      this.feat.setValue(conll.feat);
+      this.head.setValue(conll.head);
+      this.deprel.setValue(conll.deprel);
+      this.deps.setValue(conll.deps);
+      this.misc.setValue(conll.misc);
+  }
 }

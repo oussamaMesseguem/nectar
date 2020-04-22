@@ -8,13 +8,10 @@ import { NerParser } from '../annotators/ner/ner.model';
 import { ConllxParser } from '../annotators/conllx/conllx.model';
 
 @Injectable()
-export class InjectionService implements AdjustmentService {
+export class InjectionService {
 
   lang: string;
-  annotation: string;
-  sentences2: string[][] = [
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.']];
+
   private parser: IParser;
   private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
@@ -22,7 +19,6 @@ export class InjectionService implements AdjustmentService {
 
   injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
     this.lang = lang;
-    this.annotation = annotation;
     // New Behaviour might have been destroyed by an unsubscribing
     this.isInProgress = new BehaviorSubject(true);
 
@@ -95,11 +91,6 @@ export class InjectionService implements AdjustmentService {
     throw new Error(`Annotation type '${annotation}' not recognized`);
   }
 
-  sentences() {
-    // return this.parser.sentences;
-    return this.sentences2;
-  }
-
   /**
    * Parses the content according to the right parser
    * @param content The content to parse
@@ -123,46 +114,6 @@ export class InjectionService implements AdjustmentService {
       'https://cors-anywhere.herokuapp.com/http://corenlp.run/?properties={"annotators":"tokenize,ssplit","outputFormat":"json"}',
       { data: content }
     ).toPromise();
-  }
-
-  duplicateSent(isent: number) {
-    this.sentences().splice(isent, 0, this.sentences()[isent]);
-
-  }
-  deleteSent(isent: number) {
-    this.sentences().splice(isent, 1);
-  }
-  newAbove(isent: number) {
-    this.sentences().splice(isent, 0, ['~']);
-  }
-  newBelow(isent: number) {
-    this.sentences().splice(isent + 1, 0, ['~']);
-  }
-
-  duplicateTok(isent: number, itok: number) {
-    const token = this.sentences()[isent][itok];
-    this.sentences()[isent].splice(itok, 0, token);
-  }
-
-  newLeft(isent: number, itok: number) {
-    this.sentences()[isent].splice(itok, 0, '~');
-  }
-
-  newRight(isent: number, itok: number) {
-    this.sentences()[isent].splice(itok + 1, 0, '~');
-  }
-
-  edit(isent: number, itok: number, value: string) {
-    this.sentences()[isent].splice(itok, 1, value);
-  }
-
-  deleteTok(isent: number, itok: number) {
-    console.log(this.sentences()[isent]);
-
-    this.sentences()[isent].splice(itok, 1);
-    if (this.sentences()[isent].length === 0) {
-      this.deleteSent(isent);
-    }
   }
 
 }
@@ -224,26 +175,6 @@ export class Raw implements IParser {
     return tokenAndAnnotation[0];
   }
 }
-
-
-export interface AdjustmentService {
-
-  duplicateSent(isent: number);
-  deleteSent(isent: number);
-  newAbove(isent: number);
-  newBelow(isent: number);
-
-  duplicateTok(isent: number, itok: number);
-
-  newLeft(isent: number, itok: number);
-
-  newRight(isent: number, itok: number);
-
-  edit(isent: number, itok: number, value: string);
-
-  deleteTok(isent: number, itok: number);
-}
-
 
 interface CoreNLPResponse {
   docDate: any;

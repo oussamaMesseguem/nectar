@@ -24,7 +24,7 @@ export interface ConlluToken {
  * A parser for files.
  */
 export class ConlluParser implements IParser {
-    annotation: Annotation.conllu;
+    annotation = Annotation.conllu;
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\t/);
     ignoreLinePattern: RegExp = new RegExp('#');
@@ -40,6 +40,24 @@ export class ConlluParser implements IParser {
             head: Number.parseInt(value[6]), deprel: value[7], deps: value[8], misc: value[9]
         };
     }
+}
+
+export function createConlluToken(
+    index: number, token: string, lemma?: string, upos?: string,
+    xpos?: string, feat?: string, head?: number, deprel?: string,
+    deps?: string, misc?: string): ConlluToken {
+    return {
+        index,
+        token,
+        lemma: lemma ? lemma : '_',
+        upos: upos ? upos : '_',
+        xpos: xpos ? xpos : '_',
+        feat: feat ? feat : '_',
+        head: head ? head : 0,
+        deprel: deprel ? deprel : '_',
+        deps: deps ? deps : '_',
+        misc: misc ? misc : '_'
+    };
 }
 
 export interface UPos {

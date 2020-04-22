@@ -36,7 +36,7 @@
 
     <mat-form-field appearance="outline" class="unit-margin">
         <mat-label>FEAT</mat-label>
-        <input matInput formControlName="feat" disabled (click)="openFeatDialog()">
+        <input matInput formControlName="feat" (click)="openFeatDialog()">
     </mat-form-field>
 
     <mat-form-field style="max-width:50px !important;" class="unit-margin" appearance="outline">
@@ -61,7 +61,7 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:100px !important;">
         <mat-label>DEPS</mat-label>
-        <input matInput formControlName="deps" disabled (click)="openDepsDialog()">
+        <input matInput formControlName="deps" (click)="openDepsDialog()">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="unit-margin">

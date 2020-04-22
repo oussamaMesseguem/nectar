@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { InjectionService } from '../injector/injector.service';
+import { AdjustorService } from './adjustor.service';
 
 
 @Component({
@@ -10,30 +10,9 @@ import { InjectionService } from '../injector/injector.service';
 })
 export class AdjustorComponent implements OnInit {
 
-  // sentences: string[][];
-  sentences: string[][] = [
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', '.'],
-    ['je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
-      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi',
-      'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le',
-      'roi', 'je', 'suis', 'le', 'roi', 'je', 'suis', 'le', 'roi', '!']
-  ];
+  constructor(private adjustorService: AdjustorService) { }
 
-  constructor(private injectionService: InjectionService) { }
+  ngOnInit(): void { }
 
-  ngOnInit(): void {
-    try {
-      // this.injectionService.sentences2 = this.sentences;
-      this.sentences = this.injectionService.sentences();
-    } catch (error) {
-    }
-  }
-
+  get sentences() { return this.adjustorService.sentences; }
 }

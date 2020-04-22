@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { InjectionService } from '../../injector/injector.service';
 import { fromEvent, Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
+import { AdjustorService } from '../adjustor.service';
 
 @Component({
   selector: 'app-token',
@@ -23,30 +23,30 @@ export class TokenComponent implements OnInit {
 
   inEditing = false;
 
-  constructor(private injectionService: InjectionService) { }
+  constructor(private adjustorService: AdjustorService) { }
 
   ngOnInit(): void {
   }
 
   duplicate() {
-    this.injectionService.duplicateTok(this.isent, this.itok);
+    this.adjustorService.duplicateTok(this.isent, this.itok);
   }
 
   newLeft() {
-    this.injectionService.newLeft(this.isent, this.itok);
+    this.adjustorService.newLeft(this.isent, this.itok);
   }
 
   newRight() {
-    this.injectionService.newRight(this.isent, this.itok);
+    this.adjustorService.newRight(this.isent, this.itok);
   }
 
   edit() {
-    this.injectionService.edit(this.isent, this.itok, this.token);
+    this.adjustorService.edit(this.isent, this.itok, this.token);
     this.inEditing = !this.inEditing;
   }
 
   delete() {
-    this.injectionService.deleteTok(this.isent, this.itok);
+    this.adjustorService.deleteTok(this.isent, this.itok);
   }
 
   /**

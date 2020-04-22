@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { InjectionService } from '../../injector/injector.service';
+import { AdjustorService } from '../adjustor.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-sentence',
@@ -12,7 +13,7 @@ export class SentenceComponent implements OnInit {
   @Input() sentence: string[];
   @Input() isent: number;
 
-  constructor(private injectionService: InjectionService) { }
+  constructor(private adjustorService: AdjustorService) { }
 
   ngOnInit(): void { }
 
@@ -21,17 +22,17 @@ export class SentenceComponent implements OnInit {
   }
 
   duplicate() {
-    this.injectionService.duplicateSent(this.isent);
+    this.adjustorService.duplicateSent(this.isent);
   }
 
   delete() {
-    this.injectionService.deleteSent(this.isent);
+    this.adjustorService.deleteSent(this.isent);
   }
   newAbove() {
-    this.injectionService.newAbove(this.isent);
+    this.adjustorService.newAbove(this.isent);
   }
   newBelow() {
-    this.injectionService.newBelow(this.isent);
+    this.adjustorService.newBelow(this.isent);
   }
 
 }

@@ -14,6 +14,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdjustorRoutingModule } from './adjustor-routing.module';
+import { AdjustorService } from './adjustor.service';
 
 @NgModule({
   declarations: [AdjustorComponent, SentenceComponent, TokenComponent],
@@ -33,6 +34,9 @@ import { AdjustorRoutingModule } from './adjustor-routing.module';
   ],
   exports: [
     AdjustorComponent
+  ],
+  providers: [
+    { provide: AdjustorService, useClass: AdjustorService }
   ]
 })
 export class AdjustorModule { }

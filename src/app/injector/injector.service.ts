@@ -53,7 +53,6 @@ export class InjectionService {
         // console.log(r);
         const r = nerSents.map(s => s.map(t => t.token));
         content = r.map(tab => tab.join('\n')).join('\n\n');
-
       }
 
       // Add new entry in the store
@@ -157,7 +156,7 @@ export interface IParser {
  * Since it isn't a proper annotation it behaves a little differently
  */
 export class Raw implements IParser {
-  annotation: Annotation.raw;
+  annotation = Annotation.raw;
   sentences: string[][] = [];
   stopInjecting: boolean;
 

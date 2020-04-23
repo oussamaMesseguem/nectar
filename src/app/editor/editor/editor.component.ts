@@ -77,7 +77,7 @@ export class EditorComponent implements OnInit {
     const dialogRef = this.dialog.open(ExportComponent, {
       width: '100%',
       data: {
-        annotations: this.selectedAnnotations
+        annotations: this.selectedAnnotations.value
       }
     });
 

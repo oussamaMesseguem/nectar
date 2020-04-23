@@ -19,7 +19,6 @@ export class ConlluComponent implements OnInit {
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc', 'edit'];
 
   @Input() sentence$: BehaviorSubject<ConlluToken[]>;
-  @Input() sentenceLength: number;
 
   constructor(public dialog: MatDialog) { }
 
@@ -36,7 +35,7 @@ export class ConlluComponent implements OnInit {
       width: '100%',
       data: {
         conlluToken: this.sentence$.value[index],
-        nbTokens: this.sentenceLength
+        nbTokens: this.sentence$.value.length
       }
     });
 

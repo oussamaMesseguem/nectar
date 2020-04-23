@@ -51,7 +51,7 @@
     <mat-divider></mat-divider>
 
     <ng-container [ngSwitch]="annotation">
-        <app-conllu [sentence$]="sentence$" [sentenceLength]="sentenceLength" *ngSwitchCase="'Conll-U'">
+        <app-conllu [sentence$]="sentence$" *ngSwitchCase="'Conll-U'">
         </app-conllu>
         <app-ner [sentence$]="sentence$" *ngSwitchCase="'Ner'"></app-ner>
         <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>

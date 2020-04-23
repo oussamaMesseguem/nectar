@@ -49,8 +49,8 @@
             </div>
         </mat-step>
 
-        <mat-step *ngIf="isRaw" label="Validation">
-            <div *ngIf="contentValidationInProgress" class="validation-in-progress">
+        <mat-step *ngIf="isRaw && contentValidationInProgress" label="Validation">
+            <div class="validation-in-progress">
                 <mat-spinner [diameter]="35"></mat-spinner>
                 <div>Validation in progress..</div>
             </div>
@@ -59,8 +59,6 @@
 </form>
 
 <mat-dialog-actions align="end">
-    <button *ngIf="isRaw" mat-button [mat-dialog-close]="adjust()">
-        <mat-icon>check</mat-icon>Adjust
-    </button>
-    <button mat-button (click)="stepper.reset(); type.reset(); cancelFile();">Reset</button>
+    <button *ngIf="isRaw" mat-stroked-button [mat-dialog-close]="adjust()">Adjust</button>
+    <button mat-stroked-button color="accent" (click)="stepper.reset(); type.reset(); cancelFile();">Reset</button>
 </mat-dialog-actions>

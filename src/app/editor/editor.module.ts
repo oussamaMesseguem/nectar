@@ -27,7 +27,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { InjectorComponent } from '../injector/injector/injector.component';
 import { AdjustorModule } from '../adjustor/adjustor.module';
-import { InjectorModule } from '../injector/injector.module';
 
 
 @NgModule({
@@ -58,7 +57,6 @@ import { InjectorModule } from '../injector/injector.module';
     // Nectar Modules
     AdjustorModule,
     ConlluModule,
-    InjectorModule,
     NerModule,
     EditorRoutingModule
   ]

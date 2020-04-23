@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Annotation } from '../../annotators/annotations';
 import { StoreService } from 'src/app/store.service';
 import { BehaviorSubject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportComponent } from '../export/export.component';
 
 @Component({
   selector: 'app-editor',
@@ -10,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class EditorComponent implements OnInit {
 
-  constructor(private storeService: StoreService) { }
+  constructor(private storeService: StoreService, public dialog: MatDialog) { }
 
   ngOnInit(): void { }
 
@@ -41,6 +43,7 @@ export class EditorComponent implements OnInit {
    */
   set annotation(annotation: string) { this.storeService.annotation = annotation; }
 
+  get selectedAnnotations(): string[] { return this.storeService.selectedAnnotations; }
   /**
    * The index of the current sentence
    */
@@ -57,5 +60,20 @@ export class EditorComponent implements OnInit {
    */
   removeAnnotation(annotation: string) {
     this.storeService.removeAnnotation(annotation);
+  }
+
+  export() {
+    const dialogRef = this.dialog.open(ExportComponent, {
+      width: '100%',
+      data: {
+        annotations: this.selectedAnnotations
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: string[]) => {
+      if (result !== undefined && result.length > 0) {
+        console.log('selected annots', result);
+      }
+    });
   }
 }

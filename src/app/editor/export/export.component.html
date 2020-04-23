@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Export</h1>
+<mat-dialog-content>
+    <mat-form-field [ngStyle]="{'width': '100%'}">
+        <mat-chip-list multiple=true ariaOrientation="horizontal"
+            aria-label="Annotation selection">
+            <mat-chip *ngFor="let annot of exportedAnnotations; let i = index" [value]="annot"
+                (click)="touch(i)" [selected]="annot.selected">
+                {{ annot.annotation }}
+            </mat-chip>
+        </mat-chip-list>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="export()" cdkFocusInitial color="accent">Export</button>
+</mat-dialog-actions>

@@ -88,6 +88,8 @@ export class StoreService {
      */
     get nbSentences(): number { return this.nbSentencesValue; }
 
+    get selectedAnnotations(): string[] { return Object.keys(this.store); }
+
     /**
      * The exposed sentence to display and tag
      */

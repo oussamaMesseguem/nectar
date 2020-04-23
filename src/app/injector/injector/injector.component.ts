@@ -10,6 +10,9 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-injector',
   templateUrl: './injector.component.html',
   styleUrls: ['./injector.component.scss'],
+  providers: [
+    { provide: InjectionService, useClass: InjectionService }
+  ],
   animations: [
     trigger('fadeInOut', [
       state('in', style({ opacity: 100 })),
@@ -37,8 +40,9 @@ export class InjectorComponent implements OnInit {
 
   files: Array<FileUploadModel> = [];
 
-  constructor(private formBuilder: FormBuilder, private injectionService: InjectionService,
-              private router: Router, public dialogRef: MatDialogRef<InjectorComponent>) { }
+  constructor(
+    private formBuilder: FormBuilder, private injectionService: InjectionService,
+    private router: Router, public dialogRef: MatDialogRef<InjectorComponent>) { }
 
   ngOnInit(): void { }
 
@@ -97,9 +101,9 @@ export class InjectorComponent implements OnInit {
   /**
    * Redirects to the adjusment form.
    */
-  adjust() {
+  adjust(): boolean {
     console.log(this.contentUploadFormGroup.value);
-    // this.router.navigateByUrl('adjust');
+    return this.isRaw;
   }
 
   /**

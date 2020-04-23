@@ -59,8 +59,8 @@
 </form>
 
 <mat-dialog-actions align="end">
-    <!-- <button *ngIf="isRaw" mat-button [mat-dialog-close]="adjust()">
+    <button *ngIf="isRaw" mat-button [mat-dialog-close]="adjust()">
         <mat-icon>check</mat-icon>Adjust
-    </button> -->
+    </button>
     <button mat-button (click)="stepper.reset(); type.reset(); cancelFile();">Reset</button>
 </mat-dialog-actions>

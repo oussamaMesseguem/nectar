@@ -28,7 +28,7 @@ export class TokenComponent implements OnInit {
    * Either display button or input
    * isTagged: input, so that label is displayed colored
    */
-  get isTagged(): boolean { return this.token.tag !== undefined && this.token.tag !== 'O' ; }
+  get isTagged(): boolean { return this.token.type !== undefined && this.token.type !== '' ; }
 
   /**
    * Once the tag has been added to a token, parent notifies self.

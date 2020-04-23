@@ -26,13 +26,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { InjectorComponent } from '../injector/injector/injector.component';
-import { AdjustorComponent } from '../adjustor/adjustor/adjustor.component';
 import { AdjustorModule } from '../adjustor/adjustor.module';
 import { InjectorModule } from '../injector/injector.module';
 
 
 @NgModule({
-  declarations: [EditorComponent, AnnotationListComponent, ExportComponent, InjectorComponent, AdjustorComponent],
+  declarations: [EditorComponent, AnnotationListComponent, ExportComponent, InjectorComponent],
   imports: [
     // Angular Modules
     CommonModule,

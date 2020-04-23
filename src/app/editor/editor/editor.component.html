@@ -15,7 +15,7 @@
         </div>
 
         <div>
-            <app-annotation-list (selectedAnnotation)="annotation = $event"
+            <app-annotation-list [annotation]="annotation" (selectedAnnotation)="annotation = $event"
                 (removedAnnotation)="removeAnnotation($event)"></app-annotation-list>
         </div>
 
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <button class="margin-elt" mat-stroked-button color="primary">Export</button>
+            <button class="margin-elt" mat-stroked-button color="primary" (click)="export()">Export</button>
         </div>
     </div>
 

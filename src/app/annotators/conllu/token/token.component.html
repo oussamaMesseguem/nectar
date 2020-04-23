@@ -43,8 +43,8 @@
         <mat-label>HEAD</mat-label>
         <input matInput formControlName="head" [matAutocomplete]="autoNB">
         <mat-autocomplete #autoNB="matAutocomplete">
-            <mat-option *ngFor="let nb of nbTokens" [value]="nb">
-                {{nb}}
+            <mat-option *ngFor="let itok of tokensIndexes" [value]="itok">
+                {{itok}}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

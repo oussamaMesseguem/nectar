@@ -18,10 +18,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ConlluModule } from '../annotators/conllu/conllu.module';
 import { NerModule } from '../annotators/ner/ner.module';
+import { ExportComponent } from './export/export.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
-  declarations: [EditorComponent, AnnotationListComponent],
+  declarations: [EditorComponent, AnnotationListComponent, ExportComponent],
   imports: [
     CommonModule,
     ConlluModule,
@@ -31,6 +33,7 @@ import { NerModule } from '../annotators/ner/ner.module';
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
     MatIconModule,

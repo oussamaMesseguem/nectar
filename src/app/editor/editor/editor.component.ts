@@ -73,6 +73,7 @@ export class EditorComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: string[]) => {
       if (result !== undefined && result.length > 0) {
         console.log('selected annots', result);
+        this.storeService.writeContents(result);
       }
     });
   }

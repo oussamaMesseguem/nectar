@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ConlluToken, createConlluToken } from './annotators/conllu/conllu.model';
+import { createConlluToken, conlluIntoText } from './annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
-import { NerToken, createNerToken } from './annotators/ner/ner.model';
+import { createNerToken, nerIntoText } from './annotators/ner/ner.model';
 import { Annotation } from './annotators/annotations';
 
 /**
@@ -137,6 +137,27 @@ export class StoreService {
         });
         this.store[annotation] = annotationContent;
     }
+
+    /**
+     * Writes content into files.
+     * @param annotations the exported annotations
+     */
+    writeContents(annotations: string[]) {
+        annotations.forEach(annotation => {
+            const a = document.createElement('a');
+            let content: string;
+            if (annotation === Annotation.conllu) {
+                content = conlluIntoText(this.store[annotation]);
+            }
+            if (annotation === Annotation.ner) {
+                content = nerIntoText(this.store[annotation]);
+            }
+            const file = new Blob([content], { type: 'text/plain'} );
+            a.href = URL.createObjectURL(file);
+            a.download = `${annotation}.txt`;
+            a.click();
+        });
+      }
 }
 
 // const conlluSents: ConlluToken[][] = [

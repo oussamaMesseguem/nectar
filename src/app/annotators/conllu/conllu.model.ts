@@ -57,6 +57,22 @@ export function createConlluToken(
     };
 }
 
+/**
+ * Writes the content as conllu scheme.
+ * @param content the content from the store
+ */
+export function conlluIntoText(content: ConlluToken[][]): string {
+    const text = [];
+    content.forEach(sentence => {
+        const sentenceArray = [];
+        sentence.forEach(token => {
+            sentenceArray.push(Object.values(token).join('\t'));
+        });
+        text.push(sentenceArray.join('\n'));
+    });
+    return text.join('\n\n');
+}
+
 export interface UPos {
     tag: string;
     name: string;

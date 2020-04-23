@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportComponent } from '../export/export.component';
 import { InjectorComponent } from 'src/app/injector/injector/injector.component';
+import { AdjustorComponent } from 'src/app/adjustor/adjustor/adjustor.component';
 
 @Component({
   selector: 'app-editor',
@@ -81,6 +82,21 @@ export class EditorComponent implements OnInit {
 
   import() {
     const dialogRef = this.dialog.open(InjectorComponent, {
+      width: '100%',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe((result: string[]) => {
+      if (result !== undefined) {
+        console.log('open adjust', result);
+        this.adjust();
+      }
+    });
+  }
+
+  adjust() {
+    console.log(this.storeService.rawContent);
+    const dialogRef = this.dialog.open(AdjustorComponent, {
       width: '100%',
       data: { }
     });

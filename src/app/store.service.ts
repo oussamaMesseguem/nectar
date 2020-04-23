@@ -33,10 +33,12 @@ export class StoreService {
      */
     rawContent: string[][];
 
+    selectedAnnotations$: BehaviorSubject<string[]> = new BehaviorSubject([]);
+
     /**
-     * The private observable sentence in readonly.
+     * The exposed sentence to display and tag.
      */
-    sentence$$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+    sentence$: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
     /**
      * The store itself.
@@ -61,6 +63,7 @@ export class StoreService {
         this.annotationValue = annotation;
         if (!Object.keys(this.store).includes(annotation)) {
             this.init(annotation);
+            this.selectedAnnotations$.next(this.keys());
         }
         this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
@@ -88,13 +91,6 @@ export class StoreService {
      */
     get nbSentences(): number { return this.nbSentencesValue; }
 
-    get selectedAnnotations(): string[] { return Object.keys(this.store); }
-
-    /**
-     * The exposed sentence to display and tag
-     */
-    get sentence$(): BehaviorSubject<any[]> { return this.sentence$$; }
-
     /**
      * Adds a new entry in the store and sets the raw content array.
      * @param annotation new object property
@@ -104,6 +100,7 @@ export class StoreService {
             this.rawContent = content.map(l => l.map(t => t.token));
             this.store[annotation] = content;
             this.annotation = annotation;
+            this.selectedAnnotations$.next(this.keys());
         } else {
             this.rawContent = content;
         }
@@ -115,6 +112,10 @@ export class StoreService {
      */
     removeAnnotation(annotation: string) {
         delete this.store[annotation];
+        this.selectedAnnotations$.next(this.keys());
+        if (this.selectedAnnotations$.value.length > 0) {
+            this.annotation = this.selectedAnnotations$.value[0];
+        }
     }
 
     /**
@@ -136,6 +137,13 @@ export class StoreService {
             annotationContent.push(sent);
         });
         this.store[annotation] = annotationContent;
+    }
+
+    /**
+     * Returns the annotations in the store.
+     */
+    private keys(): string[] {
+        return Object.keys(this.store);
     }
 
     /**

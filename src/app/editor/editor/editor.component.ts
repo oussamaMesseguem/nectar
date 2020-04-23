@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Annotation } from '../../annotators/annotations';
 import { StoreService } from 'src/app/store.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportComponent } from '../export/export.component';
 import { InjectorComponent } from 'src/app/injector/injector/injector.component';
@@ -21,7 +21,36 @@ export class EditorComponent implements OnInit {
   /**
    * The annotation list.
    */
-  get annotations() { return Annotation; }
+  get annotations(): string[] { return Object.values(Annotation).filter(a => a !== Annotation.raw); }
+
+  /**
+   * The current annotation.
+   */
+  get annotation(): string { return this.storeService.annotation; }
+
+  /**
+   * The current annotation. Set in the template by a <list-annotation> output
+   */
+  set annotation(annotation: string) { this.storeService.annotation = annotation; }
+
+  /**
+   * The index of the current sentence
+   */
+  get index() { return this.storeService.index; }
+
+  /**
+   * Sets the new index value
+   */
+  set index(index: number) { this.storeService.index = index; }
+
+  /**
+   * The remaining annotations that is possible to add to the chip-list
+   */
+  get filteredAnnotations(): string[] {
+    return this.annotations.filter(annot => !this.selectedAnnotations.value.includes(annot));
+  }
+
+  get selectedAnnotations(): BehaviorSubject<string[]> { return this.storeService.selectedAnnotations$; }
 
   /**
    * A view on the current sentence depending on the index and the annotation.
@@ -34,27 +63,6 @@ export class EditorComponent implements OnInit {
    * The sentence length.
    */
   get sentenceLength(): number { return this.storeService.sentence$.value.length; }
-
-  /**
-   * The current annotation.
-   */
-  get annotation(): string { return this.storeService.annotation; }
-
-  /**
-   * The current annotation. Set in the template by a <list-annotation> output
-   */
-  set annotation(annotation: string) { this.storeService.annotation = annotation; }
-
-  get selectedAnnotations(): string[] { return this.storeService.selectedAnnotations; }
-  /**
-   * The index of the current sentence
-   */
-  get index() { return this.storeService.index; }
-
-  /**
-   * Sets the new index value
-   */
-  set index(index: number) { this.storeService.index = index; }
 
   /**
    * Opens the dialog to adjust the content

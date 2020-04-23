@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AdjustorService } from '../adjustor.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -17,7 +16,4 @@ export class AdjustorComponent implements OnInit {
 
   get sentences() { return this.adjustorService.sentences; }
 
-  edit() {
-    // this.router.navigateByUrl('edit');
-  }
 }

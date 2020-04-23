@@ -57,13 +57,19 @@ export class EditorComponent implements OnInit {
   set index(index: number) { this.storeService.index = index; }
 
   /**
-   * Removes the annotation form the store.
-   * @param annotation The emitted annotation
+   * Opens the dialog to adjust the content
    */
-  removeAnnotation(annotation: string) {
-    this.storeService.removeAnnotation(annotation);
+  adjust() {
+    console.log(this.storeService.rawContent);
+    this.dialog.open(AdjustorComponent, {
+      width: '100%',
+      data: { }
+    });
   }
 
+  /**
+   * Opens a dialog to export the content.
+   */
   export() {
     const dialogRef = this.dialog.open(ExportComponent, {
       width: '100%',
@@ -74,38 +80,33 @@ export class EditorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: string[]) => {
       if (result !== undefined && result.length > 0) {
-        console.log('selected annots', result);
         this.storeService.writeContents(result);
       }
     });
   }
 
+  /**
+   * Opens the dialog to import content.
+   */
   import() {
     const dialogRef = this.dialog.open(InjectorComponent, {
       width: '100%',
       data: { }
     });
 
+    // After the import dialog; opens the adjust dialog if asked.
     dialogRef.afterClosed().subscribe((result: string[]) => {
       if (result !== undefined) {
-        console.log('open adjust', result);
         this.adjust();
       }
     });
   }
 
-  adjust() {
-    console.log(this.storeService.rawContent);
-    const dialogRef = this.dialog.open(AdjustorComponent, {
-      width: '100%',
-      data: { }
-    });
-
-    // dialogRef.afterClosed().subscribe((result: string[]) => {
-    //   if (result !== undefined && result.length > 0) {
-    //     console.log('selected annots', result);
-    //     this.storeService.writeContents(result);
-    //   }
-    // });
+  /**
+   * Removes the annotation form the store.
+   * @param annotation The emitted annotation
+   */
+  removeAnnotation(annotation: string) {
+    this.storeService.removeAnnotation(annotation);
   }
 }

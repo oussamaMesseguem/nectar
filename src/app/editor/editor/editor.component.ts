@@ -4,6 +4,7 @@ import { StoreService } from 'src/app/store.service';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportComponent } from '../export/export.component';
+import { InjectorComponent } from 'src/app/injector/injector/injector.component';
 
 @Component({
   selector: 'app-editor',
@@ -76,5 +77,19 @@ export class EditorComponent implements OnInit {
         this.storeService.writeContents(result);
       }
     });
+  }
+
+  import() {
+    const dialogRef = this.dialog.open(InjectorComponent, {
+      width: '100%',
+      data: { }
+    });
+
+    // dialogRef.afterClosed().subscribe((result: string[]) => {
+    //   if (result !== undefined && result.length > 0) {
+    //     console.log('selected annots', result);
+    //     this.storeService.writeContents(result);
+    //   }
+    // });
   }
 }

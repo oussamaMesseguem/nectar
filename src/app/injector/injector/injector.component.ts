@@ -4,6 +4,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { Annotation, Language } from '../../annotators/annotations';
 import { Router } from '@angular/router';
 import { InjectionService } from '../injector.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-injector',
@@ -37,7 +38,7 @@ export class InjectorComponent implements OnInit {
   files: Array<FileUploadModel> = [];
 
   constructor(private formBuilder: FormBuilder, private injectionService: InjectionService,
-              private router: Router) { }
+              private router: Router, public dialogRef: MatDialogRef<InjectorComponent>) { }
 
   ngOnInit(): void { }
 
@@ -94,20 +95,11 @@ export class InjectorComponent implements OnInit {
   }
 
   /**
-   * Redirects to the annotation page.
-   */
-  annotate() {
-    console.log(this.contentUploadFormGroup.value);
-    this.router.navigateByUrl('edit');
-
-  }
-
-  /**
    * Redirects to the adjusment form.
    */
   adjust() {
     console.log(this.contentUploadFormGroup.value);
-    this.router.navigateByUrl('adjust');
+    // this.router.navigateByUrl('adjust');
   }
 
   /**

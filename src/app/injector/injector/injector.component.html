@@ -1,91 +1,66 @@
-<div class="main-container">
-    <mat-card class="flow-diagram">
-        <!-- <img mat-card-image class="img-size" src="assets\img\content-injection-flow-diagram.png"> -->
-    </mat-card>
+<form mat-dialog-content [formGroup]="contentUploadFormGroup">
+    <mat-vertical-stepper [linear]=true #stepper>
+        <mat-step [stepControl]="lang" label="Select the language">
 
-    <mat-card class="upload-form">
-        <mat-card-content>
-            <form [formGroup]="contentUploadFormGroup">
-                <mat-vertical-stepper [linear]=true #stepper>
-                    <mat-step [stepControl]="lang" label="Select the language">
+            <mat-form-field class="full-width">
+                <input type="text" placeholder="Language" aria-label="Language" matInput [formControl]="lang"
+                    [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let language of languages" [value]="language">
+                        {{language}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </mat-step>
 
-                        <mat-form-field class="full-width">
-                            <input type="text" placeholder="Language" aria-label="Language" matInput
-                                [formControl]="lang" [matAutocomplete]="auto" required>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let language of languages" [value]="language">
-                                    {{language}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </mat-step>
+        <mat-step label="Choose the type">
+            <mat-form-field class="full-width">
+                <mat-chip-list class="type-chips" multiple=false ariaOrientation="horizontal" required
+                    [formControl]="type">
+                    <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
+                        (click)="type.setValue(typeContent)">
+                        {{ typeContent }}
+                    </mat-chip>
+                </mat-chip-list>
+            </mat-form-field>
+        </mat-step>
 
-                    <mat-step label="Choose the type">
-                        <mat-form-field class="full-width">
-                            <mat-chip-list class="type-chips" multiple=false ariaOrientation="horizontal" required
-                                [formControl]="type">
-                                <mat-chip *ngFor="let typeContent of types" [value]="typeContent"
-                                    (click)="type.setValue(typeContent)">
-                                    {{ typeContent }}
-                                </mat-chip>
-                            </mat-chip-list>
-                        </mat-form-field>
-                    </mat-step>
+        <mat-step label="Upload">
+            <div class="container-upload">
+                <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!isFormValid">
+                    <mat-icon>file_upload</mat-icon>
+                    Upload
+                </button>
 
-                    <mat-step label="Upload">
-                        <div class="container-upload">
-                            <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!isFormValid">
-                                <mat-icon>file_upload</mat-icon>
-                                Upload
-                            </button>
+                <ul>
+                    <li *ngFor="let file of files" [@fadeInOut]="file.state">
+                        <mat-progress-bar [value]="file.progress"></mat-progress-bar>
 
-                            <ul>
-                                <li *ngFor="let file of files" [@fadeInOut]="file.state">
-                                    <mat-progress-bar [value]="file.progress"></mat-progress-bar>
+                        <span style="margin-top: 10px;" id="file-label">
+                            {{file.data.name}}
+                            <a title="Cancel" (click)="cancelFile()">
+                                <mat-icon>cancel</mat-icon>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
 
-                                    <span style="margin-top: 10px;" id="file-label">
-                                        {{file.data.name}}
-                                        <a title="Cancel" (click)="cancelFile()">
-                                            <mat-icon>cancel</mat-icon>
-                                        </a>
-                                    </span>
-                                </li>
-                            </ul>
+                <input type="file" id="fileUpload" name="fileUpload" multiple="multiple" style="display:none;" />
+            </div>
+        </mat-step>
 
-                            <input type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-                                style="display:none;" />
-                        </div>
-                    </mat-step>
+        <mat-step *ngIf="isRaw" label="Validation">
+            <div *ngIf="contentValidationInProgress" class="validation-in-progress">
+                <mat-spinner [diameter]="35"></mat-spinner>
+                <div>Validation in progress..</div>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+</form>
 
-                    <mat-step label="Validation">
-                        <div class="validation-step">
-                            <div>
-                                <div *ngIf="contentValidationInProgress" class="validation-in-progress">
-                                    <mat-spinner [diameter]="35"></mat-spinner>
-
-                                    <div>Validation in progress..</div>
-                                </div>
-
-                                <div *ngIf="isValid">
-                                    <mat-card class="mat-elevation-z0 validation-btns-card">
-                                        <button mat-button (click)="annotate()" *ngIf="!isRaw">
-                                            <mat-icon>check</mat-icon>Annotate
-                                        </button>
-
-                                        <button mat-button (click)="adjust()" *ngIf="isRaw">
-                                            <mat-icon>check</mat-icon>Adjust
-                                        </button>
-                                    </mat-card>
-                                </div>
-                            </div>
-
-                            <div>
-                                <button mat-button (click)="stepper.reset(); type.reset(); cancelFile();">Reset</button>
-                            </div>
-                        </div>
-                    </mat-step>
-                </mat-vertical-stepper>
-            </form>
-        </mat-card-content>
-    </mat-card>
-</div>
+<mat-dialog-actions align="end">
+    <!-- <button *ngIf="isRaw" mat-button [mat-dialog-close]="adjust()">
+        <mat-icon>check</mat-icon>Adjust
+    </button> -->
+    <button mat-button (click)="stepper.reset(); type.reset(); cancelFile();">Reset</button>
+</mat-dialog-actions>

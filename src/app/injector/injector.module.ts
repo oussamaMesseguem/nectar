@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InjectorComponent } from './injector/injector.component';
-import { InjectionRoutingModule } from './injector-routing.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HttpClientModule } from '@angular/common/http';
 import { InjectionService } from './injector.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [InjectorComponent],
@@ -28,6 +28,7 @@ import { InjectionService } from './injector.service';
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -36,10 +37,10 @@ import { InjectionService } from './injector.service';
     MatProgressSpinnerModule,
     MatStepperModule,
     MatTooltipModule,
-    InjectionRoutingModule
   ],
   providers: [
     { provide: InjectionService, useClass: InjectionService}
-  ]
+  ],
+  exports: [InjectorComponent]
 })
 export class InjectorModule { }

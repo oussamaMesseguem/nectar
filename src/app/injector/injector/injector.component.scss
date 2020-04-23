@@ -1,41 +1,6 @@
-.main-container {
-  display: grid;
-  grid-template-areas: "flow-diagram upload-form";
-  grid-template-columns: 1fr 1fr;
-  height: 100%;
-}
-
-.flow-diagram {
-  grid-area: flow-diagram;
-  background-color: orange;
-  margin: 10% 5% 15% 5%;
-  min-width: 350px;
-  max-width: 700px;
-}
-
-.upload-form {
-  grid-area: upload-form;
-  margin: 5% 15% 8% 5%;
-  min-width: 350px;
-  max-width: 700px;
-  padding: 5px 10px 5px 10px;
-}
-
-.validation-step {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  column-gap: 14px;
-}
-
 .validation-in-progress {
   display: grid;
   grid-template-columns: 1fr 3fr;
-}
-
-.validation-btns-card {
-  padding-left: 30%;
-  padding-right: 25%;
-  border: 1px solid green;
 }
 
 .full-width {
@@ -85,22 +50,3 @@ li {
   padding: 0 24px 14px 24px !important;
 }
 
-
-
-// Media screen
-@media screen and (max-width: 860px) {
-  .main-container {
-    display: grid;
-    grid-template-areas: "flow-diagram flow-diagram" "upload-form upload-form";
-    grid-template-rows: 1fr 1fr;
-    width: 100%;
-  }
-
-  .flow-diagram {
-    margin: 5% 15% 5% 15%;
-  }
-
-  .upload-form {
-    margin: 5% 15% 5% 15%;
-  }
-}

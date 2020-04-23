@@ -20,6 +20,7 @@ import { ConlluModule } from '../annotators/conllu/conllu.module';
 import { NerModule } from '../annotators/ner/ner.module';
 import { ExportComponent } from './export/export.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { InjectorModule } from '../injector/injector.module';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatOptionModule,
     MatSlideToggleModule,
     MatTooltipModule,
+    InjectorModule,
     EditorRoutingModule
   ]
 })

@@ -60,11 +60,6 @@ export class EditorComponent implements OnInit {
   get sentence$(): BehaviorSubject<any[]> { return this.storeService.sentence$; }
 
   /**
-   * The sentence length.
-   */
-  get sentenceLength(): number { return this.storeService.sentence$.value.length; }
-
-  /**
    * Opens the dialog to adjust the content
    */
   adjust() {

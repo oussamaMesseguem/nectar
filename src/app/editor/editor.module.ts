@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ConlluModule } from '../annotators/conllu/conllu.module';
 import { NerModule } from '../annotators/ner/ner.module';
-import { ExportComponent } from './export/export.component';
+import { ExportComponent } from '../export/export.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';

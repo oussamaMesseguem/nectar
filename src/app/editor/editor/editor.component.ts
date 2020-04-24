@@ -3,7 +3,7 @@ import { Annotation } from '../../annotators/annotations';
 import { StoreService } from 'src/app/store.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ExportComponent } from '../export/export.component';
+import { ExportComponent } from '../../export/export.component';
 import { InjectorComponent } from 'src/app/injector/injector/injector.component';
 import { AdjustorComponent } from 'src/app/adjustor/adjustor/adjustor.component';
 

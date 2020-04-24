@@ -5,7 +5,6 @@ import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { ConlluParser } from '../annotators/conllu/conllu.model';
 import { StoreService } from '../store.service';
 import { NerParser, NerToken } from '../annotators/ner/ner.model';
-import { ConllxParser } from '../annotators/conllx/conllx.model';
 
 @Injectable()
 export class InjectionService {
@@ -25,9 +24,6 @@ export class InjectionService {
     switch (annotation) {
       case Annotation.conllu:
         this.parser = new ConlluParser();
-        break;
-      case Annotation.conllx:
-        this.parser = new ConllxParser();
         break;
       case Annotation.ner:
         this.parser = new NerParser();

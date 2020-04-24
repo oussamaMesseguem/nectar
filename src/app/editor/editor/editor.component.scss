@@ -8,14 +8,17 @@
 .manager {
     display: grid;
     grid-template-columns: 20% 40% 20% 20%;
-    padding: 15px;
     text-align: center;
 }
 
-.margin-elt {
-    margin: 13px;
+.padding-top-elt {
+    padding-top: 13px;
 }
 
 .full-width {
     width: 100%;
+}
+
+.btn-margin-right {
+    margin-right: 13px;
 }

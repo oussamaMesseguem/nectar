@@ -1,5 +1,5 @@
 <div class="editor-container">
-    <div class="manager">
+    <mat-card class="mat-elevation-z0 manager">
         <div>
             <button mat-icon-button (click)="index = index - 1">
                 <mat-icon>chevron_left</mat-icon>
@@ -35,18 +35,24 @@
         </mat-form-field>
 
         <div>
-            <mat-slide-toggle class="margin-elt" color="primary"
+            <mat-slide-toggle class="padding-top-elt" color="primary"
                 matTooltip="Display propositions from an external service. Leave results as they are or modify them."
                 matTooltipPosition="below" matTooltipShowDelay="500">
                 Active Propostions
             </mat-slide-toggle>
         </div>
 
-        <div>
-            <button class="margin-elt" mat-stroked-button color="primary" (click)="import()">Import</button>
-            <button class="margin-elt" mat-stroked-button color="primary" (click)="export()">Export</button>
+        <div class="padding-top-elt">
+            <button class="btn-margin-right" mat-stroked-button color="primary" (click)="import()"
+                matTooltip="Import content into the annotator." matTooltipShowDelay="500">
+                Import
+            </button>
+            <button class="btn-margin-right" mat-stroked-button color="primary" (click)="export()"
+                matTooltip="Export the content into files." matTooltipShowDelay="500">
+                Export
+            </button>
         </div>
-    </div>
+    </mat-card>
 
     <mat-divider></mat-divider>
 

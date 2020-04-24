@@ -12,23 +12,31 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
-import { AnnotationListComponent } from './annotation-list/annotation-list.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ConlluModule } from '../annotators/conllu/conllu.module';
 import { NerModule } from '../annotators/ner/ner.module';
-import { ExportComponent } from './export/export.component';
+import { ExportComponent } from '../export/export.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule } from '@angular/material/stepper';
+import { InjectorComponent } from '../injector/injector/injector.component';
+import { AdjustorModule } from '../adjustor/adjustor.module';
 
 
 @NgModule({
-  declarations: [EditorComponent, AnnotationListComponent, ExportComponent],
+  declarations: [EditorComponent, ExportComponent, InjectorComponent],
   imports: [
+    // Angular Modules
     CommonModule,
-    ConlluModule,
-    NerModule,
     FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    // Material Modules
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
@@ -37,10 +45,18 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatMenuModule,
     MatOptionModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatStepperModule,
     MatTooltipModule,
+    // Nectar Modules
+    AdjustorModule,
+    ConlluModule,
+    NerModule,
     EditorRoutingModule
   ]
 })

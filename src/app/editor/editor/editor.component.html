@@ -1,5 +1,5 @@
 <div class="editor-container">
-    <div class="manager">
+    <mat-card class="mat-elevation-z0 manager">
         <div>
             <button mat-icon-button (click)="index = index - 1">
                 <mat-icon>chevron_left</mat-icon>
@@ -14,30 +14,58 @@
             </button>
         </div>
 
-        <div>
-            <app-annotation-list [annotation]="annotation" (selectedAnnotation)="annotation = $event"
-                (removedAnnotation)="removeAnnotation($event)"></app-annotation-list>
-        </div>
+        <mat-form-field class="full-width">
+            <mat-chip-list multiple=false ariaOrientation="horizontal" [(ngModel)]="annotation"
+                aria-label="Annotation selection">
+                <mat-chip *ngFor="let annot of selectedAnnotations | async" [selectable]="true" [removable]="true"
+                    [value]="annot" (removed)="removeAnnotation(annot)" (click)="annotation = annot">
+                    {{annot}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
 
-        <div>
-            <mat-slide-toggle class="margin-elt" color="primary"
+                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations"
+                    matTooltipPosition="above" matTooltipShowDelay="500">
+                    <mat-icon>add_circle_outlined</mat-icon>
+                    <mat-menu #menu="matMenu" yPosition="below">
+                        <button *ngFor="let annot of filteredAnnotations" mat-menu-item
+                            (click)="annotation = annot">{{annot}}</button>
+                    </mat-menu>
+                </button>
+            </mat-chip-list>
+        </mat-form-field>
+
+        <!-- Must be uncommented when a services are available -->
+        <!-- <div>
+            <mat-slide-toggle class="padding-top-elt" color="primary"
                 matTooltip="Display propositions from an external service. Leave results as they are or modify them."
                 matTooltipPosition="below" matTooltipShowDelay="500">
                 Active Propostions
             </mat-slide-toggle>
-        </div>
+        </div> -->
 
-        <div>
-            <button class="margin-elt" mat-stroked-button color="primary" (click)="export()">Export</button>
+        <div class="padding-top-elt">
+            <button class="btn-margin-right" mat-stroked-button color="primary" (click)="import()"
+                matTooltip="Import content into the annotator." matTooltipShowDelay="500">
+                Import
+            </button>
+            <button class="btn-margin-right" mat-stroked-button color="primary" (click)="export()"
+                matTooltip="Export the content into files." matTooltipShowDelay="500">
+                Export
+            </button>
         </div>
-    </div>
+    </mat-card>
 
     <mat-divider></mat-divider>
 
     <ng-container [ngSwitch]="annotation">
-        <app-conllu [sentence$]="sentence$" [sentenceLength]="sentenceLength" *ngSwitchCase="annotations.conllu">
+        <app-conllu [sentence$]="sentence$" *ngSwitchCase="'Conll-U'">
         </app-conllu>
-        <app-ner [sentence$]="sentence$" *ngSwitchCase="annotations.ner"></app-ner>
-        <div class="mat-elevation-z0 mat-card" *ngSwitchDefault>Please add an annotation</div>
+        <app-ner [sentence$]="sentence$" *ngSwitchCase="'Ner'"></app-ner>
+        <div class="centered-content" *ngSwitchDefault>
+            <video controls width="800" height="500" autoplay loop muted>
+                <source src="assets/img/2020-04-24-12-01-59_Nectar-Trim.mp4" type="video/mp4">
+                <p>Your browser doesn't support HTML5 video. Here is a ink to the video instead.</p>
+            </video>
+        </div>
     </ng-container>
 </div>

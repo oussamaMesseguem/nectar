@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { ConlluParser } from '../annotators/conllu/conllu.model';
 import { StoreService } from '../store.service';
-import { NerParser } from '../annotators/ner/ner.model';
-import { ConllxParser } from '../annotators/conllx/conllx.model';
+import { NerParser, NerToken } from '../annotators/ner/ner.model';
 
 @Injectable()
 export class InjectionService {
@@ -26,9 +25,6 @@ export class InjectionService {
       case Annotation.conllu:
         this.parser = new ConlluParser();
         break;
-      case Annotation.conllx:
-        this.parser = new ConllxParser();
-        break;
       case Annotation.ner:
         this.parser = new NerParser();
         break;
@@ -44,15 +40,15 @@ export class InjectionService {
     const promise: Promise<boolean> = new Promise(async (resolve, reject) => {
 
       if (annotation === Annotation.raw) {
-        const response: CoreNLPResponse = await this.corenlp(content);
-        const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
-        console.log(r);
-        r[0].splice(0, 6);
-        const lastPosition = r[r.length - 1].length;
-        r[r.length - 1].splice(lastPosition - 2, 2);
-        console.log(r);
+        // const response: CoreNLPResponse = await this.corenlp(content);
+        // const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
+        // console.log(r);
+        // r[0].splice(0, 6);
+        // const lastPosition = r[r.length - 1].length;
+        // r[r.length - 1].splice(lastPosition - 2, 2);
+        // console.log(r);
+        const r = nerSents.map(s => s.map(t => t.token));
         content = r.map(tab => tab.join('\n')).join('\n\n');
-
       }
 
       // Add new entry in the store
@@ -156,7 +152,7 @@ export interface IParser {
  * Since it isn't a proper annotation it behaves a little differently
  */
 export class Raw implements IParser {
-  annotation: Annotation.raw;
+  annotation = Annotation.raw;
   sentences: string[][] = [];
   stopInjecting: boolean;
 
@@ -188,3 +184,490 @@ interface CoreNLPSentence {
 interface CoreNLPToken {
   originalText: string;
 }
+
+const nerSents: NerToken[][] = [
+    [
+        {
+
+            token: 'Baisse',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'des',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'prix',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'en',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'Grande',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '-',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'Bretagne',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ':',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'en',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'novembre',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ',',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'les',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'prix',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'ont',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'baissé',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'de',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '0',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ',',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '1',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '%',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ',',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'annonce',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'l\'',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'office',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'des',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'statistiques',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'le',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '11',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'décembre',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '.',
+            tag: '',
+            type: ''
+        }
+    ],
+    [
+        {
+
+            token: 'Signe',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'des',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'temps',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ':',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'la',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'très',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'britannique',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'banque',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'd\'',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'affaires',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'et',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'de',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'marché', tag: '',
+            type: ''
+        },
+        {
+
+            token: 'vient', tag: '',
+            type: ''
+        },
+        {
+
+            token: 'd\'', tag: '',
+            type: ''
+
+        },
+        {
+
+            token: 'acheter', tag: '',
+            type: ''
+
+        },
+        {
+
+            token: 'un', tag: '',
+            type: ''
+
+        },
+        {
+
+            token: 'siège', tag: '',
+            type: ''
+
+        },
+        {
+
+            token: 'à',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'la',
+            tag: '',
+            type: ''
+
+        },
+        {
+
+            token: 'Bourse',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'de',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'Paris',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '.',
+            tag: '',
+            type: ''
+        }
+    ],
+    [
+        {
+
+            token: 'Comme',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'le',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'déplore',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'le',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'quotidien',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'financier',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: ',',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'on',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'est',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'bien',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'loin',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'des',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'quatre',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '-',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'vingt',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '-',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'deux',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'admissions',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'enregistrées',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'au',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'cours',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'de',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'l\'',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: 'année',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '1987',
+            tag: '',
+            type: ''
+        },
+        {
+
+            token: '.', tag: '',
+            type: ''
+        }
+    ]
+];

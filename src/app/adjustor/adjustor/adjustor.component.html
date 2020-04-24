@@ -1,11 +1,10 @@
-<div class="main-container">
-    <div>
-        <button class="btn-validation" mat-fab (click)="edit()">
-            <mat-icon>check</mat-icon>
-        </button>
-    </div>
+<h2 mat-dialog-title>Split and Tokenisation</h2>
+<mat-dialog-content>
+    <app-sentence *ngFor="let sent of sentences; let i = index" [sentence]="sent" [isentence]="i"></app-sentence>
+</mat-dialog-content>
 
-    <div class="sentences-container">
-        <app-sentence *ngFor="let sent of sentences; let i = index" [sentence]="sent" [isentence]="i"></app-sentence>
-    </div>
-</div>
+<mat-dialog-actions align="end">
+    <button mat-fab color="primary" [mat-dialog-close]="true" cdkFocusInitial>
+        <mat-icon>check</mat-icon>
+    </button>
+</mat-dialog-actions>

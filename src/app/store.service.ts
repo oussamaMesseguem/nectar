@@ -104,6 +104,7 @@ export class StoreService {
         } else {
             this.rawContent = content;
         }
+        this.nbSentencesValue = this.rawContent.length;
     }
 
     /**

@@ -19,7 +19,7 @@ export class NerParser implements IParser {
         const token = value[0];
         let tag = 'O';
         let type = '';
-        if (value[1] !== 'O') {
+        if (value[1] !== '' && value[1] !== 'O') {
             const t = value[1].split('-');
             tag = t[0];
             type = t[1];
@@ -43,7 +43,7 @@ export function nerIntoText(content: NerToken[][]): string {
         sentence.forEach(token => {
             const values: string[] = Object.values(token);
             let tag = 'O';
-            if (values[1] !== 'O') {
+            if (values[1] !== '' && values[1] !== 'O') {
                 tag = values[1].concat('-', values[2]);
             }
             values.splice(1, 2, tag);

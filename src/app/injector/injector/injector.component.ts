@@ -23,7 +23,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class InjectorComponent implements OnInit {
 
   languages: string[] = Object.values(Language);
-  types: string[] = Object.values(Annotation);
+  types: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
 
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 

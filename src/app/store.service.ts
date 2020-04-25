@@ -13,21 +13,6 @@ import { Annotation } from './annotators/annotations';
 export class StoreService {
 
     /**
-     * The current selected annotation. Affects the sentence observable as it changes its content.
-     */
-    private annotationValue: string;
-
-    /**
-     * The current sentence index among the sentences. Affects the sentence observable as it changes its content.
-     */
-    private indexValue = 0;
-
-    /**
-     * the number of sentences. Used to move from a sentence to another.
-     */
-    private nbSentencesValue: number;
-
-    /**
      * Contains the tokens per sentences.
      * Used to init new annotation objects
      */
@@ -39,6 +24,16 @@ export class StoreService {
      * The exposed sentence to display and tag.
      */
     sentence$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+
+    /**
+     * The current selected annotation. Affects the sentence observable as it changes its content.
+     */
+    private annotationValue: string;
+
+    /**
+     * The current sentence index among the sentences. Affects the sentence observable as it changes its content.
+     */
+    private indexValue = 0;
 
     /**
      * The store itself.
@@ -61,7 +56,7 @@ export class StoreService {
      */
     set annotation(annotation: string) {
         this.annotationValue = annotation;
-        if (!Object.keys(this.store).includes(annotation)) {
+        if (!this.keys().includes(annotation)) {
             this.init(annotation);
             this.selectedAnnotations$.next(this.keys());
         }
@@ -89,7 +84,7 @@ export class StoreService {
     /**
      * The number of sentences in the store.
      */
-    get nbSentences(): number { return this.nbSentencesValue; }
+    get nbSentences(): number { return this.rawContent.length; }
 
     /**
      * Adds a new entry in the store and sets the raw content array.
@@ -100,11 +95,9 @@ export class StoreService {
             this.rawContent = content.map(l => l.map(t => t.token));
             this.store[annotation] = content;
             this.annotation = annotation;
-            this.selectedAnnotations$.next(this.keys());
         } else {
             this.rawContent = content;
         }
-        this.nbSentencesValue = this.rawContent.length;
     }
 
     /**

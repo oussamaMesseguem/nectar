@@ -102,7 +102,6 @@ export class InjectorComponent implements OnInit {
    * Redirects to the adjusment form.
    */
   adjust(): boolean {
-    console.log(this.contentUploadFormGroup.value);
     return this.isRaw;
   }
 
@@ -118,7 +117,6 @@ export class InjectorComponent implements OnInit {
 
       // While on progress a progress bar is displayed
       reader.onprogress = (event: ProgressEvent) => {
-        console.log('inside onprogress');
         file.progress = Math.round((event.loaded * 100) / event.total);
       };
 

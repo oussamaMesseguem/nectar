@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Annotation, Language } from '../../annotators/annotations';
-import { Router } from '@angular/router';
 import { InjectionService } from '../injector.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -42,7 +41,7 @@ export class InjectorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder, private injectionService: InjectionService,
-    private router: Router, public dialogRef: MatDialogRef<InjectorComponent>) { }
+    public dialogRef: MatDialogRef<InjectorComponent>) { }
 
   ngOnInit(): void { }
 
@@ -99,7 +98,7 @@ export class InjectorComponent implements OnInit {
   }
 
   /**
-   * Redirects to the adjusment form.
+   * Tells whether the annoation is raw, if so to the adjusment form will be displayed.
    */
   adjust(): boolean {
     return this.isRaw;

@@ -7,7 +7,7 @@ import { StoreService } from '../store.service';
 import { NerParser, NerToken } from '../annotators/ner/ner.model';
 
 @Injectable()
-export class InjectionService {
+export class InjectorService {
 
   lang: string;
 

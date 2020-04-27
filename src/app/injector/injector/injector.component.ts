@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Annotation, Language } from '../../annotators/annotations';
-import { InjectionService } from '../injector.service';
+import { InjectorService } from '../injector.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './injector.component.html',
   styleUrls: ['./injector.component.scss'],
   providers: [
-    { provide: InjectionService, useClass: InjectionService }
+    { provide: InjectorService, useClass: InjectorService }
   ],
   animations: [
     trigger('fadeInOut', [
@@ -40,8 +40,10 @@ export class InjectorComponent implements OnInit {
   files: Array<FileUploadModel> = [];
 
   constructor(
-    private formBuilder: FormBuilder, private injectionService: InjectionService,
-    public dialogRef: MatDialogRef<InjectorComponent>) { }
+    private formBuilder: FormBuilder,
+    private injectionService: InjectorService,
+    public dialogRef: MatDialogRef<InjectorComponent>) {
+    }
 
   ngOnInit(): void { }
 

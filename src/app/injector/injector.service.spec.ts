@@ -1,13 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 
-import { InjectionService } from './injector.service';
+import { InjectorService } from './injector.service';
+import { StoreService } from '../store.service';
+import { HttpClient } from '@angular/common/http';
 
 describe('InjectionService', () => {
-  let service: InjectionService;
+  let service: InjectorService;
+  let storeServiceSpy: jasmine.SpyObj<StoreService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(InjectionService);
+    const storeSpy = jasmine.createSpyObj('StoreService', ['dummy']);
+    TestBed.configureTestingModule({
+      providers: [
+        InjectorService,
+        { provide: StoreService, useValue: storeSpy },
+        { provide: HttpClient, useValue: {} },
+      ]
+    });
+    service = TestBed.inject(InjectorService);
+    storeServiceSpy = TestBed.inject(StoreService) as jasmine.SpyObj<StoreService>;
   });
 
   it('should be created', () => {

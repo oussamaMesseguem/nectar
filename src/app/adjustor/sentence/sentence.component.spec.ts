@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SentenceComponent } from './sentence.component';
+import { AdjustorService } from '../adjustor.service';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('SentenceComponent', () => {
   let component: SentenceComponent;
@@ -8,6 +10,10 @@ describe('SentenceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MatMenuModule ],
+      providers: [
+        AdjustorService
+      ],
       declarations: [ SentenceComponent ]
     })
     .compileComponents();

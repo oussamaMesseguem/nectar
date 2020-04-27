@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdjustorComponent } from './adjustor.component';
+import { AdjustorService } from '../adjustor.service';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 
 describe('AdjustorComponent', () => {
   let component: AdjustorComponent;
@@ -8,6 +10,11 @@ describe('AdjustorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MatDialogModule ],
+      providers: [
+        AdjustorService,
+        { provide: MatDialogRef, useValue: {} },
+      ],
       declarations: [ AdjustorComponent ]
     })
     .compileComponents();

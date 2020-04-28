@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PairComponent } from './pair.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormControl } from '@angular/forms';
 
 describe('PairComponent', () => {
   let component: PairComponent;
@@ -18,6 +19,7 @@ describe('PairComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PairComponent);
     component = fixture.componentInstance;
+    component.ctrl = new FormControl();
     fixture.detectChanges();
   });
 

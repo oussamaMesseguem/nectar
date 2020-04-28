@@ -16,7 +16,7 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:80px !important;">
         <mat-label>UPOS</mat-label>
-        <input type="text" matInput formControlName="upos" [matAutocomplete]="auto">
+        <input matInput formControlName="upos" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let up of uposList" [value]="up.tag">
                 {{up.tag}}
@@ -26,7 +26,7 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:80px !important;">
         <mat-label>XPOS</mat-label>
-        <input type="text" matInput formControlName="xpos" [matAutocomplete]="auto">
+        <input matInput formControlName="xpos" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let up of uposList" [value]="up.tag">
                 {{up.tag}}
@@ -51,7 +51,7 @@
 
     <mat-form-field style="max-width:80px !important;" appearance="outline" class="unit-margin">
         <mat-label>DEPREL</mat-label>
-        <input type="text" matInput formControlName="deprel" [matAutocomplete]="autoDeprel">
+        <input matInput formControlName="deprel" [matAutocomplete]="autoDeprel">
         <mat-autocomplete #autoDeprel="matAutocomplete">
             <mat-option *ngFor="let deprel of udeprelList" [value]="deprel.tag">
                 {{deprel.tag}}

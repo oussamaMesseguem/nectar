@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ValueListComponent } from './value-list.component';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ValueListComponent', () => {
   let component: ValueListComponent;
@@ -12,9 +12,8 @@ describe('ValueListComponent', () => {
     TestBed.configureTestingModule({
       imports: [ MatDialogModule, ReactiveFormsModule ],
       providers: [
-        { provide: FormBuilder, useValue: { group: dummy => ({}) } },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: { tags: [], tag: ''} }
       ],
       declarations: [ ValueListComponent ]
     })

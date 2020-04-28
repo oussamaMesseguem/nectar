@@ -12,7 +12,7 @@ describe('ExportComponent', () => {
       imports: [ MatDialogModule ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: { annotations: [] } }
       ],
       declarations: [ ExportComponent ]
     })

@@ -1,6 +1,6 @@
-<form class="row" [formGroup]="ctrl">
+<div class="row">
     <mat-form-field>
-        <input matInput type="text" style="text-align: center;" formControlName="key"
+        <input matInput type="text" style="text-align: center;" [(ngModel)]="tag"
             [matAutocomplete]="keyOptionsAutocomplete">
         <mat-autocomplete #keyOptionsAutocomplete="matAutocomplete">
             <mat-option *ngFor="let key of tags" [value]="key.tag" matTooltip="{{key.name}}" matTooltipPosition="right">
@@ -12,10 +12,10 @@
     <mat-divider [vertical]="true"></mat-divider>
 
     <mat-form-field>
-        <input matInput type="text" style="text-align: center;" formControlName="val"
+        <input matInput type="text" style="text-align: center;" [(ngModel)]="value"
             [matAutocomplete]="valueOptionsAutocomplete">
         <mat-autocomplete #valueOptionsAutocomplete="matAutocomplete">
-            <mat-option *ngFor="let v of values$ | async" [value]="v.tag" matTooltip="{{v.name}}" matTooltipPosition="right">
+            <mat-option *ngFor="let v of values" [value]="v.tag" matTooltip="{{v.name}}" matTooltipPosition="right">
                 {{v.tag}}
             </mat-option>
         </mat-autocomplete>
@@ -23,4 +23,4 @@
     <button mat-icon-button (click)="remove()">
         <mat-icon>clear</mat-icon>
     </button>
-</form>
+</div>

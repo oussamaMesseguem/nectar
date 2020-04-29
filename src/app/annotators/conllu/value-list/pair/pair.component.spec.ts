@@ -19,8 +19,10 @@ describe('PairComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PairComponent);
     component = fixture.componentInstance;
-    component.ctrl = new FormControl();
-    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should create', () => {

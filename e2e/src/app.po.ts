@@ -5,7 +5,7 @@ export class AppPage {
     return browser.get(browser.baseUrl) as Promise<unknown>;
   }
 
-  getTitleText(): Promise<string> {
-    return element(by.css('app-root .content span')).getText() as Promise<string>;
+  getImportText(): Promise<string> {
+    return element(by.css('app-root app-editor .editor-container mat-card .padding-top-elt button')).getText() as Promise<string>;
   }
 }

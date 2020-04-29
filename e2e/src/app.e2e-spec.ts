@@ -8,9 +8,9 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display have import button', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('nectar app is running!');
+    expect(page.getImportText()).toEqual('Import');
   });
 
   afterEach(async () => {

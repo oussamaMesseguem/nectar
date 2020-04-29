@@ -10,12 +10,11 @@ branches:
   only:
   - master
 
+notifications:
+  email: false
+
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 
 cache:
   directories:

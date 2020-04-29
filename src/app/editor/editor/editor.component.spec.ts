@@ -9,16 +9,14 @@ describe('EditorComponent', () => {
   let service: StoreService;
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
-  let storeServiceStub: Partial<StoreService>;
 
   beforeEach(async(() => {
-    storeServiceStub = {};
     TestBed.configureTestingModule({
       declarations: [ EditorComponent ],
       imports: [ MatDialogModule, MatMenuModule ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
-        { provide: StoreService, useValue: storeServiceStub },
+        { provide: StoreService, useValue: {} },
     ]
     })
     .compileComponents();
@@ -28,7 +26,9 @@ describe('EditorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // Needed when fixture.detectChanges() is called as getters are executed.
+    // spyOnProperty(component, 'filteredAnnotations').and.callFake(() => []);
+    // fixture.detectChanges();
   });
 
   it('should create', () => {

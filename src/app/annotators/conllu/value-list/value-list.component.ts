@@ -20,9 +20,7 @@ export interface DialogData {
   tags:
     {
       tag: string;
-      values: [
-        { tag: string, name: string }
-      ]
+      values: { tag: string, name: string }[]
     }[];
   separator: string;
   equality: string;

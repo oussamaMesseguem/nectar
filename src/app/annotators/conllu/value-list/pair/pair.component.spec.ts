@@ -78,8 +78,7 @@ describe('PairComponent', () => {
   it('Click on remove button should trigger a null event emitter', () => {
     let value;
     const buttonElt = fixture.debugElement.query(By.css('button'));
-    component.removed.subscribe((v) => {value = v; console.log(v);
-    });
+    component.removed.subscribe((v) => value = v);
     expect(value).toBeUndefined();
     buttonElt.triggerEventHandler('click', null);
     expect(value).toBeNull('The emitted event should be null.');

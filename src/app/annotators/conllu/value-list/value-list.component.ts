@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormArray } from '@angular/forms';
 
 
 /**
@@ -36,8 +35,7 @@ export class ValueListComponent implements OnInit {
   fields: string[][] = [];
 
   constructor(public dialogRef: MatDialogRef<ValueListComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: DialogData,
-              private fb: FormBuilder) { }
+              @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
 

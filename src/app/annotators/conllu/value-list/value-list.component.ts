@@ -58,6 +58,35 @@ export class ValueListComponent implements OnInit {
   }
 
   /**
+   * Closes the dialog with a value.
+   */
+  closeDialog() {
+    this.dialogRef.close(this.format());
+  }
+
+  /**
+   * Builds the string to display
+   * * key/val separated by the equality, separator is the list separator.
+   * * single values without equality sign.
+   */
+  format(): string {
+    const values = [];
+    this.fields.filter(t => t.length > 0).forEach(element => {
+      if (element[0] && element[1]) {
+        const v = `${element[0]}${this.data.equality}${element[1]}`;
+        values.push(v);
+      } else if (element[0]) {
+        values.push(element[0]);
+      }
+    });
+    if (values.length > 0) {
+      return values.join(this.data.separator);
+    } else {
+      return this.data.tag;
+    }
+  }
+
+  /**
    * Removes the tag from the array
    * @param i the index of the tag
    */
@@ -65,28 +94,6 @@ export class ValueListComponent implements OnInit {
     this.fields.splice(i, 1);
     if (this.fields.length === 0) {
       this.add();
-    }
-  }
-
-  /**
-   * Builds the string to display:
-   * * underscore if no value
-   * * key/val separated by the equality, separator is the list separator
-   */
-  format() {
-    const values = [];
-    this.fields.forEach(element => {
-      if (element[0] !== '' && element[1] !== '') {
-        const v = `${element[0]}${this.data.equality}${element[1]}`;
-        values.push(v);
-      } else if (element[0] !== '') {
-        values.push(element[0]);
-      }
-    });
-    if (values.length > 0) {
-      this.dialogRef.close(values.join(this.data.separator));
-    } else {
-      this.dialogRef.close(this.data.tag);
     }
   }
 

@@ -34,7 +34,7 @@ export class TokenComponent implements OnInit {
 
   ngOnInit(): void {
     this.conlluTokenForm = this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken));
-    this.tokensIndexes = [...Array(this.conlluDialog.nbTokens).keys()].map(i => (i++).toString());
+    this.tokensIndexes = [...Array(this.conlluDialog.nbTokens).keys()].map(i => i += 1).map(i => i.toString());
   }
 
   openFeatDialog(): void {
@@ -45,8 +45,9 @@ export class TokenComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      result = result === undefined ? tag : result;
-      this.conlluTokenForm.get('feat').setValue(result);
+      if (result) {
+        this.conlluTokenForm.get('feat').setValue(result);
+      }
     });
   }
 
@@ -60,8 +61,9 @@ export class TokenComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      result = result === undefined ? tag : result;
-      this.conlluTokenForm.get('deps').setValue(result);
+      if (result) {
+        this.conlluTokenForm.get('deps').setValue(result);
+      }
     });
   }
 

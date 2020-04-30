@@ -19,23 +19,17 @@ export class TokenComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.isTagged) {
+    if (this.token.type) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
     }
   }
-
-  /**
-   * Either display button or input
-   * isTagged: input, so that label is displayed colored
-   */
-  get isTagged(): boolean { return this.token.type !== undefined && this.token.type !== '' ; }
 
   /**
    * Once the tag has been added to a token, parent notifies self.
    * The value doesn't matter as the setter is used to update the view.
    */
   @Input() set update(b: boolean) {
-    if (this.isTagged) {
+    if (this.token.type) {
       this.labelColor = NER_TAG_COLOR[this.token.type];
     }
   }

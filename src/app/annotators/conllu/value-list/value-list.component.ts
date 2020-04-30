@@ -17,14 +17,13 @@ import { FormBuilder, FormArray } from '@angular/forms';
  */
 export interface DialogData {
   tag: string;
-  tags: [
+  tags:
     {
       tag: string;
       values: [
         { tag: string, name: string }
       ]
-    }
-  ];
+    }[];
   separator: string;
   equality: string;
 }

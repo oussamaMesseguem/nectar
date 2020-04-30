@@ -18,15 +18,12 @@ export class PairComponent implements OnInit {
   /**
    * The tags
    */
-  @Input() tags: [
+  @Input() tags:
     {
       tag: string;
       name: string;
-      values: [
-        { tag: string, name: string }
-      ]
-    }
-  ];
+      values: { tag: string, name: string }[]
+    }[];
   /**
    * Emitted row when removed
    */
@@ -83,6 +80,6 @@ export class PairComponent implements OnInit {
    * Emits the signal to remove self
    */
   remove() {
-    this.removed.emit();
+    this.removed.emit(null);
   }
 }

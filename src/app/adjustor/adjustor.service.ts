@@ -10,6 +10,8 @@ export class AdjustorService {
 
   constructor(private storeService: StoreService) { }
 
+  get isentence() { return this.storeService.index; }
+
   /**
    * The array of sentences
    */

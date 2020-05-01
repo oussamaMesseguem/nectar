@@ -14,6 +14,9 @@ export class AdjustorComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  get isentence() { return this.adjustorService.isentence; }
+
   get sentences() { return this.adjustorService.getSentences(); }
+
 
 }

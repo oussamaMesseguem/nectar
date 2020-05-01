@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AdjustorService } from '../adjustor.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -10,10 +10,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AdjustorComponent implements OnInit {
 
-  constructor(private adjustorService: AdjustorService, public dialogRef: MatDialogRef<AdjustorComponent>) { }
+  constructor(private adjustorService: AdjustorService) { }
 
   ngOnInit(): void { }
 
-  get sentences() { return this.adjustorService.sentences; }
+  get sentences() { return this.adjustorService.getSentences(); }
 
 }

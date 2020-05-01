@@ -21,7 +21,7 @@ import { InjectorService } from '../injector.service';
 export class InjectorComponent implements OnInit {
 
   languages: string[] = Object.values(Language);
-  types: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
+  types: string[] = Object.values(Annotation);//.filter(a => a !== Annotation.raw);
 
   formGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 

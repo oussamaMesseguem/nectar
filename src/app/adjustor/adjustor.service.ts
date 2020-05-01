@@ -13,7 +13,29 @@ export class AdjustorService {
   /**
    * The array of sentences
    */
-  get sentences(): string[][] { return this.storeService.rawContent; }
+  getSentences(): string[][] {
+    if (this.storeService.nbSentences < 3) {
+      return this.storeService.rawContent;
+    }
+    if (this.storeService.index === 0) {
+      return [
+        this.storeService.rawContent[this.storeService.index],
+        this.storeService.rawContent[this.storeService.index + 1],
+        this.storeService.rawContent[this.storeService.index + 2]
+      ];
+    }
+    if (this.storeService.index === this.storeService.nbSentences) {
+      return [
+        this.storeService.rawContent[this.storeService.index - 1],
+        this.storeService.rawContent[this.storeService.index]
+      ];
+    }
+    return [
+      this.storeService.rawContent[this.storeService.index - 1],
+      this.storeService.rawContent[this.storeService.index],
+      this.storeService.rawContent[this.storeService.index + 1]
+    ];
+  }
 
   /**
    * Duplicates the sentence at the given index.

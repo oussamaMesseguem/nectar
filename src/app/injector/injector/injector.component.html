@@ -27,7 +27,7 @@
 
         <mat-step label="Upload">
             <div class="container-upload">
-                <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!isFormValid">
+                <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!contentUploadFormGroup.valid">
                     <mat-icon>file_upload</mat-icon>
                     Upload
                 </button>

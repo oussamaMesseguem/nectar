@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Annotation, Language } from '../../annotators/annotations';
 import { InjectorService } from '../injector.service';
-import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-injector',
@@ -27,11 +26,6 @@ export class InjectorComponent implements OnInit {
   contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 
   /**
-   * Whether the content has been validated
-   */
-  isValid = false;
-
-  /**
    * Wheter the promise of Validation has been started
    * Also used to display the spinner
    */
@@ -41,19 +35,9 @@ export class InjectorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private injectionService: InjectorService,
-    public dialogRef: MatDialogRef<InjectorComponent>) {
-    }
+    private injectionService: InjectorService) { }
 
   ngOnInit(): void { }
-
-  /**
-   * Whether the Form is filled: language and type not null.
-   * Used to enable the upload button.
-   */
-  get isFormValid(): boolean {
-    return !Object.values(this.contentUploadFormGroup.value).includes(null);
-  }
 
   /**
    * Whether the selected type is Raw.
@@ -111,8 +95,7 @@ export class InjectorComponent implements OnInit {
    * @param file The upload content
    */
   onFileComplete(file: FileUploadModel) {
-    console.log(this.contentUploadFormGroup.value);
-    if (this.isFormValid) {
+    if (this.contentUploadFormGroup.valid) {
       const reader = new FileReader();
       reader.readAsText(file.data);
 
@@ -135,7 +118,6 @@ export class InjectorComponent implements OnInit {
             },
             () => {
               this.contentValidationInProgress = false;
-              this.isValid = true;
             });
       };
 
@@ -150,9 +132,6 @@ export class InjectorComponent implements OnInit {
     this.files = [];
     // No parsing running
     this.contentValidationInProgress = false;
-    // No message of validation to display
-    this.isValid = false;
-
   }
 }
 

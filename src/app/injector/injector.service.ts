@@ -80,7 +80,7 @@ export class InjectorService {
    */
   cancelContentInjection() {
     this.isInProgress.unsubscribe();
-    this.storeService.removeAnnotation(this.parser.annotation);
+    this.storeService.reset();
   }
 
   private assertAnnotationType(annotation: string): never {

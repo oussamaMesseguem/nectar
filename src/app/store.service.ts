@@ -114,6 +114,16 @@ export class StoreService {
     }
 
     /**
+     * Resets the store to scrach.
+     */
+    reset() {
+        this.store = {};
+        this.annotationValue = '';
+        this.selectedAnnotations$.next([]);
+        this.sentence$.next([]);
+    }
+
+    /**
      * Iterates through the raw content and inits new tokens according to the given annotation.
      * @param annotation The new annotation to add
      */

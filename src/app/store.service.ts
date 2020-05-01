@@ -94,11 +94,11 @@ export class StoreService {
         if (annotation !== Annotation.raw) {
             this.rawContent = content.map(l => l.map(t => t.token));
             this.store[annotation] = content;
-            this.annotation = annotation;
-            this.selectedAnnotations$.next(this.keys());
         } else {
             this.rawContent = content;
         }
+        this.annotation = annotation;
+        this.selectedAnnotations$.next(this.keys());
     }
 
     /**

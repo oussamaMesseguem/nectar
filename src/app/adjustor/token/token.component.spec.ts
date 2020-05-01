@@ -3,27 +3,76 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TokenComponent } from './token.component';
 import { AdjustorService } from '../adjustor.service';
 import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TokenComponent', () => {
   let component: TokenComponent;
   let fixture: ComponentFixture<TokenComponent>;
+  let spyService: jasmine.SpyObj<AdjustorService>;
 
   beforeEach(async(() => {
+    const adjustorServiceStub = jasmine.createSpyObj('AdjustorService',
+      ['duplicateToken', 'newTokenBefore', 'newTokenAfter', 'editToken', 'deleteToken']);
+
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule ],
-      providers: [ AdjustorService ],
-      declarations: [ TokenComponent ]
+      imports: [MatMenuModule, BrowserAnimationsModule],
+      providers: [{ provide: AdjustorService, useValue: adjustorServiceStub }],
+      declarations: [TokenComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TokenComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    spyService = TestBed.inject(AdjustorService) as jasmine.SpyObj<AdjustorService>;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set inputs at init', () => {
+    expect(component.token).toBeUndefined('token input should be undefined before detectChanges');
+    component.token = 'test';
+    component.isentence = 2;
+    component.itoken = 3;
+    expect(component.token).toEqual('test', 'token input should be set after detectChanges');
+  });
+
+  it('should call duplicateToken when duplicate button is clicked', () => {
+    component.isentence = 2;
+    component.itoken = 3;
+    component.duplicate();
+    expect(spyService.duplicateToken).toHaveBeenCalledWith(2, 3);
+  });
+
+  it('should call newTokenBefore when duplicate button is clicked', () => {
+    component.isentence = 2;
+    component.itoken = 3;
+    component.newBefore();
+    expect(spyService.newTokenBefore).toHaveBeenCalledWith(2, 3);
+  });
+
+  it('should call newTokenAfter when duplicate button is clicked', () => {
+    component.isentence = 2;
+    component.itoken = 3;
+    component.newAfter();
+    expect(spyService.newTokenAfter).toHaveBeenCalledWith(2, 3);
+  });
+
+  it('should call editToken when duplicate button is clicked', () => {
+    component.isentence = 2;
+    component.itoken = 3;
+    component.token = 'value';
+    component.edit();
+    expect(spyService.editToken).toHaveBeenCalledWith(2, 3, 'value');
+  });
+
+  it('should call deleteToken when duplicate button is clicked', () => {
+    component.isentence = 2;
+    component.itoken = 3;
+    component.delete();
+    expect(spyService.deleteToken).toHaveBeenCalledWith(2, 3);
   });
 });

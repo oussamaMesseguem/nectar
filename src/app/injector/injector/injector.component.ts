@@ -23,7 +23,7 @@ export class InjectorComponent implements OnInit {
   languages: string[] = Object.values(Language);
   types: string[] = Object.values(Annotation).filter(a => a !== Annotation.raw);
 
-  contentUploadFormGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
+  formGroup: FormGroup = this.formBuilder.group(new ContentUploadForm());
 
   /**
    * Wheter the promise of Validation has been started
@@ -47,8 +47,8 @@ export class InjectorComponent implements OnInit {
     return this.type.value === Annotation.raw;
   }
 
-  get lang(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.LANG) as FormControl; }
-  get type(): FormControl | null { return this.contentUploadFormGroup.get(ContentUploadForm.TYPE) as FormControl; }
+  get lang(): FormControl | null { return this.formGroup.get(ContentUploadForm.LANG) as FormControl; }
+  get type(): FormControl | null { return this.formGroup.get(ContentUploadForm.TYPE) as FormControl; }
 
 
   onUpload() {
@@ -95,7 +95,7 @@ export class InjectorComponent implements OnInit {
    * @param file The upload content
    */
   onFileComplete(file: FileUploadModel) {
-    if (this.contentUploadFormGroup.valid) {
+    if (this.formGroup.valid) {
       const reader = new FileReader();
       reader.readAsText(file.data);
 

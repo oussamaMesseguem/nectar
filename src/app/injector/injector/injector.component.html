@@ -1,4 +1,4 @@
-<form mat-dialog-content [formGroup]="contentUploadFormGroup">
+<form mat-dialog-content [formGroup]="formGroup">
     <mat-vertical-stepper [linear]=true #stepper>
         <mat-step [stepControl]="lang" label="Select the language">
 
@@ -27,7 +27,7 @@
 
         <mat-step label="Upload">
             <div class="container-upload">
-                <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!contentUploadFormGroup.valid">
+                <button mat-stroked-button color="accent" (click)="onUpload()" [disabled]="!formGroup.valid">
                     <mat-icon>file_upload</mat-icon>
                     Upload
                 </button>

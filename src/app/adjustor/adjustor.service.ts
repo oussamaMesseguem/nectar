@@ -10,8 +10,6 @@ export class AdjustorService {
 
   constructor(private storeService: StoreService) { }
 
-  get isentence() { return this.storeService.index; }
-
   /**
    * Return the previous and the next sentence of the current one.
    */
@@ -35,37 +33,34 @@ export class AdjustorService {
   }
 
   /**
+   * Deletes the entire sentence from the array.
+   */
+  deleteSentence() {
+    this.storeService.deleteSentence();
+  }
+
+  /**
    * Duplicates the sentence at the given index.
    * The duplication is index + 1.
-   * @param isentence The index of the sentence
    */
-  duplicateSentence(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 0, this.storeService.rawContent[isentence]);
-  }
-
-  /**
-   * Deletes the entire sentence from the array.
-   * @param isentence The index of the sentence
-   */
-  deleteSentence(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 1);
-  }
-
-  /**
-   * Adds a new empty sentence before the given index.
-   * @param isentence The index of the sentence
-   */
-  newSentenceBefore(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 0, ['~']);
+  duplicateSentence() {
+    this.storeService.duplicateSentence();
   }
 
   /**
    * Adds a new empty sentence after the given index.
-   * @param isentence The index of the sentence
    */
-  newSentenceAfter(isentence: number) {
-    this.storeService.rawContent.splice(isentence + 1, 0, ['~']);
+  newSentenceAfter() {
+    this.storeService.newSentenceAfter();
   }
+
+  /**
+   * Adds a new empty sentence before the given index.
+   */
+  newSentenceBefore() {
+    this.storeService.newSentenceBefore();
+  }
+
 
   /**
    * Duplicates the token at the given index in the given sentence.

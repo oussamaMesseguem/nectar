@@ -123,6 +123,43 @@ export class StoreService {
         this.sentence$.next([]);
     }
 
+    // Sentences operations START
+
+    /**
+     * Deletes the entire sentence from the array.
+     */
+    deleteSentence() {
+        this.store[Annotation.raw].splice(this.indexValue, 1);
+    }
+
+    /**
+     * Duplicates the sentence at the given index.
+     * The duplication is index + 1.
+     */
+    duplicateSentence() {
+        this.store[Annotation.raw].splice(this.indexValue, 0, this.sentence$.value);
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Adds a new empty sentence after the given index.
+     */
+    newSentenceAfter() {
+        this.store[Annotation.raw].splice(this.indexValue + 1, 0, ['~']);
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Adds a new empty sentence before the given index.
+     * @param isentence The index of the sentence
+     */
+    newSentenceBefore() {
+        this.store[Annotation.raw].splice(this.indexValue, 0, ['~']);
+        // Needs to stay on the current sentence for that index should increment
+        this.index = this.indexValue + 1;
+    }
+    // Sentences operations END
+
     /**
      * Iterates through the raw content and inits new tokens according to the given annotation.
      * @param annotation The new annotation to add

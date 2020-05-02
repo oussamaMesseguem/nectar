@@ -11,7 +11,6 @@ import { BehaviorSubject } from 'rxjs';
 export class SentenceComponent implements OnInit {
 
   @Input() sentence$: BehaviorSubject<string[]>;
-  @Input() isentence: number;
 
   constructor(private adjustorService: AdjustorService) { }
 
@@ -22,18 +21,18 @@ export class SentenceComponent implements OnInit {
   }
 
   duplicate() {
-    this.adjustorService.duplicateSentence(this.isentence);
+    this.adjustorService.duplicateSentence();
   }
 
   delete() {
-    this.adjustorService.deleteSentence(this.isentence);
+    this.adjustorService.deleteSentence();
   }
 
   newBefore() {
-    this.adjustorService.newSentenceBefore(this.isentence);
+    this.adjustorService.newSentenceBefore();
   }
 
   newAfter() {
-    this.adjustorService.newSentenceAfter(this.isentence);
+    this.adjustorService.newSentenceAfter();
   }
 }

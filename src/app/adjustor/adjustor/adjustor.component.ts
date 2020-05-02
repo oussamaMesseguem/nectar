@@ -29,7 +29,4 @@ export class AdjustorComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ondestroy.complete();
   }
-
-  get isentence() { return this.adjustorService.isentence; }
-
 }

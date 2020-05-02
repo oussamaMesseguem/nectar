@@ -1,3 +1,3 @@
-<button mat-stroked-button *ngFor="let token of sentences[0]" disabled>{{token}}</button>
-<app-sentence [sentence]="sentences[1]" [isentence]="isentence"></app-sentence>
-<button mat-stroked-button *ngFor="let token of sentences[0]" disabled>{{token}}</button>
+<button mat-stroked-button *ngFor="let token of previousSentence" disabled>{{token}}</button>
+<app-sentence [sentence$]="sentence$" [isentence]="isentence"></app-sentence>
+<button mat-stroked-button *ngFor="let token of nextSentence" disabled>{{token}}</button>

@@ -93,10 +93,10 @@ export class StoreService {
     addAnnotation(annotation: string, content: any[][]) {
         if (annotation !== Annotation.raw) {
             this.rawContent = content.map(l => l.map(t => t.token));
-            this.store[annotation] = content;
         } else {
             this.rawContent = content;
         }
+        this.store[annotation] = content;
         this.annotation = annotation;
         this.selectedAnnotations$.next(this.keys());
     }

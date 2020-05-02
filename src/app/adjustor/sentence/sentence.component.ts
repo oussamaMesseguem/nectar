@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SentenceComponent implements OnInit {
 
-  @Input() sentence: string[];
+  @Input() sentence$: BehaviorSubject<string[]>;
   @Input() isentence: number;
 
   constructor(private adjustorService: AdjustorService) { }
@@ -18,7 +18,7 @@ export class SentenceComponent implements OnInit {
   ngOnInit(): void { }
 
   moveWithinSentence(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.sentence, event.previousIndex, event.currentIndex);
+    // moveItemInArray(this.sentence, event.previousIndex, event.currentIndex);
   }
 
   duplicate() {

@@ -60,7 +60,7 @@
     <ng-container [ngSwitch]="annotation">
         <app-conllu [sentence$]="sentence$" *ngSwitchCase="'Conll-U'"></app-conllu>
         <app-ner [sentence$]="sentence$" *ngSwitchCase="'Ner'"></app-ner>
-        <app-adjustor *ngSwitchCase="'Raw'"></app-adjustor>
+        <app-adjustor [sentence$]="sentence$" *ngSwitchCase="'Raw'"></app-adjustor>
 
         <div class="centered-content" *ngSwitchDefault>
             <video controls width="800" height="500" autoplay loop muted>

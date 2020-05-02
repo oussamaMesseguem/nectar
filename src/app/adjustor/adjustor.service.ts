@@ -13,28 +13,23 @@ export class AdjustorService {
   get isentence() { return this.storeService.index; }
 
   /**
-   * The array of sentences
+   * Return the previous and the next sentence of the current one.
    */
-  getSentences(): string[][] {
-    if (this.storeService.nbSentences < 3) {
-      return this.storeService.rawContent;
-    }
+  getPreviousAndNextSentences(): string[][] {
     if (this.storeService.index === 0) {
       return [
-        this.storeService.rawContent[this.storeService.index],
-        this.storeService.rawContent[this.storeService.index + 1],
-        this.storeService.rawContent[this.storeService.index + 2]
+        [],
+        this.storeService.rawContent[this.storeService.index + 1]
       ];
     }
     if (this.storeService.index === this.storeService.nbSentences) {
       return [
         this.storeService.rawContent[this.storeService.index - 1],
-        this.storeService.rawContent[this.storeService.index]
+        []
       ];
     }
     return [
       this.storeService.rawContent[this.storeService.index - 1],
-      this.storeService.rawContent[this.storeService.index],
       this.storeService.rawContent[this.storeService.index + 1]
     ];
   }

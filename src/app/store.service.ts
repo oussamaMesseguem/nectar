@@ -123,13 +123,16 @@ export class StoreService {
         this.sentence$.next([]);
     }
 
-    // Sentences operations START
+    // **** Sentences operations START ****
 
     /**
      * Deletes the entire sentence from the array.
      */
     deleteSentence() {
-        this.store[Annotation.raw].splice(this.indexValue, 1);
+        this.keys().forEach(annotation => {
+            this.store[annotation].splice(this.indexValue, 1);
+        });
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
     /**
@@ -137,7 +140,10 @@ export class StoreService {
      * The duplication is index + 1.
      */
     duplicateSentence() {
-        this.store[Annotation.raw].splice(this.indexValue, 0, this.sentence$.value);
+        this.keys().forEach(annotation => {
+            const value = this.store[annotation][this.indexValue];
+            this.store[annotation].splice(this.indexValue, 0, value);
+        });
         this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
@@ -145,7 +151,9 @@ export class StoreService {
      * Adds a new empty sentence after the given index.
      */
     newSentenceAfter() {
-        this.store[Annotation.raw].splice(this.indexValue + 1, 0, ['~']);
+        this.keys().forEach(annotation => {
+            this.store[annotation].splice(this.indexValue + 1, 0, [this.createToken(annotation, '~', 0)]);
+        });
         this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
     }
 
@@ -154,11 +162,31 @@ export class StoreService {
      * @param isentence The index of the sentence
      */
     newSentenceBefore() {
-        this.store[Annotation.raw].splice(this.indexValue, 0, ['~']);
+        this.keys().forEach(annotation => {
+            this.store[annotation].splice(this.indexValue, 0, [this.createToken(annotation, '~', 0)]);
+        });
         // Needs to stay on the current sentence for that index should increment
         this.index = this.indexValue + 1;
     }
-    // Sentences operations END
+    // **** Sentences operations END ****
+
+    /**
+     * Returns an object depending on the annotation that contains the token at the given position.
+     * @param annotation the annotation
+     * @param token the token
+     * @param index the position
+     */
+    private createToken(annotation: string, token: string, index?: number): any {
+        if (annotation === Annotation.conllu) {
+            return createConlluToken((index + 1).toString(), token);
+        }
+        if (annotation === Annotation.ner) {
+            return createNerToken(token);
+        }
+        if (annotation === Annotation.raw) {
+            return token;
+        }
+    }
 
     /**
      * Iterates through the raw content and inits new tokens according to the given annotation.
@@ -169,12 +197,7 @@ export class StoreService {
         this.rawContent.forEach(sentence => {
             const sent = [];
             sentence.forEach((token: string, index: number) => {
-                if (annotation === Annotation.conllu) {
-                    sent.push(createConlluToken((index + 1).toString(), token));
-                }
-                if (annotation === Annotation.ner) {
-                    sent.push(createNerToken(token));
-                }
+                sent.push(this.createToken(annotation, token, index));
             });
             annotationContent.push(sent);
         });

@@ -69,52 +69,47 @@ export class AdjustorService {
 
   /**
    * Duplicates the token at the given index in the given sentence.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  duplicateToken(isentence: number, itoken: number) {
-    const token = this.storeService.rawContent[isentence][itoken];
-    this.storeService.rawContent[isentence].splice(itoken, 0, token);
+  duplicateToken(itoken: number) {
+    const token = this.storeService.sentence$.value[itoken];
+    this.storeService.sentence$.value.splice(itoken, 0, token);
   }
 
   /**
    * Adds a new empty token before the given index.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  newTokenBefore(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken, 0, '~');
+  newTokenBefore(itoken: number) {
+    this.storeService.sentence$.value.splice(itoken, 0, '~');
   }
 
   /**
    * Adds a new empty token after the given index.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  newTokenAfter(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken + 1, 0, '~');
+  newTokenAfter(itoken: number) {
+    this.storeService.sentence$.value.splice(itoken + 1, 0, '~');
   }
 
   /**
    * Changes the value of the token.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    * @param value The new value
    */
-  editToken(isentence: number, itoken: number, value: string) {
-    this.storeService.rawContent[isentence].splice(itoken, 1, value);
+  editToken(itoken: number, value: string) {
+    this.storeService.sentence$.value.splice(itoken, 1, value);
   }
 
   /**
    * Deletes the token from the sentence.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  deleteToken(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken, 1);
-    if (this.storeService.rawContent[isentence].length === 0) {
-      this.deleteSentence(isentence);
-    }
+  deleteToken(itoken: number) {
+    this.storeService.sentence$.value.splice(itoken, 1);
+    // if (this.storeService.rawContent[isentence].length === 0) {
+    //   this.deleteSentence(isentence);
+    // }
   }
 
   push() {

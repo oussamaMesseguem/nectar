@@ -68,7 +68,7 @@ export class AdjustorService {
    */
   duplicateToken(itoken: number) {
     const token = this.storeService.sentence$.value[itoken];
-    this.storeService.sentence$.value.splice(itoken, 0, token);
+    this.storeService.duplicateToken(itoken);
   }
 
   /**
@@ -76,7 +76,7 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   newTokenBefore(itoken: number) {
-    this.storeService.sentence$.value.splice(itoken, 0, '~');
+    this.storeService.newTokenBefore(itoken);
   }
 
   /**
@@ -84,7 +84,7 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   newTokenAfter(itoken: number) {
-    this.storeService.sentence$.value.splice(itoken + 1, 0, '~');
+    this.storeService.newTokenAfter(itoken);
   }
 
   /**
@@ -93,7 +93,7 @@ export class AdjustorService {
    * @param value The new value
    */
   editToken(itoken: number, value: string) {
-    this.storeService.sentence$.value.splice(itoken, 1, value);
+    this.storeService.editToken(itoken, value);
   }
 
   /**
@@ -101,7 +101,7 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   deleteToken(itoken: number) {
-    this.storeService.sentence$.value.splice(itoken, 1);
+    this.storeService.deleteToken(itoken);
     // if (this.storeService.rawContent[isentence].length === 0) {
     //   this.deleteSentence(isentence);
     // }

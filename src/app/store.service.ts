@@ -41,7 +41,7 @@ export class StoreService {
      * * Keys: are the annotations
      * * Values: are an array of the annotated content
      */
-    private store = {};
+    store = {};
 
     constructor() { }
 
@@ -169,6 +169,78 @@ export class StoreService {
         this.index = this.indexValue + 1;
     }
     // **** Sentences operations END ****
+
+    // **** Tokens operations START ****
+
+    /**
+     * Duplicates the token at the given index in the given sentence.
+     * @param itoken The index of the token
+     */
+    duplicateToken(itoken: number) {
+        this.keys().forEach(annotation => {
+            const token = this.store[annotation][this.indexValue][itoken];
+            this.store[annotation][this.indexValue].splice(itoken, 0, token);
+        });
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Adds a new empty token before the given index.
+     * @param itoken The index of the token
+     */
+    newTokenBefore(itoken: number) {
+        this.keys().forEach(annotation => {
+            this.store[annotation][this.indexValue].splice(itoken, 0, this.createToken(annotation, '~', itoken));
+        });
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Adds a new empty token after the given index.
+     * @param itoken The index of the token
+     */
+    newTokenAfter(itoken: number) {
+        this.keys().forEach(annotation => {
+            this.store[annotation][this.indexValue].splice(itoken + 1, 0, this.createToken(annotation, '~', itoken));
+        });
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Changes the value of the token.
+     * @param itoken The index of the token
+     * @param value The new value
+     */
+    editToken(itoken: number, value: string) {
+        this.keys().forEach(annotation => {
+            this.store[annotation][this.indexValue].splice(itoken, 1, this.createToken(annotation, value, itoken));
+        });
+        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+    }
+
+    /**
+     * Deletes the token from the sentence.
+     * @param itoken The index of the token
+     */
+    deleteToken(itoken: number) {
+        let shouldDeleteSentence = false;
+        this.keys().forEach(annotation => {
+            this.store[annotation][this.indexValue].splice(itoken, 1);
+            // Because: if the sentence doesn't have any token, it no longer needed.
+            if (this.store[annotation][this.indexValue].length === 0) {
+                shouldDeleteSentence = true;
+            }
+        });
+        // Because: need to delete the sentence and move the subject after the deletion
+        // otherwise move the subject now.
+        if (shouldDeleteSentence) {
+            this.deleteSentence();
+        } else {
+            this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+        }
+    }
+
+    // **** Tokens operations END ***
 
     /**
      * Returns an object depending on the annotation that contains the token at the given position.

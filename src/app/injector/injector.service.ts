@@ -53,7 +53,7 @@ export class InjectorService {
 
       // Add new entry in the store
       const parsedContent = this.parse(content);
-      this.storeService.addAnnotation(this.parser.annotation, parsedContent);
+      this.storeService.initStore(this.parser.annotation, parsedContent);
 
       if (this.storeService.nbSentences === 0) {
         reject(new Error('Parsing has been asked to be stopped'));

@@ -90,7 +90,7 @@ export class StoreService {
      * Adds a new entry in the store and sets the raw content array.
      * @param annotation new object property
      */
-    addAnnotation(annotation: string, content: any[][]) {
+    initStore(annotation: string, content: any[][]) {
         if (annotation !== Annotation.raw) {
             this.rawContent = content.map(l => l.map(t => t.token));
         } else {

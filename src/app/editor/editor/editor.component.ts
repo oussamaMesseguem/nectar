@@ -63,7 +63,6 @@ export class EditorComponent implements OnInit {
    * Opens the dialog to adjust the content
    */
   adjust() {
-    console.log(this.storeService.rawContent);
     this.dialog.open(AdjustorComponent, {
       width: '100%',
       data: { }

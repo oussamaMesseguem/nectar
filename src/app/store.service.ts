@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createConlluToken, conlluIntoText } from './annotators/conllu/conllu.model';
+import { createConlluToken, conlluIntoText, ConlluToken } from './annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
 import { createNerToken, nerIntoText } from './annotators/ner/ner.model';
 import { Annotation } from './annotators/annotations';
@@ -122,6 +122,16 @@ export class StoreService {
         this.selectedAnnotations$.next([]);
         this.sentence$.next([]);
     }
+
+    /**
+     * Updates Conllu indexes.
+     * Should be used after tokens operations.
+     */
+    updateConlluIndexes() {
+        this.store[Annotation.conllu][this.indexValue].forEach((element: ConlluToken, index: number) => {
+          element.index = (index += 1).toString();
+        });
+      }
 
     /**
      * Returns an object depending on the annotation that contains the token at the given position.

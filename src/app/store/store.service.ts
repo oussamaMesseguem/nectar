@@ -98,6 +98,10 @@ export class StoreService {
         this.store.initStore(annotation, content);
         this.store[annotation] = content;
         this.annotation = annotation;
+        // Because: if the uploaded content is not Raw this raw type should not be added in future.
+        if (annotation !== Annotation.raw) {
+            this.removedAnnotations.push(Annotation.raw);
+        }
         this.selectedAnnotations$.next([annotation]);
     }
 

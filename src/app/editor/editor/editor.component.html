@@ -20,7 +20,7 @@
                 <mat-chip *ngFor="let annot of selectedAnnotations | async" [selectable]="true" [removable]="true"
                     [value]="annot" (removed)="removeAnnotation(annot)" (click)="annotation = annot">
                     {{annot}}
-                    <mat-icon matChipRemove>cancel</mat-icon>
+                    <mat-icon [matTooltip]="annot === 'Raw' ? 'Carreful: Raw cannot be added back!' : ''" matChipRemove>cancel</mat-icon>
                 </mat-chip>
 
                 <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations"

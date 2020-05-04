@@ -3,17 +3,20 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdjustorComponent } from './adjustor.component';
 import { AdjustorService } from '../adjustor.service';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
 
 describe('AdjustorComponent', () => {
   let component: AdjustorComponent;
   let fixture: ComponentFixture<AdjustorComponent>;
+  let spyService: jasmine.SpyObj<AdjustorService>;
 
   beforeEach(async(() => {
+    const adjustorServiceStub = jasmine.createSpyObj('AdjustorService',
+    ['getPreviousAndNextSentences']);
     TestBed.configureTestingModule({
-      imports: [ MatDialogModule ],
+      imports: [ ],
       providers: [
-        AdjustorService,
-        { provide: MatDialogRef, useValue: {} },
+        { provide: AdjustorService, useValue: adjustorServiceStub }
       ],
       declarations: [ AdjustorComponent ]
     })
@@ -23,7 +26,8 @@ describe('AdjustorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AdjustorComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.sentence$ = new BehaviorSubject(['This', 'is', 'a', 'test', '.']);
+    spyService = TestBed.inject(AdjustorService) as jasmine.SpyObj<AdjustorService>;
   });
 
   it('should create', () => {

@@ -3,6 +3,7 @@ import { createConlluToken, conlluIntoText, ConlluToken } from './annotators/con
 import { BehaviorSubject } from 'rxjs';
 import { createNerToken, nerIntoText } from './annotators/ner/ner.model';
 import { Annotation } from './annotators/annotations';
+import { Store } from './store/store.model';
 
 /**
  * The main service class that holds the content and serves it to view.
@@ -25,7 +26,7 @@ export class StoreService {
      * * Keys: are the annotations
      * * Values: are an array of the annotated content
      */
-    store = {};
+    store: Store = new Store();
 
     /**
      * The current selected annotation. Affects the sentence observable as it changes its content.
@@ -58,11 +59,11 @@ export class StoreService {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
         // Because: the store migth not know about this annotation, therefore it should be init.
-        if (!this.keys().includes(annotation)) {
-            this.init(annotation);
+        if (!this.store.keys().includes(annotation)) {
+            this.store.addEntry(annotation);
         }
-        this.selectedAnnotations$.next(this.keys().filter(a => !this.removedAnnotations.includes(a)));
-        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+        this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
+        this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));
     }
 
     /**
@@ -80,51 +81,29 @@ export class StoreService {
         } else {
             this.indexValue = this.indexValue === 0 ? this.nbSentences - 1 : this.indexValue - 1;
         }
-        this.sentence$.next(this.store[this.annotationValue][this.indexValue]);
+        this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));
     }
 
     /**
      * The number of sentences in the store.
      */
-    get nbSentences(): number { return this.store[Annotation.raw].length; }
+    get nbSentences(): number { return this.store.nbSentences(); }
 
-    /**
-     * Returns an object depending on the annotation that contains the token at the given position.
-     * @param annotation the annotation
-     * @param token the token
-     * @param index the position
-     */
-    createToken(annotation: string, token: string, index?: number): any {
-        if (annotation === Annotation.conllu) {
-            return createConlluToken((index + 1).toString(), token);
-        }
-        if (annotation === Annotation.ner) {
-            return createNerToken(token);
-        }
-        if (annotation === Annotation.raw) {
-            return token;
-        }
-    }
 
     /**
      * Adds a new entry in the store and sets the raw content array.
      * @param annotation new object property
      */
     initStore(annotation: string, content: any[][]) {
-        // Because: store[Raw] contains the tokens per sentences and it's used to init new annotation objects
-        if (annotation !== Annotation.raw) {
-            this.store[Annotation.raw] = content.map(l => l.map(t => t.token));
-        }
+        this.store.initStore(annotation, content);
         this.store[annotation] = content;
         this.annotation = annotation;
         this.selectedAnnotations$.next([annotation]);
     }
 
-    /**
-     * Returns the annotations in the store.
-     */
-    keys(): string[] {
-        return Object.keys(this.store);
+    next(annotation?: string, isentence?: number): void {
+        this.sentence$.next(this.store.getSentence(annotation ? annotation : this.annotationValue,
+            isentence ? isentence : this.indexValue));
     }
 
     /**
@@ -133,7 +112,7 @@ export class StoreService {
      */
     removeAnnotation(annotation: string) {
         this.removedAnnotations.push(annotation);
-        this.selectedAnnotations$.next(this.keys().filter(a => !this.removedAnnotations.includes(a)));
+        this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         if (this.selectedAnnotations$.value.length > 0) {
             this.annotation = this.selectedAnnotations$.value[0];
         }
@@ -143,20 +122,10 @@ export class StoreService {
      * Resets the store to scrach.
      */
     reset() {
-        this.store = {};
+        this.store = new Store();
         this.annotationValue = '';
         this.selectedAnnotations$.next([]);
         this.sentence$.next([]);
-    }
-
-    /**
-     * Updates Conllu indexes.
-     * Should be used after tokens operations.
-     */
-    updateConlluIndexes() {
-        this.store[Annotation.conllu][this.indexValue].forEach((element: ConlluToken, index: number) => {
-            element.index = (index += 1).toString();
-        });
     }
 
     /**
@@ -178,27 +147,6 @@ export class StoreService {
             a.download = `${annotation}.txt`;
             a.click();
         });
-    }
-
-    /**
-     * Iterates through the raw content and inits new tokens according to the given annotation.
-     * @param annotation The new annotation to add
-     */
-    private init(annotation: string) {
-        try {
-            const annotationContent = [];
-            // store[Raw] should never be undefined
-            this.store[Annotation.raw].forEach((sentence: string[]) => {
-                const sent = [];
-                sentence.forEach((token: string, index: number) => {
-                    sent.push(this.createToken(annotation, token, index));
-                });
-                annotationContent.push(sent);
-            });
-            this.store[annotation] = annotationContent;
-        } catch (error) {
-            throw new Error(`Initilisation of [${annotation}] was not possible. Make sure store[Raw] is defined`);
-        }
     }
 }
 

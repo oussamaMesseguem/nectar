@@ -6,12 +6,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BehaviorSubject } from 'rxjs';
 
-const sentence: string[][] = [
-  ['This', 'is', 'a', 'test', '.'],
-  ['Yes', 'a', 'test', ';'],
-  ['I', 'said', 'a', 'test', '!']
-];
 
 describe('SentenceComponent', () => {
   let component: SentenceComponent;
@@ -34,7 +30,7 @@ describe('SentenceComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SentenceComponent);
     component = fixture.componentInstance;
-
+    component.sentence$ = new BehaviorSubject(['This', 'is', 'a', 'test', '.']);
     spyService = TestBed.inject(AdjustorService) as jasmine.SpyObj<AdjustorService>;
   });
 
@@ -43,16 +39,11 @@ describe('SentenceComponent', () => {
   });
 
   it('should have a sentence and its index in the array when init.', () => {
-    expect(component.sentence).toBeUndefined('sentence should be undefined before detecChanges');
-    component.sentence = sentence[0];
-    component.isentence = 0;
     fixture.detectChanges();
-    expect(component.sentence).toBe(sentence[0], 'sentence should be a sentence after detecChanges');
+    expect(component.sentence$.value).toEqual(['This', 'is', 'a', 'test', '.'], 'sentence should be a sentence after detecChanges');
   });
 
   it('should have only button first and when click 4 others.', () => {
-    component.sentence = sentence[0];
-    component.isentence = 0;
     fixture.detectChanges();
     let buttonElts: DebugElement[];
     buttonElts = fixture.debugElement.queryAll(By.css('button'));
@@ -64,27 +55,23 @@ describe('SentenceComponent', () => {
   });
 
   it('should call duplicateSentence when duplicate button is clicked', () => {
-    component.isentence = 0;
     component.duplicate();
-    expect(spyService.duplicateSentence).toHaveBeenCalledWith(0);
+    expect(spyService.duplicateSentence).toHaveBeenCalled();
   });
 
   it('should call deleteSentence when delete button is clicked', () => {
-    component.isentence = 1;
     component.delete();
-    expect(spyService.deleteSentence).toHaveBeenCalledWith(1);
+    expect(spyService.deleteSentence).toHaveBeenCalled();
   });
 
   it('should call newSentenceBefore when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.newBefore();
-    expect(spyService.newSentenceBefore).toHaveBeenCalledWith(2);
+    expect(spyService.newSentenceBefore).toHaveBeenCalled();
   });
 
   it('should call newSentenceAfter when duplicate button is clicked', () => {
-    component.isentence = 0;
     component.newAfter();
-    expect(spyService.newSentenceAfter).toHaveBeenCalledWith(0);
+    expect(spyService.newSentenceAfter).toHaveBeenCalled();
   });
 
 });

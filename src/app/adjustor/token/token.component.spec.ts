@@ -4,6 +4,7 @@ import { TokenComponent } from './token.component';
 import { AdjustorService } from '../adjustor.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Subscription } from 'rxjs';
 
 describe('TokenComponent', () => {
   let component: TokenComponent;
@@ -35,44 +36,39 @@ describe('TokenComponent', () => {
   it('should set inputs at init', () => {
     expect(component.token).toBeUndefined('token input should be undefined before detectChanges');
     component.token = 'test';
-    component.isentence = 2;
     component.itoken = 3;
     expect(component.token).toEqual('test', 'token input should be set after detectChanges');
   });
 
   it('should call duplicateToken when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.itoken = 3;
     component.duplicate();
-    expect(spyService.duplicateToken).toHaveBeenCalledWith(2, 3);
+    expect(spyService.duplicateToken).toHaveBeenCalledWith(3);
   });
 
   it('should call newTokenBefore when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.itoken = 3;
     component.newBefore();
-    expect(spyService.newTokenBefore).toHaveBeenCalledWith(2, 3);
+    expect(spyService.newTokenBefore).toHaveBeenCalledWith(3);
   });
 
   it('should call newTokenAfter when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.itoken = 3;
     component.newAfter();
-    expect(spyService.newTokenAfter).toHaveBeenCalledWith(2, 3);
+    expect(spyService.newTokenAfter).toHaveBeenCalledWith(3);
   });
 
   it('should call editToken when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.itoken = 3;
     component.token = 'value';
+    component.subscription = new Subscription();
     component.edit();
-    expect(spyService.editToken).toHaveBeenCalledWith(2, 3, 'value');
+    expect(spyService.editToken).toHaveBeenCalledWith(3, 'value');
   });
 
   it('should call deleteToken when duplicate button is clicked', () => {
-    component.isentence = 2;
     component.itoken = 3;
     component.delete();
-    expect(spyService.deleteToken).toHaveBeenCalledWith(2, 3);
+    expect(spyService.deleteToken).toHaveBeenCalledWith(3);
   });
 });

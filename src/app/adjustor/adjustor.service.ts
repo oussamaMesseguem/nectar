@@ -18,18 +18,18 @@ export class AdjustorService {
     if (this.storeService.index === 0) {
       return [
         [],
-        this.storeService.store[Annotation.raw][this.storeService.index + 1]
+        this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
       ];
     }
     if (this.storeService.index === this.storeService.nbSentences) {
       return [
-        this.storeService.store[Annotation.raw][this.storeService.index - 1],
+        this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
         []
       ];
     }
     return [
-      this.storeService.store[Annotation.raw][this.storeService.index - 1],
-      this.storeService.store[Annotation.raw][this.storeService.index + 1]
+      this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
+      this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
     ];
   }
 
@@ -38,10 +38,8 @@ export class AdjustorService {
    * Deletes the entire sentence from the array.
    */
   deleteSentence() {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation].splice(this.storeService.index, 1);
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.deleteSentence(this.storeService.index);
+    this.storeService.next();
   }
 
   /**
@@ -49,21 +47,16 @@ export class AdjustorService {
    * The duplication is index + 1.
    */
   duplicateSentence() {
-    this.storeService.keys().forEach(annotation => {
-      const value = this.storeService.store[annotation][this.storeService.index];
-      this.storeService.store[annotation].splice(this.storeService.index, 0, value);
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.duplicateSentence(this.storeService.index);
+    this.storeService.next();
   }
 
   /**
    * Adds a new empty sentence after the given index.
    */
   newSentenceAfter() {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation].splice(this.storeService.index + 1, 0, [this.storeService.createToken(annotation, '~', 0)]);
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.newSentenceAfter(this.storeService.index);
+    this.storeService.next();
   }
 
   /**
@@ -71,9 +64,7 @@ export class AdjustorService {
    * @param isentence The index of the sentence
    */
   newSentenceBefore() {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation].splice(this.storeService.index, 0, [this.storeService.createToken(annotation, '~', 0)]);
-    });
+    this.storeService.store.newSentenceBefore(this.storeService.index);
     // Needs to stay on the current sentence for that index should increment
     this.storeService.index = this.storeService.index + 1;
   }
@@ -85,14 +76,8 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   duplicateToken(itoken: number) {
-    this.storeService.keys().forEach(annotation => {
-      const token = JSON.parse(JSON.stringify(this.storeService.store[annotation][this.storeService.index][itoken]));
-      this.storeService.store[annotation][this.storeService.index].splice(itoken, 0, token);
-      if (annotation === Annotation.conllu) {
-        this.storeService.updateConlluIndexes();
-      }
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.duplicateToken(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
@@ -100,14 +85,8 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   newTokenBefore(itoken: number) {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation][this.storeService.index].splice(
-        itoken, 0, this.storeService.createToken(annotation, '~', itoken));
-      if (annotation === Annotation.conllu) {
-        this.storeService.updateConlluIndexes();
-      }
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.newTokenBefore(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
@@ -115,14 +94,8 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   newTokenAfter(itoken: number) {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation][this.storeService.index].splice(
-        itoken + 1, 0, this.storeService.createToken(annotation, '~', itoken));
-      if (annotation === Annotation.conllu) {
-        this.storeService.updateConlluIndexes();
-      }
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.newTokenAfter(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
@@ -131,14 +104,8 @@ export class AdjustorService {
    * @param value The new value
    */
   editToken(itoken: number, value: string) {
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation][this.storeService.index].splice(
-        itoken, 1, this.storeService.createToken(annotation, value, itoken));
-      if (annotation === Annotation.conllu) {
-        this.storeService.updateConlluIndexes();
-      }
-    });
-    this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
+    this.storeService.store.editToken(this.storeService.index, itoken, value);
+    this.storeService.next();
   }
 
   /**
@@ -146,24 +113,8 @@ export class AdjustorService {
    * @param itoken The index of the token
    */
   deleteToken(itoken: number) {
-    let shouldDeleteSentence = false;
-    this.storeService.keys().forEach(annotation => {
-      this.storeService.store[annotation][this.storeService.index].splice(itoken, 1);
-      if (annotation === Annotation.conllu) {
-        this.storeService.updateConlluIndexes();
-      }
-      // Because: if the sentence doesn't have any token, it no longer needed.
-      if (this.storeService.store[annotation][this.storeService.index].length === 0) {
-        shouldDeleteSentence = true;
-      }
-    });
-    // Because: need to delete the sentence and move the subject after the deletion
-    // otherwise move the subject now.
-    if (shouldDeleteSentence) {
-      this.deleteSentence();
-    } else {
-      this.storeService.sentence$.next(this.storeService.store[this.storeService.annotation][this.storeService.index]);
-    }
+    this.storeService.store.deleteToken(this.storeService.index, itoken);
+    this.storeService.next();
   }
   // **** Tokens operations END ***
 

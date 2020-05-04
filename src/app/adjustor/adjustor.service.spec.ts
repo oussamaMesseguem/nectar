@@ -2,97 +2,268 @@ import { TestBed } from '@angular/core/testing';
 
 import { AdjustorService } from './adjustor.service';
 import { StoreService } from '../store.service';
-import { MatDialogModule } from '@angular/material/dialog';
+import { Store } from '../store/store.model';
 
-const rawContent: string[][] = [
-  ['This', 'is', 'a', 'test', '.'],
-  ['Yes', 'a', 'test', ';'],
-  ['I', 'said', 'a', 'test', '!']
-];
+const store = {
+  Raw: [
+    ['This', 'is', 'a', 'test', '.'],
+    ['Yes', 'a', 'test', ';'],
+    ['I', 'said', 'a', 'test', '!']
+  ],
+  'Conll-U': [
+    [
+      {
+        index: '1',
+        token: 'This',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '2',
+        token: 'is',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '3',
+        token: 'a',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '4',
+        token: 'test',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '5',
+        token: '.',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      }
+    ],
+    [
+      {
+        index: '1',
+        token: 'Yes',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '2',
+        token: 'a',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '3',
+        token: 'test',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '4',
+        token: ';',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      }
+    ],
+    [
+      {
+        index: '1',
+        token: 'I',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '2',
+        token: 'said',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '3',
+        token: 'a',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '4',
+        token: 'test',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      },
+      {
+        index: '5',
+        token: '!',
+        lemma: '_',
+        upos: '_',
+        xpos: '_',
+        feat: '_',
+        head: '_',
+        deprel: '_',
+        deps: '_',
+        misc: '_'
+      }
+    ]
+  ],
+  Ner: [
+    [{ token: 'This', tag: '', type: '' }, { token: 'is', tag: '', type: '' }, { token: 'a', tag: '', type: '' },
+    { token: 'test', tag: '', type: '' }, { token: '.', tag: '', type: '' }],
+    [{ token: 'Yes', tag: '', type: '' }, { token: 'a', tag: '', type: '' },
+    { token: 'test', tag: '', type: '' }, { token: ';', tag: '', type: '' }],
+    [{ token: 'I', tag: '', type: '' }, { token: 'said', tag: '', type: '' }, { token: 'a', tag: '', type: '' },
+    { token: 'test', tag: '', type: '' }, { token: '!', tag: '', type: '' }],
+  ]
+
+};
 
 describe('AdjustorService', () => {
   let service: AdjustorService;
-  let storeServiceStub: Partial<StoreService>;
+  let storeServiceSpy: jasmine.SpyObj<StoreService>;
 
   beforeEach(() => {
-    const storeStub = {
-      rawContent: rawContent.map(s => Array.from(s))
-    };
+    // Because: we need a new store for each test independently.
+    const storeStub = jasmine.createSpyObj('StoreService', ['next', 'store']);
+
     TestBed.configureTestingModule({
-      imports: [ MatDialogModule],
+      imports: [],
       providers: [
         AdjustorService,
         { provide: StoreService, useValue: storeStub }
       ]
     });
     service = TestBed.inject(AdjustorService);
-    storeServiceStub = TestBed.inject(StoreService);
+    storeServiceSpy = TestBed.inject(StoreService) as jasmine.SpyObj<StoreService>;
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('sentences should be rawContent from store service', () => {
-    expect(service.sentences).toEqual(rawContent, 'sentences should be rawContent from store service');
-  });
+  // it('should call delete sentence', () => {
+  //   service.deleteSentence();
+  //   spyOnProperty(storeServiceSpy, 'store').and.callThrough();
+  //   // expect(storeServiceSpy.store.deleteSentence).toHaveBeenCalled();
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should duplicate sentence', () => {
-    expect(service.sentences.length).toEqual(3);
-    service.duplicateSentence(1);
-    expect(service.sentences.length).toEqual(4);
-    expect(service.sentences[1]).toEqual(service.sentences[2], 'the duplication should be i+1');
-  });
+  // it('should duplicate sentence', () => {
+  //   service.duplicateSentence();
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should delete sentence', () => {
-    expect(service.sentences.length).toEqual(3);
-    service.deleteSentence(1);
-    expect(service.sentences.length).toEqual(2);
-  });
+  // it('should add new sentence before sentence', () => {
+  //   service.newSentenceBefore();
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should add new sentence before sentence', () => {
-    expect(service.sentences.length).toEqual(3);
-    service.newSentenceBefore(0);
-    expect(service.sentences.length).toEqual(4);
-    expect(service.sentences[0]).toEqual(['~'], 'new sentence before should be at i-1 and contain ~');
-  });
+  // it('should duplicate sentence', () => {
+  //   service.newSentenceAfter();
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should duplicate sentence', () => {
-    expect(service.sentences.length).toEqual(3);
-    service.newSentenceAfter(0);
-    expect(service.sentences.length).toEqual(4);
-    expect(service.sentences[1]).toEqual(['~'], 'new sentence before should be at i+1 and contain ~');
-  });
+  // it('should duplicate token', () => {
+  //   service.duplicateToken(1);
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should duplicate token', () => {
-    service.duplicateToken(1, 1);
-    expect(service.sentences[1][1]).toEqual('a', 'the duplication should be the same value');
-    expect(service.sentences[1][2]).toEqual(service.sentences[1][2], 'the duplication should be i+1');
-  });
+  // it('should add new token before', () => {
+  //   service.newTokenBefore(3);
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should add new token before', () => {
-    service.newTokenBefore(2, 3);
-    expect(service.sentences[2].length).toEqual(6, 'increment sentence length.');
-    expect(service.sentences[2][3]).toEqual('~', 'the new token takes the given position');
-    expect(service.sentences[2][4]).toEqual('test', 'the value of the given position should be itoken+1');
-  });
+  // it('should add new token after', () => {
+  //   service.newTokenAfter(3);
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should add new token after', () => {
-    service.newTokenAfter(2, 3);
-    expect(service.sentences[2].length).toEqual(6, 'increment sentence length.');
-    expect(service.sentences[2][4]).toEqual('~', 'the new token takes the given position + 1');
-    expect(service.sentences[2][3]).toEqual('test', 'the value of the given position should be ~');
-  });
+  // it('should edit token', () => {
+  //   service.editToken(3, 'Oops');
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 
-  it('should edit token', () => {
-    service.editToken(2, 3, 'Oops');
-    expect(service.sentences[2][3]).toEqual('Oops', 'the edited token should be changed');
-  });
-
-  it('should delete token', () => {
-    expect(service.sentences[1].length).toEqual(4);
-    service.deleteToken(1, 0);
-    expect(service.sentences[1].length).toEqual(3);
-    expect(service.sentences[1][0]).toEqual('a', 'removing a value make move other values back');
-  });
+  // it('should delete token', () => {
+  //   service.deleteToken(0);
+  //   expect(storeServiceSpy.next).toHaveBeenCalled();
+  // });
 });

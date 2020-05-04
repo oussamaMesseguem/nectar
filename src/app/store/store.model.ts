@@ -60,7 +60,12 @@ export class Store {
     /**
      * The number of sentences in the store.
      */
-    nbSentences(): number { return this.store[Annotation.raw].length; }
+    nbSentences(): number {
+        if (this.store[Annotation.raw] !== undefined) {
+            return this.store[Annotation.raw].length;
+        }
+        return 0;
+    }
     // **** Store Initialisation END ****
 
     // **** Sentences operations START ****

@@ -1,6 +1,5 @@
 import { Store } from './store.model';
 import { Annotation } from '../annotators/annotations';
-import { NerToken } from '../annotators/ner/ner.model';
 
 const storeContent = {
     Raw: [

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { createConlluToken, conlluIntoText, ConlluToken } from './annotators/conllu/conllu.model';
+import { createConlluToken, conlluIntoText, ConlluToken } from '../annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
-import { createNerToken, nerIntoText } from './annotators/ner/ner.model';
-import { Annotation } from './annotators/annotations';
-import { Store } from './store/store.model';
+import { createNerToken, nerIntoText } from '../annotators/ner/ner.model';
+import { Annotation } from '../annotators/annotations';
+import { Store } from './store.model';
 
 /**
  * The main service class that holds the content and serves it to view.

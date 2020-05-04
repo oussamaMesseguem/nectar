@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { InjectorService } from './injector.service';
-import { StoreService } from '../store.service';
+import { StoreService } from '../store/store.service';
 import { HttpClient } from '@angular/common/http';
 
 describe('InjectionService', () => {

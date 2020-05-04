@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AdjustorService } from './adjustor.service';
-import { StoreService } from '../store.service';
+import { StoreService } from '../store/store.service';
 import { Store } from '../store/store.model';
 
 const store = {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Annotation } from '../../annotators/annotations';
-import { StoreService } from 'src/app/store.service';
+import { StoreService } from 'src/app/store/store.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportComponent } from '../../export/export.component';

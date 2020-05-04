@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../store.service';
+import { StoreService } from '../store/store.service';
 import { Annotation } from '../annotators/annotations';
 
 /**

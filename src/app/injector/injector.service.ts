@@ -3,7 +3,7 @@ import { Annotation, Language } from '../annotators/annotations';
 import { HttpClient } from '@angular/common/http';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { ConlluParser } from '../annotators/conllu/conllu.model';
-import { StoreService } from '../store.service';
+import { StoreService } from '../store/store.service';
 import { NerParser, NerToken } from '../annotators/ner/ner.model';
 
 @Injectable()

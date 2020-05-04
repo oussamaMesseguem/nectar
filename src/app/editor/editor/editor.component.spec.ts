@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditorComponent } from './editor.component';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { StoreService } from 'src/app/store.service';
+import { StoreService } from 'src/app/store/store.service';
 import { MatMenuModule } from '@angular/material/menu';
 
 describe('EditorComponent', () => {

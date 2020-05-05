@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { AdjustorService } from '../adjustor.service';
 
@@ -10,13 +10,13 @@ import { AdjustorService } from '../adjustor.service';
 })
 export class TokenComponent implements OnInit {
 
-  @Input() isentence: number;
   @Input() itoken: number;
   @Input() token: string;
+
   /**
-   * When editing the original token is displayed in the mat-label
+   * Display either the button or the input
    */
-  originalToken: string;
+  inEditing = false;
 
   /**
    * The input to edit the token
@@ -25,31 +25,33 @@ export class TokenComponent implements OnInit {
   @ViewChild('newinput')
   newinput: ElementRef;
 
-  inEditing = false;
+  /**
+   * When editing the original token is displayed in the mat-label
+   */
+  originalToken: string;
+
+  /**
+   * To close the subscription to the click event when editing.
+   */
+  subscription: Subscription;
 
   constructor(private adjustorService: AdjustorService) { }
 
   ngOnInit(): void {
   }
 
+  delete() {
+    this.adjustorService.deleteToken(this.itoken);
+  }
+
   duplicate() {
-    this.adjustorService.duplicateToken(this.isentence, this.itoken);
-  }
-
-  newBefore() {
-    this.adjustorService.newTokenBefore(this.isentence, this.itoken);
-  }
-
-  newAfter() {
-    this.adjustorService.newTokenAfter(this.isentence, this.itoken);
+    this.adjustorService.duplicateToken(this.itoken);
   }
 
   edit() {
-    this.adjustorService.editToken(this.isentence, this.itoken, this.token);
-  }
-
-  delete() {
-    this.adjustorService.deleteToken(this.isentence, this.itoken);
+    this.adjustorService.editToken(this.itoken, this.token);
+    this.inEditing = false;
+    this.subscription.unsubscribe();
   }
 
   /**
@@ -60,12 +62,18 @@ export class TokenComponent implements OnInit {
     this.originalToken = this.token;
     this.inEditing = true;
     const source: Observable<Event> = fromEvent(document, 'click').pipe(skip(1));
-    const s = source.subscribe(next => {
+    this.subscription = source.subscribe(next => {
       if (!this.newinput.nativeElement.contains(next.target)) {
         this.edit();
-        this.inEditing = false;
-        s.unsubscribe();
       }
     });
+  }
+
+  newAfter() {
+    this.adjustorService.newTokenAfter(this.itoken);
+  }
+
+  newBefore() {
+    this.adjustorService.newTokenBefore(this.itoken);
   }
 }

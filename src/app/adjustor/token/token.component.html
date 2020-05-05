@@ -1,10 +1,10 @@
-<mat-chip class="mat-chip-token" #chipToken [matMenuTriggerFor]="menu" [value]="token" *ngIf="!inEditing">{{ token }}
-</mat-chip>
-
 <mat-form-field appearance="outline" color="purple" *ngIf="inEditing">
     <mat-label>{{originalToken}}</mat-label>
     <input #newinput matInput [(ngModel)]="token" (keydown.enter)="edit()">
 </mat-form-field>
+
+<button mat-stroked-button [matMenuTriggerFor]="menu" [value]="token" *ngIf="!inEditing">{{token}}</button>
+
 
 <mat-menu #menu="matMenu" yPosition="above">
     <ng-template matMenuContent>

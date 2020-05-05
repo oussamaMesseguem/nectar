@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../store.service';
+import { StoreService } from '../store/store.service';
+import { Annotation } from '../annotators/annotations';
 
 /**
  * Service inside Adjust Module scope.
@@ -11,93 +12,110 @@ export class AdjustorService {
   constructor(private storeService: StoreService) { }
 
   /**
-   * The array of sentences
+   * Return the previous and the next sentence of the current one.
    */
-  get sentences(): string[][] { return this.storeService.rawContent; }
+  getPreviousAndNextSentences(): string[][] {
+    if (this.storeService.index === 0) {
+      return [
+        [],
+        this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
+      ];
+    }
+    if (this.storeService.index === this.storeService.nbSentences) {
+      return [
+        this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
+        []
+      ];
+    }
+    return [
+      this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
+      this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
+    ];
+  }
+
+  // **** Sentences operations START ****
+  /**
+   * Deletes the entire sentence from the array.
+   */
+  deleteSentence() {
+    this.storeService.store.deleteSentence(this.storeService.index);
+    this.storeService.next();
+  }
 
   /**
    * Duplicates the sentence at the given index.
    * The duplication is index + 1.
-   * @param isentence The index of the sentence
    */
-  duplicateSentence(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 0, this.storeService.rawContent[isentence]);
+  duplicateSentence() {
+    this.storeService.store.duplicateSentence(this.storeService.index);
+    this.storeService.next();
   }
 
   /**
-   * Deletes the entire sentence from the array.
-   * @param isentence The index of the sentence
+   * Adds a new empty sentence after the given index.
    */
-  deleteSentence(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 1);
+  newSentenceAfter() {
+    this.storeService.store.newSentenceAfter(this.storeService.index);
+    this.storeService.next();
   }
 
   /**
    * Adds a new empty sentence before the given index.
    * @param isentence The index of the sentence
    */
-  newSentenceBefore(isentence: number) {
-    this.storeService.rawContent.splice(isentence, 0, ['~']);
+  newSentenceBefore() {
+    this.storeService.store.newSentenceBefore(this.storeService.index);
+    // Needs to stay on the current sentence for that index should increment
+    this.storeService.index = this.storeService.index + 1;
   }
+  // **** Sentences operations END ****
 
-  /**
-   * Adds a new empty sentence after the given index.
-   * @param isentence The index of the sentence
-   */
-  newSentenceAfter(isentence: number) {
-    this.storeService.rawContent.splice(isentence + 1, 0, ['~']);
-  }
-
+  // **** Tokens operations START ****
   /**
    * Duplicates the token at the given index in the given sentence.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  duplicateToken(isentence: number, itoken: number) {
-    const token = this.storeService.rawContent[isentence][itoken];
-    this.storeService.rawContent[isentence].splice(itoken, 0, token);
+  duplicateToken(itoken: number) {
+    this.storeService.store.duplicateToken(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
    * Adds a new empty token before the given index.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  newTokenBefore(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken, 0, '~');
+  newTokenBefore(itoken: number) {
+    this.storeService.store.newTokenBefore(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
    * Adds a new empty token after the given index.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  newTokenAfter(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken + 1, 0, '~');
+  newTokenAfter(itoken: number) {
+    this.storeService.store.newTokenAfter(this.storeService.index, itoken);
+    this.storeService.next();
   }
 
   /**
    * Changes the value of the token.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    * @param value The new value
    */
-  editToken(isentence: number, itoken: number, value: string) {
-    this.storeService.rawContent[isentence].splice(itoken, 1, value);
+  editToken(itoken: number, value: string) {
+    this.storeService.store.editToken(this.storeService.index, itoken, value);
+    this.storeService.next();
   }
 
   /**
    * Deletes the token from the sentence.
-   * @param isentence The index of the sentence
    * @param itoken The index of the token
    */
-  deleteToken(isentence: number, itoken: number) {
-    this.storeService.rawContent[isentence].splice(itoken, 1);
-    if (this.storeService.rawContent[isentence].length === 0) {
-      this.deleteSentence(isentence);
-    }
+  deleteToken(itoken: number) {
+    this.storeService.store.deleteToken(this.storeService.index, itoken);
+    this.storeService.next();
   }
+  // **** Tokens operations END ***
 
-  push() {
-  }
 }

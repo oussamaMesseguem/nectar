@@ -4,16 +4,29 @@ node_js:
   - '12.16.1'
 
 dist: trusty
+sudo: false
 
 branches:
   only:
   - master
 
-before_script:
-  - npm install -g @angular/cli
+notifications:
+  email: false
+
+addons:
+  chrome: stable
+
+cache:
+  directories:
+     - ./node_modules
+
+install:
+  - npm install
 
 script:
 - ng lint
+- npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+- npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
 - ng build --prod --base-href https://oussamaMesseguem.github.io/nectar/
 
 deploy:

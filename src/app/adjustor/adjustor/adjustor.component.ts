@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdjustorService } from '../adjustor.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -8,12 +9,24 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './adjustor.component.html',
   styleUrls: ['./adjustor.component.scss']
 })
-export class AdjustorComponent implements OnInit {
+export class AdjustorComponent implements OnInit, OnDestroy {
 
-  constructor(private adjustorService: AdjustorService, public dialogRef: MatDialogRef<AdjustorComponent>) { }
+  @Input() sentence$: BehaviorSubject<string[]>;
 
-  ngOnInit(): void { }
+  nextSentence: string[];
+  previousSentence: string[];
 
-  get sentences() { return this.adjustorService.sentences; }
+  ondestroy: Subject<boolean> = new Subject();
 
+  constructor(private adjustorService: AdjustorService) { }
+
+  ngOnInit(): void {
+    this.sentence$.pipe(takeUntil(this.ondestroy)).subscribe(next => {
+      [this.previousSentence, this.nextSentence] = this.adjustorService.getPreviousAndNextSentences();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ondestroy.complete();
+  }
 }

@@ -11,16 +11,11 @@ export class NerComponent implements OnInit {
 
   @Input() sentence$: BehaviorSubject<NerToken[]>;
 
-  currentTokenIndex: number;
+  private currentTokenIndex: number;
   /**
    * Temporary type. Used to save what menu type has been opened
    */
-  tmpType: string;
-
-  /**
-   * The color changes when type and tag are selected
-   */
-  labelColor: string;
+  private tmpType: string;
 
   /**
    * Emitter to update the view after tags have been set.
@@ -32,6 +27,18 @@ export class NerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void { }
+
+  get index(): number {
+    return this.currentTokenIndex;
+  }
+
+  /**
+   * So that we know which token has been clicked
+   * @param index The current token index in the sentence
+   */
+  set index(index: number) {
+    this.currentTokenIndex = index;
+  }
 
   get tags() {
     return NerTags;
@@ -59,13 +66,5 @@ export class NerComponent implements OnInit {
    */
   setType(type: string) {
     this.tmpType = type;
-  }
-
-  /**
-   * So that we know which token has been clicked
-   * @param index The current token index in the sentence
-   */
-  setCurrentIndex(index: number) {
-    this.currentTokenIndex = index;
   }
 }

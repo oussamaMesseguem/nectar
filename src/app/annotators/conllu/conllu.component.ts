@@ -16,7 +16,7 @@ import { TokenComponent } from './token/token.component';
 })
 export class ConlluComponent implements OnInit {
 
-  displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc', 'edit'];
+  displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc'];
 
   @Input() sentence$: BehaviorSubject<ConlluToken[]>;
 
@@ -30,7 +30,6 @@ export class ConlluComponent implements OnInit {
    * @param index the index of the token in the sentence
    */
   editToken(index: number) {
-    console.log(index);
     const dialogRef = this.dialog.open(TokenComponent, {
       width: '100%',
       data: {

@@ -1,7 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, startWith, tap, map, takeUntil } from 'rxjs/operators';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 /**
  * Manages the proposed keys and values for pairs
@@ -14,63 +11,75 @@ import { Observable, BehaviorSubject, Subject } from 'rxjs';
   templateUrl: './pair.component.html',
   styleUrls: ['./pair.component.scss']
 })
-export class PairComponent implements OnInit, OnDestroy {
+export class PairComponent implements OnInit {
 
-  /**
-   * The form control for one row
-   */
-  @Input() ctrl: FormControl;
+  tagValue: string;
+  valueValue: string;
   /**
    * The tags
    */
-  @Input() tags: [
+  @Input() tags:
     {
       tag: string;
       name: string;
-      values: [
-        { tag: string, name: string }
-      ]
-    }
-  ];
+      values: { tag: string, name: string }[]
+    }[];
   /**
    * Emitted row when removed
    */
   @Output() removed: EventEmitter<void> = new EventEmitter();
-
-  values: BehaviorSubject<any[]> = new BehaviorSubject([]);
-  values$: Observable<any[]> = this.values.asObservable();
-
   /**
-   * Private field used to unsubscribe to the formcontrol when component no longer exist
+   * Emitter for the tag
    */
-  private componentDestroyed: Subject<any[]> = new Subject();
+  @Output() tagChanged: EventEmitter<string> = new EventEmitter();
+  /**
+   * Emmitter for the value
+   */
+  @Output() valueChanged: EventEmitter<string> = new EventEmitter();
 
   constructor() { }
 
-  ngOnInit(): void {
-    // When the key-tag changes the proposed values change accordingly
-    this.ctrl.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.componentDestroyed)
-      )
-      .subscribe(tag => {
-        this.values.next(this.tags.filter(t => t.tag === tag.key).map(t => t.values)[0]);
-      });
+  ngOnInit(): void { }
+
+  /**
+   * Returns the value of the tag
+   */
+  get tag(): string { return this.tagValue; }
+  /**
+   * Sets the value of the tag and emits the new value.
+   */
+  @Input() set tag(tag: string) {
+    if (tag !== this.tagValue) {
+      this.tagChanged.emit(tag);
+    }
+    this.tagValue = tag;
   }
 
   /**
-   * Cleans the subscibers
+   * Returns the value of the value.
    */
-  ngOnDestroy(): void {
-    this.componentDestroyed.next();
-    this.componentDestroyed.complete();
+  get value(): string { return this.valueValue; }
+  /**
+   * Sets the value of the value and emits the new value.
+   */
+  @Input() set value(value: string) {
+    if (value !== this.valueValue) {
+      this.valueChanged.emit(value);
+    }
+    this.valueValue = value;
   }
+
+  /**
+   * Returns the possible values for the current tag.
+   */
+  get values(): any[] {
+    return this.tags.filter(t => t.tag === this.tag).map(t => t.values)[0];
+  }
+
   /**
    * Emits the signal to remove self
    */
   remove() {
-    this.removed.emit();
+    this.removed.emit(null);
   }
 }

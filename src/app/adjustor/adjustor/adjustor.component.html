@@ -1,10 +1,3 @@
-<h2 mat-dialog-title>Split and Tokenisation</h2>
-<mat-dialog-content>
-    <app-sentence *ngFor="let sent of sentences; let i = index" [sentence]="sent" [isentence]="i"></app-sentence>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-    <button mat-fab color="primary" [mat-dialog-close]="true" cdkFocusInitial>
-        <mat-icon>check</mat-icon>
-    </button>
-</mat-dialog-actions>
+<button mat-stroked-button *ngFor="let token of previousSentence" disabled>{{token}}</button>
+<app-sentence [sentence$]="sentence$"></app-sentence>
+<button mat-stroked-button *ngFor="let token of nextSentence" disabled>{{token}}</button>

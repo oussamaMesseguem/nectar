@@ -1,5 +1,18 @@
 <form mat-dialog-content [formGroup]="formGroup">
     <mat-vertical-stepper [linear]=true #stepper>
+        <mat-step [stepControl]="lang" label="Select the language">
+
+            <mat-form-field class="full-width">
+                <input type="text" placeholder="Language" aria-label="Language" matInput [formControl]="lang"
+                    [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let language of languages" [value]="language">
+                        {{language}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </mat-step>
+
         <mat-step label="Choose the type of file to upload">
             <mat-form-field class="full-width">
                 <mat-chip-list class="type-chips" multiple=false ariaOrientation="horizontal" required
@@ -9,19 +22,6 @@
                         {{ annot }}
                     </mat-chip>
                 </mat-chip-list>
-            </mat-form-field>
-        </mat-step>
-
-        <mat-step *ngIf="annotation.value === 'Raw'" [stepControl]="lang" label="Select the language">
-
-            <mat-form-field class="full-width">
-                <input type="text" placeholder="Language" aria-label="Language" matInput [formControl]="lang"
-                    [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let language of languages" [value]="language">
-                        {{language}}
-                    </mat-option>
-                </mat-autocomplete>
             </mat-form-field>
         </mat-step>
 

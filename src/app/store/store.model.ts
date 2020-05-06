@@ -186,13 +186,10 @@ export class Store {
             if (annotation === Annotation.conllu) {
                 this.updateConlluIndexes(isentence);
             }
-            // Because: if the sentence doesn't have any token, it no longer needed.
-            if (this.store[annotation][isentence].length === 0) {
-                shouldDeleteSentence = true;
-            }
+            // Because: if the sentence doesn't have any token, it's no longer needed.
+            shouldDeleteSentence = this.store[annotation][isentence].length === 0;
         });
         // Because: need to delete the sentence and move the subject after the deletion
-        // otherwise move the subject now.
         if (shouldDeleteSentence) {
             this.deleteSentence(isentence);
         }

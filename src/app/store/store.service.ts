@@ -96,6 +96,7 @@ export class StoreService {
      */
     initStore(annotation: string, content: any[][]) {
         this.store.initStore(annotation, content);
+        this.store[annotation] = content;
         this.annotation = annotation;
         // Because: if the uploaded content is not Raw this raw type should not be added in future.
         if (annotation !== Annotation.raw) {
@@ -140,10 +141,10 @@ export class StoreService {
             const a = document.createElement('a');
             let content: string;
             if (annotation === Annotation.conllu) {
-                content = conlluIntoText(this.store.getContent(annotation));
+                content = conlluIntoText(this.store[annotation]);
             }
             if (annotation === Annotation.ner) {
-                content = nerIntoText(this.store.getContent(annotation));
+                content = nerIntoText(this.store[annotation]);
             }
             const file = new Blob([content], { type: 'text/plain' });
             a.href = URL.createObjectURL(file);

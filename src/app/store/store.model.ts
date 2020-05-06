@@ -31,14 +31,6 @@ export class Store {
     }
 
     /**
-     * Returns the content for the given annotation.
-     * @param annotation the annotation
-     */
-    getContent(annotation: string): any[] {
-        return this.store[annotation];
-    }
-
-    /**
      * Returns the sentence at the given index from Store[annotation]
      * @param annotation the annotation
      * @param isentence the sentence index

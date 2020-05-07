@@ -26,10 +26,22 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:150px !important;">
         <mat-label>LABEL</mat-label>
-        <input matInput [(ngModel)]="dialogData.token.label">
+        <input matInput [matMenuTriggerFor]="typesMenu" [(ngModel)]="dialogData.token.label">
     </mat-form-field>
 </mat-dialog-content>
 
-<!-- <mat-dialog-actions align="end">
-    <button mat-mini-fab color="primary" [mat-dialog-close]="true" cdkFocusInitial><mat-icon>done</mat-icon></button>
-</mat-dialog-actions> -->
+
+<mat-menu #typesMenu="matMenu" yPosition="below" xPosition="after">
+    <ng-template matMenuContent>
+        <button mat-menu-item *ngFor="let type of types" matTooltip="{{type.description}}"
+            (menuOpened)="setType(type.tag)" [matMenuTriggerFor]="tagsMenu" matTooltipPosition="left"
+            matTooltipShowDelay="500">{{type.tag}}</button>
+    </ng-template>
+</mat-menu>
+
+<mat-menu #tagsMenu="matMenu">
+    <ng-template matMenuContent>
+        <button mat-menu-item *ngFor="let tag of tags" matTooltip="{{tag.description}}" matTooltipPosition="right"
+            matTooltipShowDelay="500" (click)="setTag(tag.tag)">{{tag.tag}}</button>
+    </ng-template>
+</mat-menu>

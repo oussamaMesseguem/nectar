@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TokenComponent } from './token/token.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -25,6 +26,7 @@ import { TokenComponent } from './token/token.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatTableModule,
     MatTooltipModule
   ],

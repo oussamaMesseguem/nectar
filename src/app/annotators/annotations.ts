@@ -5,6 +5,7 @@
 export enum Annotation {
     conllu = 'Conll-U',
     ner = 'Ner',
+    nerPlusPlus = 'Ner++',
     raw = 'Raw'
 }
 

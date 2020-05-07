@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { InjectorComponent } from '../injector/injector/injector.component';
 import { AdjustorModule } from '../adjustor/adjustor.module';
+import { NerPlusPlusModule } from '../annotators/ner++/ner-plus-plus.module';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { AdjustorModule } from '../adjustor/adjustor.module';
     AdjustorModule,
     ConlluModule,
     NerModule,
+    NerPlusPlusModule,
     EditorRoutingModule
   ]
 })

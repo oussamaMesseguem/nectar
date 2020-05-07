@@ -1,6 +1,7 @@
 import { Annotation } from '../annotators/annotations';
 import { createConlluToken, ConlluToken } from '../annotators/conllu/conllu.model';
 import { createNerToken } from '../annotators/ner/ner.model';
+import { createNerPlusPlusToken } from '../annotators/ner++/nerPlusPlus.model';
 
 export class Store {
 
@@ -208,6 +209,9 @@ export class Store {
         }
         if (annotation === Annotation.ner) {
             return createNerToken(token);
+        }
+        if (annotation === Annotation.nerPlusPlus) {
+            return createNerPlusPlusToken(token);
         }
         if (annotation === Annotation.raw) {
             return token;

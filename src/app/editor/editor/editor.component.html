@@ -60,6 +60,7 @@
     <ng-container [ngSwitch]="annotation">
         <app-conllu [sentence$]="sentence$" *ngSwitchCase="'Conll-U'"></app-conllu>
         <app-ner [sentence$]="sentence$" *ngSwitchCase="'Ner'"></app-ner>
+        <app-ner-plus-plus [sentence$]="sentence$" *ngSwitchCase="'Ner++'"></app-ner-plus-plus>
         <app-adjustor [sentence$]="sentence$" *ngSwitchCase="'Raw'"></app-adjustor>
 
         <div class="centered-content" *ngSwitchDefault>

@@ -8,7 +8,7 @@ import { DebugElement } from '@angular/core';
 const nerTokenUntyped: NerToken = { token: 'dummy', tag: 'O', type: '' };
 const nerTokenTyped: NerToken = { token: 'novembre', tag: 'U', type: 'DATE' };
 
-describe('TokenComponent', () => {
+describe('Ner TokenComponent', () => {
   let component: TokenComponent;
   let fixture: ComponentFixture<TokenComponent>;
 

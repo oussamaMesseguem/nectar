@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Subscription } from 'rxjs';
 
-describe('TokenComponent', () => {
+describe('Adjustor TokenComponent', () => {
   let component: TokenComponent;
   let fixture: ComponentFixture<TokenComponent>;
   let spyService: jasmine.SpyObj<AdjustorService>;
@@ -35,9 +35,9 @@ describe('TokenComponent', () => {
 
   it('should set inputs at init', () => {
     expect(component.token).toBeUndefined('token input should be undefined before detectChanges');
-    component.token = 'test';
+    component.token = { token: 'test' };
     component.itoken = 3;
-    expect(component.token).toEqual('test', 'token input should be set after detectChanges');
+    expect(component.token.token).toEqual('test', 'token input should be set after detectChanges');
   });
 
   it('should call duplicateToken when duplicate button is clicked', () => {
@@ -60,7 +60,7 @@ describe('TokenComponent', () => {
 
   it('should call editToken when duplicate button is clicked', () => {
     component.itoken = 3;
-    component.token = 'value';
+    component.token = { token: 'value' };
     component.subscription = new Subscription();
     component.edit();
     expect(spyService.editToken).toHaveBeenCalledWith(3, 'value');

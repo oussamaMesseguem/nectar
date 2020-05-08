@@ -1,5 +1,9 @@
 import { Tokenable } from '../annotators/annotations';
 
+/**
+ * Store content can be modified by Raw or other, therefore this class
+ * publish some operations on sentences and tokens.
+ */
 export abstract class AbstractStore {
 
     content: Tokenable[][];

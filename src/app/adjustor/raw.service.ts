@@ -4,8 +4,7 @@ import { IParser } from '../injector/injector.service';
 
 /**
  * Used by this Injection service to split and tokenise the content
- * in case of Raw content.
- * Since it isn't a proper annotation it behaves a little differently
+ * and operations on sentences and tokens.
  */
 export class RawService extends AbstractStore implements IParser {
 

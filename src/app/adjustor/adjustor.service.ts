@@ -77,7 +77,6 @@ export class AdjustorService {
    */
   duplicateToken(itoken: number) {
     this.storeService.store.duplicateToken(this.storeService.index, itoken);
-    this.storeService.next();
   }
 
   /**
@@ -86,7 +85,6 @@ export class AdjustorService {
    */
   newTokenBefore(itoken: number) {
     this.storeService.store.newTokenBefore(this.storeService.index, itoken);
-    this.storeService.next();
   }
 
   /**
@@ -95,7 +93,6 @@ export class AdjustorService {
    */
   newTokenAfter(itoken: number) {
     this.storeService.store.newTokenAfter(this.storeService.index, itoken);
-    this.storeService.next();
   }
 
   /**
@@ -105,7 +102,6 @@ export class AdjustorService {
    */
   editToken(itoken: number, value: string) {
     this.storeService.store.editToken(this.storeService.index, itoken, value);
-    this.storeService.next();
   }
 
   /**
@@ -114,7 +110,6 @@ export class AdjustorService {
    */
   deleteToken(itoken: number) {
     this.storeService.store.deleteToken(this.storeService.index, itoken);
-    this.storeService.next();
   }
   // **** Tokens operations END ***
 

@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Annotation, Language } from '../annotators/annotations';
 import { HttpClient } from '@angular/common/http';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
-import { ConlluParser } from '../annotators/conllu/conllu.model';
+import { ConlluService } from '../annotators/conllu/conllu.service';
 import { StoreService } from '../store/store.service';
-import { NerParser, NerToken } from '../annotators/ner/ner.model';
+import { NerToken } from '../annotators/ner/ner.model';
+import { NerService } from '../annotators/ner/ner.service';
+import { RawService } from '../adjustor/raw.service';
 
 @Injectable()
 export class InjectorService {
@@ -23,13 +25,13 @@ export class InjectorService {
 
     switch (annotation) {
       case Annotation.conllu:
-        this.parser = new ConlluParser();
+        this.parser = new ConlluService();
         break;
       case Annotation.ner:
-        this.parser = new NerParser();
+        this.parser = new NerService();
         break;
       case Annotation.raw:
-        this.parser = new Raw();
+        this.parser = new RawService();
         break;
       default:
         throw this.assertAnnotationType(annotation);
@@ -97,9 +99,9 @@ export class InjectorService {
     // Split into array of tokens
     // Split into tokens and annotations
     return content.split(this.parser.splitPattern)
-      .map(sent => sent.split(/\n/)
+      .map(sent => sent.split(this.parser.tokenPattern)
         .filter(line => !line.trim().match(this.parser.ignoreLinePattern))
-        .map(line => line.trim().split(this.parser.tokenPattern))
+        .map(line => line.trim().split(this.parser.elementsPattern))
         .filter(tab => tab[0].length > 0)
         .map(line => this.parser.ofToken(line))
       );
@@ -120,7 +122,6 @@ export class InjectorService {
 export interface IParser {
 
   annotation: Annotation;
-  // sentences: any[][];
   /**
    * The pattern to split sentences on
    */
@@ -130,46 +131,18 @@ export interface IParser {
    */
   tokenPattern: RegExp;
   /**
+   * The pattern to split elements on
+   */
+  elementsPattern: RegExp;
+  /**
    * The pattern to ignore lines
    */
   ignoreLinePattern: RegExp;
-
   /**
-   * Returns the tokens only
-   */
-  // tokens(): string[][];
-
-  /**
-   * Builds an Anootation Token
+   * Builds an Annotation Token
    * @param value the split array containing a token and its annotations
    */
   ofToken(value: string[]): any;
-}
-
-/**
- * Used by this Injection service to split and tokenise the content
- * in case of Raw content.
- * Since it isn't a proper annotation it behaves a little differently
- */
-export class Raw implements IParser {
-  annotation = Annotation.raw;
-  sentences: string[][] = [];
-  stopInjecting: boolean;
-
-  splitPattern: RegExp = new RegExp(/\n\s*\n/);
-  tokenPattern: RegExp = new RegExp(/\s/);
-  ignoreLinePattern: RegExp = new RegExp('#');
-
-  constructor() { }
-
-  // TODO Needs to be fixed for async call
-  tokens(): string[][] {
-    return this.sentences;
-  }
-
-  ofToken(tokenAndAnnotation: string[]): string {
-    return tokenAndAnnotation[0];
-  }
 }
 
 interface CoreNLPResponse {

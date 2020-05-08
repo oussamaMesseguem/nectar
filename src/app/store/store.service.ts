@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { conlluIntoText } from '../annotators/conllu/conllu.model';
 import { BehaviorSubject } from 'rxjs';
-import { nerIntoText } from '../annotators/ner/ner.model';
 import { Annotation } from '../annotators/annotations';
 import { Store } from './store.model';
 
 /**
- * The main service class that holds the content and serves it to view.
+ * The main service class that holds the content and serves it to the views.
  */
 @Injectable({
     providedIn: 'root'
@@ -59,9 +57,9 @@ export class StoreService {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
         // Because: the store migth not know about this annotation, therefore it should be init.
-        if (!this.store.keys().includes(annotation)) {
-            this.store.addEntry(annotation);
-        }
+        // if (!this.store.keys().includes(annotation)) {
+        // }
+        this.store.addEntry(annotation);
         this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));
     }
@@ -136,19 +134,19 @@ export class StoreService {
      * @param annotations the exported annotations
      */
     writeContents(annotations: string[]) {
-        annotations.forEach(annotation => {
-            const a = document.createElement('a');
-            let content: string;
-            if (annotation === Annotation.conllu) {
-                content = conlluIntoText(this.store.getContent(annotation));
-            }
-            if (annotation === Annotation.ner) {
-                content = nerIntoText(this.store.getContent(annotation));
-            }
-            const file = new Blob([content], { type: 'text/plain' });
-            a.href = URL.createObjectURL(file);
-            a.download = `${annotation}.txt`;
-            a.click();
-        });
+        // annotations.forEach(annotation => {
+        //     const a = document.createElement('a');
+        //     let content: string = this.store;
+        //     if (annotation === Annotation.conllu) {
+        //         content = conlluIntoText(this.store.getContent(annotation));
+        //     }
+        //     if (annotation === Annotation.ner) {
+        //         content = nerIntoText(this.store.getContent(annotation));
+        //     }
+        //     const file = new Blob([content], { type: 'text/plain' });
+        //     a.href = URL.createObjectURL(file);
+        //     a.download = `${annotation}.txt`;
+        //     a.click();
+        // });
     }
 }

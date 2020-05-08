@@ -1,6 +1,3 @@
-import { IParser } from 'src/app/injector/injector.service';
-import { Annotation } from '../annotations';
-
 /**
  * A conllu content is an array of conllu token arrays.
  * * This interface represents a token and its tags
@@ -18,59 +15,6 @@ export interface ConlluToken {
     deprel: string;
     deps: string;
     misc: string;
-}
-
-/**
- * A parser for files.
- */
-export class ConlluParser implements IParser {
-    annotation = Annotation.conllu;
-    splitPattern: RegExp = new RegExp(/\n\s*\n/);
-    tokenPattern: RegExp = new RegExp(/\t/);
-    ignoreLinePattern: RegExp = new RegExp('#');
-
-    constructor() { }
-
-    ofToken(value: string[]): ConlluToken {
-        return {
-            index: value[0], token: value[1], lemma: value[2], upos: value[3], xpos: value[4], feat: value[5],
-            head: value[6], deprel: value[7], deps: value[8], misc: value[9]
-        };
-    }
-}
-
-export function createConlluToken(
-    index: string, token: string, lemma?: string, upos?: string,
-    xpos?: string, feat?: string, head?: string, deprel?: string,
-    deps?: string, misc?: string): ConlluToken {
-    return {
-        index,
-        token,
-        lemma: lemma ? lemma : '_',
-        upos: upos ? upos : '_',
-        xpos: xpos ? xpos : '_',
-        feat: feat ? feat : '_',
-        head: head ? head : '_',
-        deprel: deprel ? deprel : '_',
-        deps: deps ? deps : '_',
-        misc: misc ? misc : '_'
-    };
-}
-
-/**
- * Writes the content as conllu scheme.
- * @param content the content from the store
- */
-export function conlluIntoText(content: ConlluToken[][]): string {
-    const text = [];
-    content.forEach(sentence => {
-        const sentenceArray = [];
-        sentence.forEach(token => {
-            sentenceArray.push(Object.values(token).join('\t'));
-        });
-        text.push(sentenceArray.join('\n'));
-    });
-    return text.join('\n\n');
 }
 
 export interface UPos {

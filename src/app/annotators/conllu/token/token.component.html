@@ -1,22 +1,22 @@
-<mat-dialog-content [formGroup]="conlluTokenForm">
+<mat-dialog-content>
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:50px !important;">
         <mat-label>INDEX</mat-label>
-        <input matInput formControlName="index">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.index">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:150px !important;">
         <mat-label>TOKEN</mat-label>
-        <input matInput formControlName="token">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.token">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="unit-margin">
         <mat-label>LEMMA</mat-label>
-        <input matInput formControlName="lemma">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.lemma">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:80px !important;">
         <mat-label>UPOS</mat-label>
-        <input matInput formControlName="upos" [matAutocomplete]="auto">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.upos" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let up of uposList" [value]="up.tag">
                 {{up.tag}}
@@ -26,7 +26,7 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:80px !important;">
         <mat-label>XPOS</mat-label>
-        <input matInput formControlName="xpos" [matAutocomplete]="auto">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.xpos" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let up of uposList" [value]="up.tag">
                 {{up.tag}}
@@ -36,12 +36,12 @@
 
     <mat-form-field appearance="outline" class="unit-margin">
         <mat-label>FEAT</mat-label>
-        <input matInput formControlName="feat" (click)="openFeatDialog()">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.feat" (click)="openFeatDialog()">
     </mat-form-field>
 
     <mat-form-field style="max-width:50px !important;" class="unit-margin" appearance="outline">
         <mat-label>HEAD</mat-label>
-        <input matInput formControlName="head" [matAutocomplete]="autoNB">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.head" [matAutocomplete]="autoNB">
         <mat-autocomplete #autoNB="matAutocomplete">
             <mat-option *ngFor="let itok of tokensIndexes" [value]="itok">
                 {{itok}}
@@ -51,7 +51,7 @@
 
     <mat-form-field style="max-width:80px !important;" appearance="outline" class="unit-margin">
         <mat-label>DEPREL</mat-label>
-        <input matInput formControlName="deprel" [matAutocomplete]="autoDeprel">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.deprel" [matAutocomplete]="autoDeprel">
         <mat-autocomplete #autoDeprel="matAutocomplete">
             <mat-option *ngFor="let deprel of udeprelList" [value]="deprel.tag">
                 {{deprel.tag}}
@@ -61,15 +61,11 @@
 
     <mat-form-field appearance="outline" class="unit-margin" style="max-width:100px !important;">
         <mat-label>DEPS</mat-label>
-        <input matInput formControlName="deps" (click)="openDepsDialog()">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.deps" (click)="openDepsDialog()">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="unit-margin">
         <mat-label>MISC</mat-label>
-        <input matInput formControlName="misc">
+        <input matInput [(ngModel)]="conlluDialog.conlluToken.misc">
     </mat-form-field>
 </mat-dialog-content>
-
-<mat-dialog-actions align="end">
-    <button mat-mini-fab color="primary" [mat-dialog-close]="format()" cdkFocusInitial><mat-icon>done</mat-icon></button>
-</mat-dialog-actions>

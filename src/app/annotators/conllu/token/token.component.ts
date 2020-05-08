@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { ConlluToken, UPos, UDeprel, UFeats, UPOS, UDEPREL, UFEATS } from '../conllu.model';
 import { ValueListComponent } from '../value-list/value-list.component';
 
@@ -25,20 +24,17 @@ export class TokenComponent implements OnInit {
   udeprelList: UDeprel[] = UDEPREL;
   ufeatList: UFeats[] = UFEATS;
   tokensIndexes: string[];
-  conlluTokenForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<TokenComponent>,
               @Inject(MAT_DIALOG_DATA) public conlluDialog: ConlluDialog,
-              public dialog: MatDialog,
-              private fb: FormBuilder) { }
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.conlluTokenForm = this.fb.group(new ConllTokenForm(this.conlluDialog.conlluToken));
     this.tokensIndexes = [...Array(this.conlluDialog.nbTokens).keys()].map(i => i += 1).map(i => i.toString());
   }
 
   openFeatDialog(): void {
-    const tag = this.conlluTokenForm.get('feat').value;
+    const tag = this.conlluDialog.conlluToken.feat;
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
       data: { tag, tags: this.ufeatList, separator: '|', equality: '=' }
@@ -46,14 +42,14 @@ export class TokenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.conlluTokenForm.get('feat').setValue(result);
+        this.conlluDialog.conlluToken.feat = result;
       }
     });
   }
 
   openDepsDialog(): void {
     const tags = [];
-    const tag = this.conlluTokenForm.get('deps').value;
+    const tag = this.conlluDialog.conlluToken.deps;
     this.tokensIndexes.forEach(nb => tags.push({ tag: nb, values: this.udeprelList }));
     const dialogRef = this.dialog.open(ValueListComponent, {
       width: '600px',
@@ -62,42 +58,8 @@ export class TokenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.conlluTokenForm.get('deps').setValue(result);
+        this.conlluDialog.conlluToken.deps = result;
       }
     });
-  }
-
-  format(): ConlluToken {
-    return this.conlluTokenForm.value;
-  }
-
-}
-
-/**
- * A form for the Conllu Token
- */
-class ConllTokenForm {
-  index = new FormControl();
-  token = new FormControl();
-  lemma = new FormControl();
-  upos = new FormControl();
-  xpos = new FormControl();
-  feat = new FormControl();
-  head = new FormControl();
-  deprel = new FormControl();
-  deps = new FormControl();
-  misc = new FormControl();
-
-  constructor(conll: ConlluToken) {
-      this.index.setValue(conll.index);
-      this.token.setValue(conll.token);
-      this.lemma.setValue(conll.lemma);
-      this.upos.setValue(conll.upos);
-      this.xpos.setValue(conll.xpos);
-      this.feat.setValue(conll.feat);
-      this.head.setValue(conll.head);
-      this.deprel.setValue(conll.deprel);
-      this.deps.setValue(conll.deps);
-      this.misc.setValue(conll.misc);
   }
 }

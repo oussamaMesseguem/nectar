@@ -3,6 +3,9 @@ import { AbstractStore } from 'src/app/store/abstractStore.model';
 import { IParser } from 'src/app/injector/injector.service';
 import { Annotation } from '../annotations';
 
+/**
+ * Store service for NER++
+ */
 export class NerPlusPlusService extends AbstractStore implements IParser {
     annotation: Annotation = Annotation.ner;
     content: NerPlusPlusToken[][];

@@ -4,7 +4,7 @@ import { Annotation } from '../annotations';
 import { ConlluToken } from './conllu.model';
 
 /**
- * 
+ * Store service for conllu
  */
 export class ConlluService extends AbstractStore implements IParser {
     annotation = Annotation.conllu;

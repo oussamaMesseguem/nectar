@@ -1,8 +1,8 @@
-import { Annotation } from '../annotators/annotations';
+import { Annotation, AnnotationType } from '../annotators/annotations';
 import { ConlluService } from '../annotators/conllu/conllu.service';
 import { NerService } from '../annotators/ner/ner.service';
 import { NerPlusPlusService } from '../annotators/ner++/nerPlusPlus.service';
-import { AbstractStore } from './abstractStore.model';
+import { AbstractStore } from './store.abstract.model';
 import { RawService } from '../adjustor/raw.service';
 
 /**
@@ -10,7 +10,7 @@ import { RawService } from '../adjustor/raw.service';
  */
 export class Store {
 
-    private store: { [key: string]: AbstractStore } = {};
+    private store: Partial<{ [key in AnnotationType]: AbstractStore }> = { };
 
     constructor() { }
 

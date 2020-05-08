@@ -1,4 +1,4 @@
-import { AbstractStore } from 'src/app/store/abstractStore.model';
+import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
 import { Annotation, Tokenable } from '../annotations';
 import { ConlluToken } from './conllu.model';

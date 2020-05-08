@@ -1,5 +1,5 @@
 import { NerPlusPlusToken } from './nerPlusPlus.model';
-import { AbstractStore } from 'src/app/store/abstractStore.model';
+import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
 import { Annotation } from '../annotations';
 

@@ -22,4 +22,4 @@ export interface Tokenable {
 /**
  * A type for Store keys
  */
-type AnnotationType = keyof typeof Annotation;
+export type AnnotationType = keyof typeof Annotation;

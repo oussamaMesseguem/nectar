@@ -1,4 +1,4 @@
-import { AbstractStore } from '../store/abstractStore.model';
+import { AbstractStore } from '../store/store.abstract.model';
 import { Annotation, Tokenable } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 

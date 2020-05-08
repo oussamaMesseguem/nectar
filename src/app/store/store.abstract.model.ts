@@ -1,70 +1,61 @@
-import { Tokenable } from '../annotators/annotations';
+import { Tokenable, Annotation } from '../annotators/annotations';
 
 /**
  * Store content can be modified by Raw or other, therefore this class
  * publish some operations on sentences and tokens.
  */
-export abstract class AbstractStore {
+export abstract class AbstractStore<T extends Tokenable> {
 
-    content: Tokenable[][];
-    annotation: string;
+    content: T[][];
+    annotation: Annotation;
 
-    constructor() {this.content = []; }
+    constructor() { this.content = []; }
 
-    // **** Constructor ****
     /**
-     * Init the content of the annotation from the raw content
+     * Init the content of the annotation from the raw content.
      * @param content the raw content
      */
-    from<T extends Tokenable>(content: T[][]) {
-        content.forEach((sentence: Tokenable[]) => {
+    from(content: Partial<T>[][]) {
+        content.forEach((sentence: T[]) => {
             const sent = [];
-            sentence.forEach((token: Tokenable) => {
+            sentence.forEach((token: T) => {
                 sent.push(this.createToken(token));
             });
             this.content.push(sent);
         });
     }
 
-    // **** Sentences operations START ****
     /**
      * Deletes the entire sentence from the array.
+     * @param isentence the sentence index
      */
     deleteSentence(isentence: number) {
         this.content.splice(isentence, 1);
     }
 
     /**
-     * Duplicates the sentence at the given index.
-     * The duplication is index + 1.
+     * Adds a the given sentence at the given position.
+     * @param isentence the sentence index
+     * @param sentence the sentence value
      */
-    duplicateSentence(isentence: number) {
-        const value = JSON.parse(JSON.stringify(this.content[isentence]));
-        this.content.splice(isentence, 0, value);
+    addSentence(isentence: number, sentence: T[]) {
+        this.content.splice(isentence, 0, sentence);
     }
 
     /**
-     * Adds a new empty sentence after the given index.
+     * Adds the given token to the given sentence at the given position.
+     * @param isentence the sentence index
+     * @param itoken the token index
+     * @param token the token value
      */
-    newSentenceAfter(isentence: number) {
-        const newToken = this.createToken({ token: '~' });
-        this.content.splice(isentence + 1, 0, [newToken]);
+    addToken(isentence: number, itoken: number, token: T) {
+        this.content[isentence].splice(itoken, 0, token);
     }
 
     /**
-     * Adds a new empty sentence before the given index.
-     * @param isentence The index of the sentence
-     */
-    newSentenceBefore(isentence: number) {
-        const newToken = this.createToken({ token: '~' });
-        this.content.splice(isentence, 0, [newToken]);
-    }
-    // **** Sentences operations END ****
-
-    // **** Tokens operations START ****
-    /**
-     * Deletes the token from the sentence.
-     * @param itoken The index of the token
+     * Deletes the given token at the given positions.
+     * @param isentence the sentence index
+     * @param itoken the token index
      */
     deleteToken(isentence: number, itoken: number) {
         this.content[isentence].splice(itoken, 1);
@@ -75,55 +66,21 @@ export abstract class AbstractStore {
     }
 
     /**
-     * Duplicates the token at the given index in the given sentence.
-     * @param itoken The index of the token
-     */
-    duplicateToken(isentence: number, itoken: number) {
-        const values: string[] = Object.values(this.content[isentence][itoken]);
-        const token = this.ofToken(values);
-        this.content[isentence].splice(itoken, 0, token);
-    }
-
-    /**
-     * Changes the value of the token.
-     * @param itoken The index of the token
-     * @param value The new value
-     */
-    editToken(isentence: number, itoken: number, value: string) {
-        const token = this.createToken({ token: value });
-        this.content[isentence][itoken] = token;
-    }
-
-    /**
-     * Adds a new empty token before the given index.
-     * @param itoken The index of the token
-     */
-    newTokenBefore(isentence: number, itoken: number) {
-        const token = this.createToken({ token: '~' });
-        this.content[isentence].splice(itoken, 0, token);
-    }
-
-    /**
-     * Adds a new empty token after the given index.
-     * @param itoken The index of the token
-     */
-    newTokenAfter(isentence: number, itoken: number) {
-        const token = this.createToken({ token: '~' });
-        this.content[isentence].splice(itoken + 1, 0, token);
-    }
-    // **** Tokens operations END ***
-
-    /**
-     * Creates an object from a given token
+     * Creates an object from a given token.
      * @param token the value of the token
-     * @param elements other values for the object
+     * @param elements other values for the objects
      */
-    abstract createToken<T extends Tokenable>(token: T): Tokenable;
+    abstract createToken(token: Partial<T>): T;
 
     /**
-     * Transforms the content into a string
+     * Transforms the content into a string.
      * @param content the content to write
      */
-    abstract intoText(content: any[][]): string;
-    abstract ofToken(content: string[]): any;
+    abstract intoText(content: T[][]): string;
+
+    /**
+     * Creates an object from an array of the token and its annotation.
+     * @param content array of token and annotation
+     */
+    abstract ofToken(content: string[]): T;
 }

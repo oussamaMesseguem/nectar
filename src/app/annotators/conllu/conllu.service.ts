@@ -2,13 +2,14 @@ import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
 import { Annotation, Tokenable } from '../annotations';
 import { ConlluToken } from './conllu.model';
+import { Storable } from 'src/app/store/store.interface';
 
 /**
  * Store service for conllu
  */
-export class ConlluService extends AbstractStore implements IParser {
+export class ConlluService extends AbstractStore<ConlluToken> implements Storable, IParser {
     annotation = Annotation.conllu;
-    content: ConlluToken[][];
+
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
     elementsPattern: RegExp = new RegExp(/\t/);
@@ -47,7 +48,7 @@ export class ConlluService extends AbstractStore implements IParser {
         content.forEach((sentence: Tokenable[]) => {
             const sent = [];
             sentence.forEach((token: Tokenable, index: number) => {
-                sent.push(this.createToken({ token: token.token, index: (index += 1).toString()}));
+                sent.push(this.createToken({ token: token.token, index: (index += 1).toString() }));
             });
             this.content.push(sent);
         });
@@ -65,35 +66,47 @@ export class ConlluService extends AbstractStore implements IParser {
         return text.join('\n\n');
     }
 
-    /**
-     * Deletes the token from the sentence.
-     * @param itoken The index of the token
-     */
+    duplicateSentence(isentence: number) {
+        const value = JSON.parse(JSON.stringify(this.content[isentence]));
+        super.addSentence(isentence, value);
+    }
+
+    newSentenceAfter(isentence: number) {
+        const newToken = this.createToken({ token: '~' });
+        super.addSentence(isentence + 1, [newToken]);
+    }
+
+    newSentenceBefore(isentence: number) {
+        const newToken = this.createToken({ token: '~' });
+        super.addSentence(isentence, [newToken]);
+    }
+
+    duplicateToken(isentence: number, itoken: number) {
+        const values: string[] = Object.values(this.content[isentence][itoken]);
+        const token = this.ofToken(values);
+        super.addToken(isentence, itoken, token);
+        this.updateConlluIndexes(isentence);
+    }
+
+    editToken(isentence: number, itoken: number, value: string) {
+        const token = this.createToken({ token: value });
+        this.content[isentence][itoken] = token;
+    }
+
     deleteToken(isentence: number, itoken: number) {
         super.deleteToken(isentence, itoken);
         this.updateConlluIndexes(isentence);
     }
 
-    duplicateToken(isentence: number, itoken: number) {
-        super.duplicateToken(isentence, itoken);
-        this.updateConlluIndexes(isentence);
-    }
-
-    /**
-     * Adds a new empty token before the given index.
-     * @param itoken The index of the token
-     */
     newTokenBefore(isentence: number, itoken: number) {
-        super.newTokenBefore(isentence, itoken);
+        const token = this.createToken({ token: '~' });
+        super.addToken(isentence, itoken, token);
         this.updateConlluIndexes(isentence);
     }
 
-    /**
-     * Adds a new empty token after the given index.
-     * @param itoken The index of the token
-     */
     newTokenAfter(isentence: number, itoken: number) {
-        super.newTokenAfter(isentence, itoken);
+        const token = this.createToken({ token: '~' });
+        super.addToken(isentence, itoken + 1, token);
         this.updateConlluIndexes(isentence);
     }
 

@@ -1,16 +1,16 @@
-import { Annotation, AnnotationType } from '../annotators/annotations';
+import { Annotation, AnnotationType, Tokenable } from '../annotators/annotations';
 import { ConlluService } from '../annotators/conllu/conllu.service';
 import { NerService } from '../annotators/ner/ner.service';
 import { NerPlusPlusService } from '../annotators/ner++/nerPlusPlus.service';
-import { AbstractStore } from './store.abstract.model';
 import { RawService } from '../adjustor/raw.service';
+import { Storable } from './store.interface';
 
 /**
  * A class which stores different type of annotation store.
  */
 export class Store {
 
-    private store: Partial<{ [key in AnnotationType]: AbstractStore }> = { };
+    private store: Partial<{ [key in AnnotationType]: Storable }> = { };
 
     constructor() { }
 
@@ -51,7 +51,9 @@ export class Store {
     initStore(annotation: string, content: any[][]) {
         // Because: store[Raw] contains the tokens per sentences and it's used to init new annotation objects
         if (annotation !== Annotation.raw) {
-            const rawContent = content.map(l => l.map(t => t.token));
+            const rawContent: Tokenable[][] = content.map(l => l.map(t => {
+                return { token: t.token };
+            }));
             this.addAnnotationStore(Annotation.raw, rawContent);
         }
         this.addAnnotationStore(annotation, content);
@@ -78,7 +80,7 @@ export class Store {
      * Deletes the entire sentence from the array.
      */
     deleteSentence(isentence: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.deleteSentence(isentence);
         });
     }
@@ -88,7 +90,7 @@ export class Store {
      * The duplication is index + 1.
      */
     duplicateSentence(isentence: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.duplicateSentence(isentence);
         });
     }
@@ -97,7 +99,7 @@ export class Store {
      * Adds a new empty sentence after the given index.
      */
     newSentenceAfter(isentence: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.newSentenceAfter(isentence);
         });
     }
@@ -107,7 +109,7 @@ export class Store {
      * @param isentence The index of the sentence
      */
     newSentenceBefore(isentence: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.newSentenceBefore(isentence);
         });
     }
@@ -119,7 +121,7 @@ export class Store {
      * @param itoken The index of the token
      */
     duplicateToken(isentence: number, itoken: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.duplicateToken(isentence, itoken);
         });
     }
@@ -129,7 +131,7 @@ export class Store {
      * @param itoken The index of the token
      */
     newTokenBefore(isentence: number, itoken: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.newTokenBefore(isentence, itoken);
         });
     }
@@ -139,7 +141,7 @@ export class Store {
      * @param itoken The index of the token
      */
     newTokenAfter(isentence: number, itoken: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.newTokenAfter(isentence, itoken);
         });
     }
@@ -150,7 +152,7 @@ export class Store {
      * @param value The new value
      */
     editToken(isentence: number, itoken: number, value: string) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.editToken(isentence, itoken, value);
         });
     }
@@ -160,7 +162,7 @@ export class Store {
      * @param itoken The index of the token
      */
     deleteToken(isentence: number, itoken: number) {
-        this.storedContent().forEach((store: AbstractStore) => {
+        this.storedContent().forEach((store: Storable) => {
             store.deleteToken(isentence, itoken);
         });
     }
@@ -189,7 +191,7 @@ export class Store {
     /**
      * Returns the stored content
      */
-    private storedContent(): AbstractStore[] {
+    private storedContent(): Storable[] {
         return Object.values(this.store);
     }
 }

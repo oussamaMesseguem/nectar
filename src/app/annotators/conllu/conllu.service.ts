@@ -31,8 +31,8 @@ export class ConlluService extends AbstractStore<ConlluToken> implements Storabl
 
     createToken(token: Partial<ConlluToken>): ConlluToken {
         return {
-            token: token.token,
             index: token.index ? token.index : '1',
+            token: token.token,
             lemma: token.lemma ? token.lemma : '_',
             upos: token.upos ? token.upos : '_',
             xpos: token.xpos ? token.xpos : '_',
@@ -44,7 +44,7 @@ export class ConlluService extends AbstractStore<ConlluToken> implements Storabl
         };
     }
 
-    from<T extends Tokenable>(content: T[][]) {
+    from(content: Tokenable[][]) {
         content.forEach((sentence: Tokenable[]) => {
             const sent = [];
             sentence.forEach((token: Tokenable, index: number) => {

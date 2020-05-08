@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StoreService } from '../store/store.service';
-import { Annotation } from '../annotators/annotations';
+import { Annotation, Tokenable } from '../annotators/annotations';
 
 /**
  * Service inside Adjust Module scope.
@@ -14,7 +14,7 @@ export class AdjustorService {
   /**
    * Return the previous and the next sentence of the current one.
    */
-  getPreviousAndNextSentences(): string[][] {
+  getPreviousAndNextSentences(): Tokenable[][] {
     if (this.storeService.index === 0) {
       return [
         [],

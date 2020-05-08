@@ -33,8 +33,8 @@ export class NerService extends AbstractStore implements IParser {
         return { token, tag, type };
     }
 
-    createToken(token: string, ...elements: string[]): NerToken {
-        return { token, tag: elements[0] ? elements[0] : '', type: elements[1] ? elements[1] : '' };
+    createToken(token: Partial<NerToken>): NerToken {
+        return { token: token.token, tag: token.tag ? token.tag : '', type: token.type ? token.type : '' };
     }
 
     intoText(content: NerToken[][]): string {

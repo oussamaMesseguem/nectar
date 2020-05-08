@@ -30,13 +30,13 @@ export class NerPlusPlusService extends AbstractStore implements IParser {
         return { token, pos, chunk, shortShape, label };
     }
 
-    createToken(token: string, ...elements: string[]): NerPlusPlusToken {
+    createToken(token: Partial<NerPlusPlusToken>): NerPlusPlusToken {
         return {
-            token,
-            label: elements[0] ? elements[0] : 'O',
-            pos: elements[1] ? elements[1] : '_',
-            chunk: elements[3] ? elements[2] : '_',
-            shortShape: elements[3] ? elements[3] : '_'
+            token: token.token,
+            label: token.label ? token.label : 'O',
+            pos: token.pos ? token.pos : '_',
+            chunk: token.chunk ? token.chunk : '_',
+            shortShape: token.shortShape ? token.shortShape : '_'
         };
     }
 

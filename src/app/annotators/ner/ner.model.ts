@@ -1,6 +1,6 @@
+import { Tokenable } from '../annotations';
 
-export interface NerToken {
-    token: string;
+export interface NerToken extends Tokenable {
     tag: string;
     type: string;
 }

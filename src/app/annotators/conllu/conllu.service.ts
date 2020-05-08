@@ -1,6 +1,6 @@
 import { AbstractStore } from 'src/app/store/abstractStore.model';
 import { IParser } from 'src/app/injector/injector.service';
-import { Annotation } from '../annotations';
+import { Annotation, Tokenable } from '../annotations';
 import { ConlluToken } from './conllu.model';
 
 /**
@@ -28,26 +28,26 @@ export class ConlluService extends AbstractStore implements IParser {
         };
     }
 
-    createToken(token: string, ...elements: string[]): ConlluToken {
+    createToken(token: Partial<ConlluToken>): ConlluToken {
         return {
-            token,
-            index: elements[0] ? elements[0] : '1',
-            lemma: elements[1] ? elements[1] : '_',
-            upos: elements[2] ? elements[2] : '_',
-            xpos: elements[3] ? elements[3] : '_',
-            feat: elements[4] ? elements[4] : '_',
-            head: elements[5] ? elements[5] : '_',
-            deprel: elements[6] ? elements[6] : '_',
-            deps: elements[7] ? elements[7] : '_',
-            misc: elements[8] ? elements[8] : '_'
+            token: token.token,
+            index: token.index ? token.index : '1',
+            lemma: token.lemma ? token.lemma : '_',
+            upos: token.upos ? token.upos : '_',
+            xpos: token.xpos ? token.xpos : '_',
+            feat: token.feat ? token.feat : '_',
+            head: token.head ? token.head : '_',
+            deprel: token.deprel ? token.deprel : '_',
+            deps: token.deps ? token.deps : '_',
+            misc: token.misc ? token.misc : '_'
         };
     }
 
-    from(content: string[][]) {
-        content.forEach((sentence: string[]) => {
+    from<T extends Tokenable>(content: T[][]) {
+        content.forEach((sentence: Tokenable[]) => {
             const sent = [];
-            sentence.forEach((token: string, index: number) => {
-                sent.push(this.createToken(token, (index += 1).toString()));
+            sentence.forEach((token: Tokenable, index: number) => {
+                sent.push(this.createToken({ token: token.token, index: (index += 1).toString()}));
             });
             this.content.push(sent);
         });

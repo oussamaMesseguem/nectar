@@ -1,12 +1,13 @@
+import { Tokenable } from '../annotations';
+
 /**
  * A conllu content is an array of conllu token arrays.
  * * This interface represents a token and its tags
  * * Token in the same array are the words in the same sentence.
  * * An array is a sentence, hence the first arrays is the document.
  */
-export interface ConlluToken {
+export interface ConlluToken extends Tokenable {
     index: string;
-    token: string;
     lemma: string;
     upos: string;
     xpos: string;

@@ -1,5 +1,5 @@
 import { AbstractStore } from '../store/abstractStore.model';
-import { Annotation } from '../annotators/annotations';
+import { Annotation, Tokenable } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 
 /**
@@ -10,29 +10,29 @@ import { IParser } from '../injector/injector.service';
 export class RawService extends AbstractStore implements IParser {
 
     annotation = Annotation.raw;
-    content: string[][];
+    content: Tokenable[][];
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
     elementsPattern: RegExp = new RegExp(/\s/);
     ignoreLinePattern: RegExp = new RegExp('#');
 
-    constructor(content?: string[][]) {
+    constructor(content?: Tokenable[][]) {
         super();
         if (content) {
             this.content = content;
         }
     }
 
-    createToken(token: string, ...elements: string[]) {
-        return token;
+    createToken(token: Tokenable): Tokenable {
+        return token ;
     }
 
-    intoText(content: string[][]): string {
+    intoText(content: Tokenable[][]): string {
         throw new Error('Method not implemented.');
     }
 
-    ofToken(tokenAndAnnotation: string[]): string {
-        return tokenAndAnnotation[0];
+    ofToken(tokenAndAnnotation: string[]): Tokenable {
+        return { token: tokenAndAnnotation[0]};
     }
 }

@@ -14,3 +14,12 @@ export enum Language {
     fr = 'French',
     es = 'Spanish'
 }
+
+export interface Tokenable {
+    token: string;
+}
+
+/**
+ * A type for Store keys
+ */
+type AnnotationType = keyof typeof Annotation;

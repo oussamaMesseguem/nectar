@@ -1,5 +1,6 @@
-export interface NerPlusPlusToken {
-    token: string;
+import { Tokenable } from '../annotations';
+
+export interface NerPlusPlusToken extends Tokenable {
     pos: string;
     chunk: string;
     shortShape: string;

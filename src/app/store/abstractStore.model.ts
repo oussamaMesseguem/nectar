@@ -1,7 +1,8 @@
+import { Tokenable } from '../annotators/annotations';
 
 export abstract class AbstractStore {
 
-    content: any[][];
+    content: Tokenable[][];
     annotation: string;
 
     constructor() {this.content = []; }
@@ -11,10 +12,10 @@ export abstract class AbstractStore {
      * Init the content of the annotation from the raw content
      * @param content the raw content
      */
-    from(content: string[][]) {
-        content.forEach((sentence: string[]) => {
+    from<T extends Tokenable>(content: T[][]) {
+        content.forEach((sentence: Tokenable[]) => {
             const sent = [];
-            sentence.forEach(token => {
+            sentence.forEach((token: Tokenable) => {
                 sent.push(this.createToken(token));
             });
             this.content.push(sent);
@@ -42,7 +43,7 @@ export abstract class AbstractStore {
      * Adds a new empty sentence after the given index.
      */
     newSentenceAfter(isentence: number) {
-        const newToken = this.createToken('~');
+        const newToken = this.createToken({ token: '~' });
         this.content.splice(isentence + 1, 0, [newToken]);
     }
 
@@ -51,7 +52,7 @@ export abstract class AbstractStore {
      * @param isentence The index of the sentence
      */
     newSentenceBefore(isentence: number) {
-        const newToken = this.createToken('~');
+        const newToken = this.createToken({ token: '~' });
         this.content.splice(isentence, 0, [newToken]);
     }
     // **** Sentences operations END ****
@@ -74,7 +75,8 @@ export abstract class AbstractStore {
      * @param itoken The index of the token
      */
     duplicateToken(isentence: number, itoken: number) {
-        const token = JSON.parse(JSON.stringify(this.content[isentence][itoken]));
+        const values: string[] = Object.values(this.content[isentence][itoken]);
+        const token = this.ofToken(values);
         this.content[isentence].splice(itoken, 0, token);
     }
 
@@ -84,8 +86,8 @@ export abstract class AbstractStore {
      * @param value The new value
      */
     editToken(isentence: number, itoken: number, value: string) {
-        const token = this.createToken(value);
-        this.content[isentence].splice(itoken, 0, token);
+        const token = this.createToken({ token: value });
+        this.content[isentence][itoken] = token;
     }
 
     /**
@@ -93,7 +95,7 @@ export abstract class AbstractStore {
      * @param itoken The index of the token
      */
     newTokenBefore(isentence: number, itoken: number) {
-        const token = this.createToken('~');
+        const token = this.createToken({ token: '~' });
         this.content[isentence].splice(itoken, 0, token);
     }
 
@@ -102,7 +104,7 @@ export abstract class AbstractStore {
      * @param itoken The index of the token
      */
     newTokenAfter(isentence: number, itoken: number) {
-        const token = this.createToken('~');
+        const token = this.createToken({ token: '~' });
         this.content[isentence].splice(itoken + 1, 0, token);
     }
     // **** Tokens operations END ***
@@ -112,11 +114,12 @@ export abstract class AbstractStore {
      * @param token the value of the token
      * @param elements other values for the object
      */
-    abstract createToken(token: string, ...elements: string[]): any;
+    abstract createToken<T extends Tokenable>(token: T): Tokenable;
 
     /**
      * Transforms the content into a string
      * @param content the content to write
      */
     abstract intoText(content: any[][]): string;
+    abstract ofToken(content: string[]): any;
 }

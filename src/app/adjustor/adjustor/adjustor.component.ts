@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdjustorService } from '../adjustor.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Tokenable } from 'src/app/annotators/annotations';
 
 
 @Component({
@@ -11,10 +12,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdjustorComponent implements OnInit, OnDestroy {
 
-  @Input() sentence$: BehaviorSubject<string[]>;
+  @Input() sentence$: BehaviorSubject<Tokenable[]>;
 
-  nextSentence: string[];
-  previousSentence: string[];
+  nextSentence: Tokenable[];
+  previousSentence: Tokenable[];
 
   ondestroy: Subject<boolean> = new Subject();
 

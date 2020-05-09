@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AdjustorService } from '../adjustor.service';
 import { BehaviorSubject } from 'rxjs';
+import { Tokenable } from 'src/app/annotators/annotations';
 
 @Component({
   selector: 'app-sentence',
@@ -10,13 +11,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SentenceComponent implements OnInit {
 
-  @Input() sentence$: BehaviorSubject<string[]>;
+  @Input() sentence$: BehaviorSubject<Tokenable[]>;
 
   constructor(private adjustorService: AdjustorService) { }
 
   ngOnInit(): void { }
 
-  moveWithinSentence(event: CdkDragDrop<string[]>) {
+  moveWithinSentence(event: CdkDragDrop<Tokenable[]>) {
     // moveItemInArray(this.sentence, event.previousIndex, event.currentIndex);
   }
 

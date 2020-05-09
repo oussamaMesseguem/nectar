@@ -3,9 +3,9 @@ import { Annotation } from '../annotators/annotations';
 
 const storeContent = {
     Raw: [
-        ['This', 'is', 'a', 'test', '.'],
-        ['Yes', 'a', 'test', ';'],
-        ['I', 'said', 'a', 'test', '!']
+        [{ token: 'This' }, { token: 'is' }, { token: 'a' }, { token: 'test' }, { token: '.' }],
+        [{ token: 'Yes' }, { token: 'a' }, { token: 'test' }, { token: ';' }],
+        [{ token: 'I' }, { token: 'said' }, { token: 'a' }, { token: 'test' }, { token: '!' }]
     ],
     'Conll-U': [
         [
@@ -259,7 +259,7 @@ describe('Store class', () => {
         expect(store.nbSentences()).toEqual(3);
         store.newSentenceBefore(1);
         expect(store.nbSentences()).toEqual(4);
-        expect(store.getSentence(Annotation.raw, 1)).toEqual(['~'], 'new sentence before should be at i and contain ~');
+        expect(store.getSentence(Annotation.raw, 1)).toEqual([{ token: '~' }], 'new sentence before should be at i and contain ~');
     });
 
     it('should duplicate sentence', () => {
@@ -267,13 +267,13 @@ describe('Store class', () => {
         expect(store.nbSentences()).toEqual(3);
         store.newSentenceAfter(1);
         expect(store.nbSentences()).toEqual(4);
-        expect(store.getSentence(Annotation.raw, 2)).toEqual(['~'], 'new sentence before should be at i+1 and contain ~');
+        expect(store.getSentence(Annotation.raw, 2)).toEqual([{ token: '~' }], 'new sentence before should be at i+1 and contain ~');
     });
 
     it('should duplicate token', () => {
         store.initStore(Annotation.raw, JSON.parse(JSON.stringify(storeContent.Raw)));
         store.duplicateToken(1, 1);
-        expect(store.getSentence(Annotation.raw, 1)[2]).toEqual('a', 'the duplication should be the same value and at i+1');
+        expect(store.getSentence(Annotation.raw, 1)[2]).toEqual({ token: 'a' }, 'the duplication should be the same value and at i+1');
         // expect(store.getSentence(Annotation.raw, 1)[2])
         //     .not.toBe(store.getSentence(Annotation.raw, 1)[1], 'the duplication should not be the same reference as i');
     });
@@ -282,22 +282,22 @@ describe('Store class', () => {
         store.initStore(Annotation.raw, JSON.parse(JSON.stringify(storeContent.Raw)));
         store.newTokenBefore(2, 3);
         expect(store.getSentence(Annotation.raw, 2).length).toEqual(6, 'increment sentence length.');
-        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual('~', 'the new token takes the given position');
-        expect(store.getSentence(Annotation.raw, 2)[4]).toEqual('test', 'the value of the given position should be itoken+1');
+        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual({ token: '~' }, 'the new token takes the given position');
+        expect(store.getSentence(Annotation.raw, 2)[4]).toEqual({ token: 'test' }, 'the value of the given position should be itoken+1');
     });
 
     it('should add new token after', () => {
         store.initStore(Annotation.raw, JSON.parse(JSON.stringify(storeContent.Raw)));
         store.newTokenAfter(2, 3);
         expect(store.getSentence(Annotation.raw, 2).length).toEqual(6, 'increment sentence length.');
-        expect(store.getSentence(Annotation.raw, 2)[4]).toEqual('~', 'the new token takes the given position + 1');
-        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual('test', 'the value of the given position should be ~');
+        expect(store.getSentence(Annotation.raw, 2)[4]).toEqual({ token: '~' }, 'the new token takes the given position + 1');
+        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual({ token: 'test' }, 'the value of the given position should be ~');
     });
 
     it('should edit token', () => {
         store.initStore(Annotation.raw, JSON.parse(JSON.stringify(storeContent.Raw)));
         store.editToken(2, 3, 'Oops');
-        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual('Oops', 'the edited token should be changed');
+        expect(store.getSentence(Annotation.raw, 2)[3]).toEqual({ token: 'Oops' }, 'the edited token should be changed');
     });
 
     it('should delete token', () => {
@@ -305,7 +305,7 @@ describe('Store class', () => {
         expect(store.getSentence(Annotation.raw, 1).length).toEqual(4);
         store.deleteToken(1, 0);
         expect(store.getSentence(Annotation.raw, 1).length).toEqual(3);
-        expect(store.getSentence(Annotation.raw, 1)[0]).toEqual('a', 'removing a value make move other values back');
+        expect(store.getSentence(Annotation.raw, 1)[0]).toEqual({ token: 'a' }, 'removing a value make move other values back');
     });
     // **** Raw Tests END ****
 });

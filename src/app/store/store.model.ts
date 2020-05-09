@@ -1,10 +1,16 @@
-import { Annotation } from '../annotators/annotations';
-import { createConlluToken, ConlluToken } from '../annotators/conllu/conllu.model';
-import { createNerToken } from '../annotators/ner/ner.model';
+import { Annotation, AnnotationType, Tokenable } from '../annotators/annotations';
+import { ConlluService } from '../annotators/conllu/conllu.service';
+import { NerService } from '../annotators/ner/ner.service';
+import { NerPlusPlusService } from '../annotators/ner++/nerPlusPlus.service';
+import { RawService } from '../adjustor/raw.service';
+import { Storable } from './store.interface';
 
+/**
+ * A class which stores different type of annotation store.
+ */
 export class Store {
 
-    private store = {};
+    private store: Partial<{ [key in AnnotationType]: Storable }> = { };
 
     constructor() { }
 
@@ -14,19 +20,9 @@ export class Store {
      * @param annotation The new annotation to add
      */
     addEntry(annotation: string) {
-        try {
-            const annotationContent = [];
-            // store[Raw] should never be undefined
-            this.store[Annotation.raw].forEach((sentence: string[]) => {
-                const sent = [];
-                sentence.forEach((token: string, index: number) => {
-                    sent.push(this.createToken(annotation, token, index));
-                });
-                annotationContent.push(sent);
-            });
-            this.store[annotation] = annotationContent;
-        } catch (error) {
-            throw new Error(`Initilisation of [${annotation}] was not possible. Make sure store[Raw] is defined`);
+        if (!this.keys().includes(annotation)) {
+            this.addAnnotationStore(annotation);
+            this.store[annotation].from(this.store[Annotation.raw].content);
         }
     }
 
@@ -35,7 +31,7 @@ export class Store {
      * @param annotation the annotation
      */
     getContent(annotation: string): any[] {
-        return this.store[annotation];
+        return this.store[annotation].content;
     }
 
     /**
@@ -44,7 +40,7 @@ export class Store {
      * @param isentence the sentence index
      */
     getSentence(annotation: string, isentence: number): any[] {
-        return this.store[annotation][isentence];
+        return this.store[annotation].content[isentence];
     }
 
     /**
@@ -55,9 +51,12 @@ export class Store {
     initStore(annotation: string, content: any[][]) {
         // Because: store[Raw] contains the tokens per sentences and it's used to init new annotation objects
         if (annotation !== Annotation.raw) {
-            this.store[Annotation.raw] = content.map(l => l.map(t => t.token));
+            const rawContent: Tokenable[][] = content.map(l => l.map(t => {
+                return { token: t.token };
+            }));
+            this.addAnnotationStore(Annotation.raw, rawContent);
         }
-        this.store[annotation] = content;
+        this.addAnnotationStore(annotation, content);
     }
 
     /**
@@ -70,7 +69,7 @@ export class Store {
      */
     nbSentences(): number {
         if (this.store[Annotation.raw] !== undefined) {
-            return this.store[Annotation.raw].length;
+            return this.store[Annotation.raw].content.length;
         }
         return 0;
     }
@@ -81,8 +80,8 @@ export class Store {
      * Deletes the entire sentence from the array.
      */
     deleteSentence(isentence: number) {
-        this.keys().forEach(annotation => {
-            this.store[annotation].splice(isentence, 1);
+        this.storedContent().forEach((store: Storable) => {
+            store.deleteSentence(isentence);
         });
     }
 
@@ -91,9 +90,8 @@ export class Store {
      * The duplication is index + 1.
      */
     duplicateSentence(isentence: number) {
-        this.keys().forEach(annotation => {
-            const value = JSON.parse(JSON.stringify(this.store[annotation][isentence]));
-            this.store[annotation].splice(isentence, 0, value);
+        this.storedContent().forEach((store: Storable) => {
+            store.duplicateSentence(isentence);
         });
     }
 
@@ -101,8 +99,8 @@ export class Store {
      * Adds a new empty sentence after the given index.
      */
     newSentenceAfter(isentence: number) {
-        this.keys().forEach(annotation => {
-            this.store[annotation].splice(isentence + 1, 0, [this.createToken(annotation, '~', 0)]);
+        this.storedContent().forEach((store: Storable) => {
+            store.newSentenceAfter(isentence);
         });
     }
 
@@ -111,8 +109,8 @@ export class Store {
      * @param isentence The index of the sentence
      */
     newSentenceBefore(isentence: number) {
-        this.keys().forEach(annotation => {
-            this.store[annotation].splice(isentence, 0, [this.createToken(annotation, '~', 0)]);
+        this.storedContent().forEach((store: Storable) => {
+            store.newSentenceBefore(isentence);
         });
     }
     // **** Sentences operations END ****
@@ -123,12 +121,8 @@ export class Store {
      * @param itoken The index of the token
      */
     duplicateToken(isentence: number, itoken: number) {
-        this.keys().forEach(annotation => {
-            const token = JSON.parse(JSON.stringify(this.store[annotation][isentence][itoken]));
-            this.store[annotation][isentence].splice(itoken, 0, token);
-            if (annotation === Annotation.conllu) {
-                this.updateConlluIndexes(isentence);
-            }
+        this.storedContent().forEach((store: Storable) => {
+            store.duplicateToken(isentence, itoken);
         });
     }
 
@@ -137,12 +131,8 @@ export class Store {
      * @param itoken The index of the token
      */
     newTokenBefore(isentence: number, itoken: number) {
-        this.keys().forEach(annotation => {
-            this.store[annotation][isentence].splice(
-                itoken, 0, this.createToken(annotation, '~', itoken));
-            if (annotation === Annotation.conllu) {
-                this.updateConlluIndexes(isentence);
-            }
+        this.storedContent().forEach((store: Storable) => {
+            store.newTokenBefore(isentence, itoken);
         });
     }
 
@@ -151,12 +141,8 @@ export class Store {
      * @param itoken The index of the token
      */
     newTokenAfter(isentence: number, itoken: number) {
-        this.keys().forEach(annotation => {
-            this.store[annotation][isentence].splice(
-                itoken + 1, 0, this.createToken(annotation, '~', itoken));
-            if (annotation === Annotation.conllu) {
-                this.updateConlluIndexes(isentence);
-            }
+        this.storedContent().forEach((store: Storable) => {
+            store.newTokenAfter(isentence, itoken);
         });
     }
 
@@ -166,12 +152,8 @@ export class Store {
      * @param value The new value
      */
     editToken(isentence: number, itoken: number, value: string) {
-        this.keys().forEach(annotation => {
-            this.store[annotation][isentence].splice(
-                itoken, 1, this.createToken(annotation, value, itoken));
-            if (annotation === Annotation.conllu) {
-                this.updateConlluIndexes(isentence);
-            }
+        this.storedContent().forEach((store: Storable) => {
+            store.editToken(isentence, itoken, value);
         });
     }
 
@@ -180,48 +162,36 @@ export class Store {
      * @param itoken The index of the token
      */
     deleteToken(isentence: number, itoken: number) {
-        let shouldDeleteSentence = false;
-        this.keys().forEach(annotation => {
-            this.store[annotation][isentence].splice(itoken, 1);
-            if (annotation === Annotation.conllu) {
-                this.updateConlluIndexes(isentence);
-            }
-            // Because: if the sentence doesn't have any token, it's no longer needed.
-            shouldDeleteSentence = this.store[annotation][isentence].length === 0;
+        this.storedContent().forEach((store: Storable) => {
+            store.deleteToken(isentence, itoken);
         });
-        // Because: need to delete the sentence and move the subject after the deletion
-        if (shouldDeleteSentence) {
-            this.deleteSentence(isentence);
-        }
     }
     // **** Tokens operations END ***
 
     /**
-     * Returns an object depending on the annotation that contains the token at the given position.
+     * Adds a new entry into the Store
      * @param annotation the annotation
-     * @param token the token
-     * @param index the position
+     * @param content the content
      */
-    private createToken(annotation: string, token: string, index?: number): any {
+    private addAnnotationStore(annotation: string, content?: any[]) {
         if (annotation === Annotation.conllu) {
-            return createConlluToken((index + 1).toString(), token);
+            this.store[annotation] = new ConlluService(content);
         }
         if (annotation === Annotation.ner) {
-            return createNerToken(token);
+            this.store[annotation] = new NerService(content);
+        }
+        if (annotation === Annotation.nerPlusPlus) {
+            this.store[annotation] = new NerPlusPlusService(content);
         }
         if (annotation === Annotation.raw) {
-            return token;
+            this.store[annotation] = new RawService(content);
         }
     }
 
     /**
-     * Updates Conllu indexes.
-     * Should be used after tokens operations.
+     * Returns the stored content
      */
-    private updateConlluIndexes(isentence: number) {
-        this.store[Annotation.conllu][isentence].forEach((element: ConlluToken, index: number) => {
-            element.index = (index += 1).toString();
-        });
+    private storedContent(): Storable[] {
+        return Object.values(this.store);
     }
-
 }

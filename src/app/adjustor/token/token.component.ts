@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { AdjustorService } from '../adjustor.service';
+import { Tokenable } from 'src/app/annotators/annotations';
 
 @Component({
   selector: 'app-token',
@@ -11,7 +12,7 @@ import { AdjustorService } from '../adjustor.service';
 export class TokenComponent implements OnInit {
 
   @Input() itoken: number;
-  @Input() token: string;
+  @Input() token: Tokenable;
 
   /**
    * Display either the button or the input
@@ -49,7 +50,7 @@ export class TokenComponent implements OnInit {
   }
 
   edit() {
-    this.adjustorService.editToken(this.itoken, this.token);
+    this.adjustorService.editToken(this.itoken, this.token.token);
     this.inEditing = false;
     this.subscription.unsubscribe();
   }
@@ -59,7 +60,7 @@ export class TokenComponent implements OnInit {
    * If so: close the input.
    */
   editing() {
-    this.originalToken = this.token;
+    this.originalToken = this.token.token;
     this.inEditing = true;
     const source: Observable<Event> = fromEvent(document, 'click').pipe(skip(1));
     this.subscription = source.subscribe(next => {

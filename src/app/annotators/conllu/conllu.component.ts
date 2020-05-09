@@ -26,27 +26,14 @@ export class ConlluComponent implements OnInit {
 
   /**
    * Opens a dialog to fillform the token.
-   * The result may be undefined when closed from outside the button.
    * @param index the index of the token in the sentence
    */
   editToken(index: number) {
-    const dialogRef = this.dialog.open(TokenComponent, {
+    this.dialog.open(TokenComponent, {
       width: '100%',
       data: {
         conlluToken: this.sentence$.value[index],
         nbTokens: this.sentence$.value.length
-      }
-    });
-
-    /**
-     * After closed if a value is sent:
-     * the array is updated
-     * and the subject notifies the change to the table
-     */
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        this.sentence$.value[index] = result;
-        this.sentence$.next(this.sentence$.value);
       }
     });
   }

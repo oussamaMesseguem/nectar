@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { StoreService } from './store.service';
-import { Annotation } from '../annotators/annotations';
+import { Annotation, Tokenable } from '../annotators/annotations';
 
 describe('StoreService', () => {
   let service: StoreService;
@@ -35,9 +35,12 @@ describe('StoreService', () => {
   });
 
   it('should add a new entry in the Store when setting annotation', () => {
-    const content: any[][] = [['A', 'test'], ['Other', 'test']];
+    const content: Tokenable[][] = [[{ token: 'A' }, { token: 'test' }], [{ token: 'Other' }, { token: 'test' }]];
     const annotation = Annotation.raw;
     service.initStore(annotation, content);
+    expect(service.store.getSentence(Annotation.raw, 0)[0])
+    .toEqual({ token: 'A' }, 'The raw annotation content should have been init in the store as tokenable');
+
     service.annotation = Annotation.conllu;
     expect(service.store.getSentence(Annotation.conllu, 0)[0])
       .toEqual({
@@ -56,7 +59,7 @@ describe('StoreService', () => {
   });
 
   it('should remove a new entry but not from the Store and push it into the removed array when setting annotation', () => {
-    const content: any[][] = [['A', 'test'], ['Other', 'test']];
+    const content: any[][] = [[{ token: 'A' }, { token: 'test' }], [{ token: 'Other' }, { token: 'test' }]];
     const annotation = Annotation.raw;
     service.initStore(annotation, content);
     service.annotation = Annotation.conllu;
@@ -64,26 +67,26 @@ describe('StoreService', () => {
     expect(service.selectedAnnotations$.value)
       .toEqual([Annotation.raw], 'the exposed annotations should have been updated and removed the annotation from the array');
     expect(service.sentence$.value[0])
-      .toEqual('A', 'the exposed sentence should have been moved to the first one in the annotations array');
+      .toEqual({ token: 'A' }, 'the exposed sentence should have been moved to the first one in the annotations array');
   });
 
   it('should move the current sentence into the given index', () => {
-    const content: any[][] = [['A', 'test'], ['Other', 'test']];
+    const content: any[][] = [[{ token: 'A' }, { token: 'test' }], [{ token: 'Other' }, { token: 'test' }]];
     const annotation = Annotation.raw;
     service.initStore(annotation, content);
     service.index = 1;
     expect(service.sentence$.value[0])
-      .toEqual('Other', 'the exposed sentence should have been moved to the second sentence');
+      .toEqual({ token: 'Other' }, 'the exposed sentence should have been moved to the second sentence');
     service.index = 2;
     expect(service.sentence$.value[0])
-      .toEqual('A', 'adding a number higher than nb sentence should move back to 0');
+      .toEqual({ token: 'A' }, 'adding a number higher than nb sentence should move back to 0');
     service.index -= 1;
     expect(service.sentence$.value[0])
-      .toEqual('Other', 'adding a number smaller than nb 0 should move back to last sentence');
+      .toEqual({ token: 'Other' }, 'adding a number smaller than nb 0 should move back to last sentence');
   });
 
   it('should remove a new entry but not from the Store and push it into the removed array when setting annotation', () => {
-    const content: any[][] = [['A', 'test'], ['Other', 'test']];
+    const content: any[][] = [[{ token: 'A' }, { token: 'test' }], [{ token: 'Other' }, { token: 'test' }]];
     const annotation = Annotation.raw;
     service.initStore(annotation, content);
     service.annotation = Annotation.conllu;
@@ -91,7 +94,7 @@ describe('StoreService', () => {
     expect(service.selectedAnnotations$.value)
       .toEqual([Annotation.raw], 'the exposed annotations should have been updated and removed the annotation from the array');
     expect(service.sentence$.value[0])
-      .toEqual('A', 'the exposed sentence should have been moved to the first one in the annotations array');
+      .toEqual({ token: 'A' }, 'the exposed sentence should have been moved to the first one in the annotations array');
   });
 
 });

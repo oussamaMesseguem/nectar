@@ -8,7 +8,7 @@ import { ConlluToken } from '../conllu.model';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('TokenComponent', () => {
+describe('Conllu TokenComponent', () => {
   let component: TokenComponent;
   let fixture: ComponentFixture<TokenComponent>;
   const conlluToken: ConlluToken = {
@@ -29,7 +29,7 @@ describe('TokenComponent', () => {
       imports: [MatDialogModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, NoopAnimationsModule],
       providers: [
         { provide: MatDialogRef, useValue: { open: () => { }, afterClosed: () => { } } },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: { } }
       ],
       declarations: [TokenComponent]
     })
@@ -43,13 +43,6 @@ describe('TokenComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should init the form from the dialog.data', () => {
-    expect(component.conlluTokenForm).toBeUndefined('Before ngOnInit the form should be undefined.');
-    component.conlluDialog = { conlluToken, nbTokens: 5 };
-    component.ngOnInit();
-    expect(component.conlluTokenForm.value).toEqual(conlluToken, 'The form.value should be equal to the injected one');
   });
 
   it('should init the tokensIndexes from the dialog.data', () => {
@@ -74,21 +67,8 @@ describe('TokenComponent', () => {
   it('format should return a form.value as conlluToken', () => {
     component.conlluDialog = { conlluToken, nbTokens: 5 };
     component.ngOnInit();
-    component.conlluTokenForm.get('feat').setValue('Abbr=Yes');
-    expect(component.conlluTokenForm.get('feat').value)
+    component.conlluDialog.conlluToken.feat = 'Abbr=Yes';
+    expect(component.conlluDialog.conlluToken.feat)
       .toEqual('Abbr=Yes', 'The form feat value should have been patched.');
-    const token: ConlluToken = {
-      index: '1',
-      token: 'Baisse',
-      lemma: 'baisse',
-      upos: 'N',
-      xpos: 'NC',
-      feat: 'Abbr=Yes',
-      head: '15',
-      deprel: 'mod',
-      deps: '15',
-      misc: 'mod'
-    };
-    expect(component.format()).toEqual(token, 'the returned object should be a ConlluToken.');
   });
 });

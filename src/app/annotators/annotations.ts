@@ -5,6 +5,7 @@
 export enum Annotation {
     conllu = 'Conll-U',
     ner = 'Ner',
+    nerPlusPlus = 'Ner++',
     raw = 'Raw'
 }
 
@@ -13,3 +14,12 @@ export enum Language {
     fr = 'French',
     es = 'Spanish'
 }
+
+export interface Tokenable {
+    token: string;
+}
+
+/**
+ * A type for Store keys
+ */
+export type AnnotationType = keyof typeof Annotation;

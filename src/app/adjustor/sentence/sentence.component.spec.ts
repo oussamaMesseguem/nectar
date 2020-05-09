@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SentenceComponent } from './sentence.component';
 import { AdjustorService } from '../adjustor.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -30,7 +29,7 @@ describe('SentenceComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SentenceComponent);
     component = fixture.componentInstance;
-    component.sentence$ = new BehaviorSubject(['This', 'is', 'a', 'test', '.']);
+    component.sentence$ = new BehaviorSubject([{ token: 'This' }, { token: 'is' }, { token: 'a' }, { token: 'test' }, { token: '.' }]);
     spyService = TestBed.inject(AdjustorService) as jasmine.SpyObj<AdjustorService>;
   });
 
@@ -40,7 +39,8 @@ describe('SentenceComponent', () => {
 
   it('should have a sentence and its index in the array when init.', () => {
     fixture.detectChanges();
-    expect(component.sentence$.value).toEqual(['This', 'is', 'a', 'test', '.'], 'sentence should be a sentence after detecChanges');
+    expect(component.sentence$.value).toEqual([{ token: 'This' }, { token: 'is' }, { token: 'a' }, { token: 'test' }, { token: '.' }],
+    'sentence should be a sentence after detecChanges');
   });
 
   it('should have only button first and when click 4 others.', () => {

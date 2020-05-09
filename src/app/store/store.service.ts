@@ -56,9 +56,6 @@ export class StoreService {
         if (this.removedAnnotations.includes(annotation)) {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
-        // Because: the store migth not know about this annotation, therefore it should be init.
-        // if (!this.store.keys().includes(annotation)) {
-        // }
         this.store.addEntry(annotation);
         this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));

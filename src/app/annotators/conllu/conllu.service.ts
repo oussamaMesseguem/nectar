@@ -1,14 +1,14 @@
 import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
-import { Annotation, Tokenable } from '../annotations';
+import { Annotation, Tokenable, AnnotationType } from '../annotations';
 import { ConlluToken } from './conllu.model';
-import { Storable } from 'src/app/store/store.interface';
+import { Storable, Matchable } from 'src/app/store/store.interface';
 
 /**
  * Store service for conllu
  */
 export class ConlluService extends AbstractStore<ConlluToken> implements Storable, IParser {
-    annotation = Annotation.conllu;
+    annotation = Annotation['Conll-U'];
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
@@ -20,6 +20,7 @@ export class ConlluService extends AbstractStore<ConlluToken> implements Storabl
         if (content) {
             this.content = content;
         }
+        this.observers['Ner++'] = new Matchable().add('pos', 'upos', ['', '_']);
     }
 
     ofToken(value: string[]): ConlluToken {

@@ -1,6 +1,6 @@
 <div class="example-button-row" style="width: 100%; height: 100%; overflow: auto;">
     <app-token *ngFor="let token of sentence$ | async; let i = index;" [token]="token" [update]="update"
-        [matMenuTriggerFor]="typesMenu" (click)="index = i"></app-token>
+        [matMenuTriggerFor]="typesMenu" (click)="index = i" (cdkObserveContent)="tokenValuesHaveChanged(i)"></app-token>
 </div>
 
 <mat-menu #typesMenu="matMenu" yPosition="below" xPosition="after">

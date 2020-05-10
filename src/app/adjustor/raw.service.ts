@@ -1,5 +1,5 @@
 import { AbstractStore } from '../store/store.abstract.model';
-import { Annotation, Tokenable } from '../annotators/annotations';
+import { Annotation, Tokenable, AnnotationType } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 import { Storable } from '../store/store.interface';
 
@@ -9,7 +9,7 @@ import { Storable } from '../store/store.interface';
  */
 export class RawService extends AbstractStore<Tokenable> implements Storable, IParser {
 
-    annotation = Annotation.raw;
+    annotation = Annotation.Raw;
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);

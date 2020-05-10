@@ -22,7 +22,7 @@ export class Store {
     addEntry(annotation: string) {
         if (!this.keys().includes(annotation)) {
             this.addAnnotationStore(annotation);
-            this.store[annotation].from(this.store[Annotation.raw].content);
+            this.store[annotation].from(this.store[Annotation.Raw].content);
         }
     }
 
@@ -50,11 +50,11 @@ export class Store {
      */
     initStore(annotation: string, content: any[][]) {
         // Because: store[Raw] contains the tokens per sentences and it's used to init new annotation objects
-        if (annotation !== Annotation.raw) {
+        if (annotation !== Annotation.Raw) {
             const rawContent: Tokenable[][] = content.map(l => l.map(t => {
                 return { token: t.token };
             }));
-            this.addAnnotationStore(Annotation.raw, rawContent);
+            this.addAnnotationStore(Annotation.Raw, rawContent);
         }
         this.addAnnotationStore(annotation, content);
     }
@@ -68,8 +68,8 @@ export class Store {
      * The number of sentences in the store.
      */
     nbSentences(): number {
-        if (this.store[Annotation.raw] !== undefined) {
-            return this.store[Annotation.raw].content.length;
+        if (this.store[Annotation.Raw] !== undefined) {
+            return this.store[Annotation.Raw].content.length;
         }
         return 0;
     }
@@ -168,22 +168,34 @@ export class Store {
     }
     // **** Tokens operations END ***
 
+    updateProperties(annotation: string, isentence: number, itoken: number, value: string) {
+        // Filter Because no need to update self-annotation but only others
+        this.storedContent().filter((store: Storable) => store.annotation !== annotation).forEach((store: Storable) => {
+            Object.keys(store.observers).forEach(key => {
+                // Because if the store doesn't contain the annotation, there is no need to update.
+                if (this.keys().includes(key)) {
+                    store.update(key, isentence, itoken, value);
+                }
+            });
+        });
+    }
+
     /**
      * Adds a new entry into the Store
      * @param annotation the annotation
      * @param content the content
      */
     private addAnnotationStore(annotation: string, content?: any[]) {
-        if (annotation === Annotation.conllu) {
+        if (annotation === Annotation['Conll-U']) {
             this.store[annotation] = new ConlluService(content);
         }
-        if (annotation === Annotation.ner) {
+        if (annotation === Annotation.Ner) {
             this.store[annotation] = new NerService(content);
         }
-        if (annotation === Annotation.nerPlusPlus) {
+        if (annotation === Annotation['Ner++']) {
             this.store[annotation] = new NerPlusPlusService(content);
         }
-        if (annotation === Annotation.raw) {
+        if (annotation === Annotation.Raw) {
             this.store[annotation] = new RawService(content);
         }
     }

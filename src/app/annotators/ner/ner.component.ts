@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { NerToken, NerTags, NerTypes } from './ner.model';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 export class NerComponent implements OnInit {
 
   @Input() sentence$: BehaviorSubject<NerToken[]>;
+  @Output() itokenHasChanged: EventEmitter<number> = new EventEmitter();
 
   private currentTokenIndex: number;
   /**
@@ -55,8 +56,7 @@ export class NerComponent implements OnInit {
    */
   setTag(tag: string) {
     const token = this.sentence$.value[this.currentTokenIndex];
-    token.tag = tag;
-    token.type = this.tmpType;
+    token.label = `${tag}-${this.tmpType}`;
     this.update = !this.update;
   }
 
@@ -66,5 +66,13 @@ export class NerComponent implements OnInit {
    */
   setType(type: string) {
     this.tmpType = type;
+  }
+
+  /**
+   * Notify Store that a vaalue has hanged to update other annotations
+   * @param itoken the token index
+   */
+  tokenValuesHaveChanged(itoken: number) {
+    this.itokenHasChanged.emit(itoken);
   }
 }

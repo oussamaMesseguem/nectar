@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { ObserversModule } from '@angular/cdk/observers';
 
 
 
@@ -22,7 +23,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ObserversModule
   ],
   exports: [NerComponent]
 })

@@ -1,8 +1,19 @@
+import { Annotation, AnnotationType } from '../annotators/annotations';
+
 /**
  * Storable interface makes annotations open to operations
  * such as adding, removing and duplicating sentences and tokens
  */
 export interface Storable {
+    /**
+     * The annotation.
+     */
+    annotation: Annotation;
+    content: any[][];
+    /**
+     * The annotations and properties to match on.
+     */
+    observers: Partial<{ [key in AnnotationType]: Matchable }>;
     /**
      * Deletes the entire sentence from the array.
      * @param isentence The index of the sentence
@@ -65,4 +76,55 @@ export interface Storable {
      * @param itoken The index of the token
      */
     newTokenAfter(isentence: number, itoken: number): void;
+
+    /**
+     * Updates other annotations with which they share same properties.
+     * @param annotation The annotation from where an update has been done
+     * @param isentence The sentence index
+     * @param itoken The token index
+     * @param value The new value
+     */
+    update(annotation: string, isentence: number, itoken: number, value: string): void;
+}
+
+/**
+ * Utility to make the update easier.
+ * One Matchable per annotation to match some properties.
+ */
+export class Matchable {
+
+    /**
+     * The properties to match on
+     */
+    properties: Property[];
+
+    constructor() {
+        this.properties = [];
+    }
+
+    /**
+     * If the value is not to be ignored, it gets copied from the source to the target
+     * @param propertyFrom The property that belongs to the source annotation
+     * @param propertyTo The property that belongs to the target annotation
+     * @param ignored The values to ignore
+     */
+    add(propertyFrom: string, propertyTo: string, ignored: string[]): Matchable {
+        this.properties.push(new Property(propertyFrom, propertyTo, ignored));
+        return this;
+    }
+}
+
+/**
+ * Wrappes the source and target properties as well as the ignored values.
+ */
+export class Property {
+    ignored: string[];
+    propertyFrom: string;
+    propertyTo: string;
+
+    constructor(propertyFrom: string, propertyTo: string, ignored: string[]) {
+        this.propertyFrom = propertyFrom;
+        this.propertyTo = propertyTo;
+        this.ignored = ignored;
+    }
 }

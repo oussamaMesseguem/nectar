@@ -57,5 +57,6 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns; let index = index;" (click)="editToken(index)"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns; let index = index;" (click)="editToken(index)"
+        (cdkObserveContent)="tokenValuesHaveChanged(index)"></tr>
 </table>

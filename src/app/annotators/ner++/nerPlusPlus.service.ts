@@ -1,14 +1,14 @@
 import { NerPlusPlusToken } from './nerPlusPlus.model';
 import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
-import { Annotation } from '../annotations';
-import { Storable } from 'src/app/store/store.interface';
+import { Annotation, AnnotationType } from '../annotations';
+import { Storable, Matchable } from 'src/app/store/store.interface';
 
 /**
  * Store service for NER++
  */
 export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implements Storable, IParser {
-    annotation: Annotation = Annotation.nerPlusPlus;
+    annotation: Annotation = Annotation['Ner++'];
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
@@ -20,6 +20,8 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         if (content) {
             this.content = content;
         }
+        this.observers.Ner = new Matchable().add('label', 'label', ['', '_', '*']);
+        this.observers['Conll-U'] = new Matchable().add('upos', 'pos', ['', '_']);
     }
 
     ofToken(value: string[]): NerPlusPlusToken {
@@ -94,5 +96,4 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         const token = this.createToken({ token: '~' });
         super.addToken(isentence, itoken + 1, token);
     }
-
 }

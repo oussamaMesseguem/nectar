@@ -1,13 +1,16 @@
-import { Tokenable, Annotation } from '../annotators/annotations';
+import { Tokenable, Annotation, AnnotationType } from '../annotators/annotations';
+import { Storable, Matchable, Property } from './store.interface';
 
 /**
  * Store content can be modified by Raw or other, therefore this class
  * publish some operations on sentences and tokens.
+ * Implements Partial<Storable> because the abstract doesn't have to implements all the methods.
  */
-export abstract class AbstractStore<T extends Tokenable> {
+export abstract class AbstractStore<T extends Tokenable> implements Partial<Storable> {
 
-    content: T[][];
     annotation: Annotation;
+    content: T[][];
+    observers: Partial<{ [key in AnnotationType]: Matchable }> = {};
 
     constructor() { this.content = []; }
 
@@ -62,6 +65,17 @@ export abstract class AbstractStore<T extends Tokenable> {
         // Because: need to delete the sentence and move the subject after the deletion
         if (this.content[isentence].length === 0) {
             this.deleteSentence(isentence);
+        }
+    }
+
+    update(annotation: string, isentence: number, itoken: number, value: string) {
+        const matchable: Matchable = this.observers[annotation];
+        if (matchable && matchable.properties) {
+            matchable.properties.forEach((property: Property) => {
+                if (!property.ignored.includes(value[property.propertyFrom])) {
+                    this.content[isentence][itoken][property.propertyTo] = value[property.propertyFrom];
+                }
+            });
         }
     }
 

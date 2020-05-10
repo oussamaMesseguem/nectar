@@ -18,11 +18,13 @@ export class Store {
     /**
      * Iterates through the raw content and inits new tokens according to the given annotation.
      * @param annotation The new annotation to add
+     * @param previousAnnotation The previous annotation to update other annotations
      */
-    addEntry(annotation: string) {
+    addEntry(annotation: string, previousAnnotation: string) {
         if (!this.keys().includes(annotation)) {
             this.addAnnotationStore(annotation);
             this.store[annotation].from(this.store[Annotation.Raw].content);
+            this.updateContentProperties(previousAnnotation);
         }
     }
 
@@ -168,7 +170,7 @@ export class Store {
     }
     // **** Tokens operations END ***
 
-    updateProperties(annotation: string, isentence: number, itoken: number, value: string) {
+    async updateProperties(annotation: string, isentence: number, itoken: number, value: string) {
         // Filter Because no need to update self-annotation but only others
         this.storedContent().filter((store: Storable) => store.annotation !== annotation).forEach((store: Storable) => {
             Object.keys(store.observers).forEach(key => {
@@ -205,5 +207,17 @@ export class Store {
      */
     private storedContent(): Storable[] {
         return Object.values(this.store);
+    }
+
+    /**
+     * Updates the new annotations from the previous one.
+     * @param annotation The previous annotation
+     */
+    private async updateContentProperties(annotation: string) {
+        this.store[annotation].content.forEach((sentence: any[], isentence: number) => {
+            sentence.forEach((token: any, itoken: number) => {
+                this.updateProperties(annotation, isentence, itoken, token);
+            });
+        });
     }
 }

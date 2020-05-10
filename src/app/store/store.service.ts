@@ -50,13 +50,13 @@ export class StoreService {
      * * Moves the observable to the new annotation.
      */
     set annotation(annotation: string) {
-        this.annotationValue = annotation;
         // Because: the annotation might have been added to the removed annotations array before
         // therefore it needs to be removed from since it should appear in the selected annotations
         if (this.removedAnnotations.includes(annotation)) {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
-        this.store.addEntry(annotation);
+        this.store.addEntry(annotation, this.annotationValue);
+        this.annotationValue = annotation;
         this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));
     }
@@ -130,7 +130,7 @@ export class StoreService {
      * Will update other annotations if they share same properties.
      * @param itoken the token index
      */
-    updateProperties(itoken: number) {
+    async updateProperties(itoken: number) {
         this.store.updateProperties(
             this.annotationValue, this.indexValue, itoken, this.store.getSentence(this.annotationValue, this.indexValue)[itoken]);
     }

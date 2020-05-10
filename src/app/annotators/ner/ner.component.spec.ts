@@ -12,19 +12,16 @@ import { NerToken } from './ner.model';
 const nerTokens: NerToken[] = [
   {
     token: 'Baisse',
-    tag: '',
-    type: ''
+    label: ''
   },
   {
     token: 'des',
-    tag: '',
-    type: ''
+    label: ''
   },
   {
 
     token: 'prix',
-    tag: '',
-    type: ''
+    label: ''
   }
 ];
 
@@ -57,15 +54,15 @@ describe('NerComponent', () => {
   });
 
   it('should tag the current token with the given tag when type and index are set', () => {
-    expect(component.sentence$.value[0]).toEqual({ token: 'Baisse', tag: '', type: '' }, 'tokens should be as they are in the array.');
+    expect(component.sentence$.value[0]).toEqual({ token: 'Baisse', label: '' }, 'tokens should be as they are in the array.');
     component.index = 0;
     component.setType('DATE');
     expect(component.update).toBeFalsy('update property should be false at init.');
-    expect(component.sentence$.value[0]).not.toEqual({ token: 'Baisse', tag: 'U', type: 'DATE' },
+    expect(component.sentence$.value[0]).not.toEqual({ token: 'Baisse', label: 'U-DATE' },
     'tokens should not have been modified before calling setTag.');
     component.setTag('U');
     expect(component.update).toBeTruthy('update property should be true after calling settag');
-    expect(component.sentence$.value[0]).toEqual({ token: 'Baisse', tag: 'U', type: 'DATE' },
+    expect(component.sentence$.value[0]).toEqual({ token: 'Baisse', label: 'U-DATE' },
       'tokens should have been modified after calling setTag.');
   });
 

@@ -5,8 +5,8 @@ import { NerToken, NER_TAG_COLOR } from '../ner.model';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-const nerTokenUntyped: NerToken = { token: 'dummy', tag: 'O', type: '' };
-const nerTokenTyped: NerToken = { token: 'novembre', tag: 'U', type: 'DATE' };
+const nerTokenUntyped: NerToken = { token: 'dummy', label: 'O' };
+const nerTokenTyped: NerToken = { token: 'novembre', label: 'U-DATE' };
 
 describe('Ner TokenComponent', () => {
   let component: TokenComponent;
@@ -40,7 +40,7 @@ describe('Ner TokenComponent', () => {
     component.token = nerTokenTyped;
     fixture.detectChanges();
     const inputElt: DebugElement = fixture.debugElement.query(By.css('input'));
-    const expectedColor: string = NER_TAG_COLOR[nerTokenTyped.type];
+    const expectedColor: string = NER_TAG_COLOR[nerTokenTyped.label.split('-')[1]];
     expect(fixture.debugElement.query(By.css('button'))).toBeNull('Typed tokens are in a form field not a button');
     expect(inputElt.styles.color).toEqual(expectedColor.toLowerCase(), 'A typed token should be colored.');
     expect(inputElt.properties.ngModel).toEqual(nerTokenTyped.token, 'The innerText should be the value of the token.');

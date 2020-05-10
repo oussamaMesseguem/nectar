@@ -19,9 +19,17 @@ export class TokenComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.token.type) {
-      this.labelColor = NER_TAG_COLOR[this.token.type];
+    if (this.displayInput) {
+      this.labelColor = NER_TAG_COLOR[this.token.label.split('-')[1]];
     }
+  }
+
+  /**
+   * Should display input rather than button
+   * When: there is a label different to O.
+   */
+  get displayInput() {
+    return this.token.label && this.token.label !== 'O';
   }
 
   /**
@@ -29,8 +37,8 @@ export class TokenComponent implements OnInit {
    * The value doesn't matter as the setter is used to update the view.
    */
   @Input() set update(b: boolean) {
-    if (this.token.type) {
-      this.labelColor = NER_TAG_COLOR[this.token.type];
+    if (this.displayInput) {
+      this.labelColor = NER_TAG_COLOR[this.token.label.split('-')[1]];
     }
   }
 

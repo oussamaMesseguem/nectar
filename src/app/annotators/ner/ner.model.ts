@@ -1,8 +1,7 @@
 import { Tokenable } from '../annotations';
 
 export interface NerToken extends Tokenable {
-    tag: string;
-    type: string;
+    label: string;
 }
 
 export const NerTags = [

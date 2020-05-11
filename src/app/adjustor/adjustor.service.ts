@@ -18,18 +18,18 @@ export class AdjustorService {
     if (this.storeService.index === 0) {
       return [
         [],
-        this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
+        this.storeService.store.getSentence(Annotation.Raw, this.storeService.index + 1)
       ];
     }
     if (this.storeService.index === this.storeService.nbSentences) {
       return [
-        this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
+        this.storeService.store.getSentence(Annotation.Raw, this.storeService.index - 1),
         []
       ];
     }
     return [
-      this.storeService.store.getSentence(Annotation.raw, this.storeService.index - 1),
-      this.storeService.store.getSentence(Annotation.raw, this.storeService.index + 1)
+      this.storeService.store.getSentence(Annotation.Raw, this.storeService.index - 1),
+      this.storeService.store.getSentence(Annotation.Raw, this.storeService.index + 1)
     ];
   }
 

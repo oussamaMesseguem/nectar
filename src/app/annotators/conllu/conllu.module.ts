@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { PairComponent } from './value-list/pair/pair.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ObserversModule } from '@angular/cdk/observers';
 import { TokenComponent } from './token/token.component';
 
 
@@ -35,7 +36,8 @@ import { TokenComponent } from './token/token.component';
     MatListModule,
     MatOptionModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ObserversModule
   ],
   exports: [ConlluComponent]
 })

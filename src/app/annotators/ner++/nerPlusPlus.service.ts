@@ -1,14 +1,14 @@
 import { NerPlusPlusToken } from './nerPlusPlus.model';
 import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
-import { Annotation } from '../annotations';
-import { Storable } from 'src/app/store/store.interface';
+import { Annotation, AnnotationType } from '../annotations';
+import { Storable, Matchable } from 'src/app/store/store.interface';
 
 /**
  * Store service for NER++
  */
 export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implements Storable, IParser {
-    annotation: Annotation = Annotation.nerPlusPlus;
+    annotation: Annotation = Annotation['Ner++'];
 
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
@@ -20,14 +20,16 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         if (content) {
             this.content = content;
         }
+        this.observers.Ner = new Matchable().add('label', 'label', ['', '_', '*']);
+        this.observers['Conll-U'] = new Matchable().add('upos', 'pos', ['', '_']);
     }
 
     ofToken(value: string[]): NerPlusPlusToken {
         const token = value[0];
-        const pos = 'O';
-        const chunk = 'O';
-        const shortShape = 'O';
-        const label = '';
+        const pos = value[1];
+        const chunk = value[2];
+        const shortShape = value[3];
+        const label = value[4];
         return { token, pos, chunk, shortShape, label };
     }
 
@@ -46,13 +48,7 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         content.forEach(sentence => {
             const sentenceArray = [];
             sentence.forEach(token => {
-                const values: string[] = Object.values(token);
-                let tag = 'O';
-                if (values[1] !== '' && values[1] !== 'O') {
-                    tag = values[1].concat('-', values[2]);
-                }
-                values.splice(1, 2, tag);
-                sentenceArray.push(values.join('\t'));
+                sentenceArray.push(Object.values(token).join('\t'));
             });
             text.push(sentenceArray.join('\n'));
         });
@@ -94,5 +90,4 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         const token = this.createToken({ token: '~' });
         super.addToken(isentence, itoken + 1, token);
     }
-
 }

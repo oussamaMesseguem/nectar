@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TokenComponent } from './token/token.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { ObserversModule } from '@angular/cdk/observers';
 
 
 
@@ -28,7 +29,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatInputModule,
     MatMenuModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ObserversModule
   ],
   exports: [NerPlusPlusComponent]
 })

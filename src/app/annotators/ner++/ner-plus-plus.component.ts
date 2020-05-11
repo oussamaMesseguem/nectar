@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { TokenComponent } from './token/token.component';
@@ -14,6 +14,7 @@ export class NerPlusPlusComponent implements OnInit {
   displayedColumns = ['token', 'pos', 'chunk', 'shortShape', 'label'];
 
   @Input() sentence$: BehaviorSubject<NerPlusPlusToken[]>;
+  @Output() itokenHasChanged: EventEmitter<number> = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
@@ -31,5 +32,13 @@ export class NerPlusPlusComponent implements OnInit {
         token: this.sentence$.value[index]
       }
     });
+  }
+
+  /**
+   * Notify Store that a vaalue has hanged to update other annotations
+   * @param itoken the token index
+   */
+  tokenValuesHaveChanged(itoken: number) {
+    this.itokenHasChanged.emit(itoken);
   }
 }

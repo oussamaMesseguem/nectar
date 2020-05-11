@@ -11,108 +11,108 @@ import { RawService } from '../adjustor/raw.service';
 @Injectable()
 export class InjectorService {
 
-  lang: string;
+    lang: string;
 
-  private parser: IParser;
-  private isInProgress: Subject<boolean> = new BehaviorSubject(false);
+    private parser: IParser;
+    private isInProgress: Subject<boolean> = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient, private storeService: StoreService) { }
+    constructor(private http: HttpClient, private storeService: StoreService) { }
 
-  injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
-    this.lang = lang;
-    // New Behaviour might have been destroyed by an unsubscribing
-    this.isInProgress = new BehaviorSubject(true);
+    injectContent(lang: string, annotation: string, content: string): Observable<boolean> {
+        this.lang = lang;
+        // New Behaviour might have been destroyed by an unsubscribing
+        this.isInProgress = new BehaviorSubject(true);
 
-    switch (annotation) {
-      case Annotation.conllu:
-        this.parser = new ConlluService();
-        break;
-      case Annotation.ner:
-        this.parser = new NerService();
-        break;
-      case Annotation.raw:
-        this.parser = new RawService();
-        break;
-      default:
-        throw this.assertAnnotationType(annotation);
+        switch (annotation) {
+            case Annotation['Conll-U']:
+                this.parser = new ConlluService();
+                break;
+            case Annotation.Ner:
+                this.parser = new NerService();
+                break;
+            case Annotation.Raw:
+                this.parser = new RawService();
+                break;
+            default:
+                throw this.assertAnnotationType(annotation);
+        }
+
+        // Parsing warpped in a promise
+        // Once done the isInProgress subject completes and unsubscribe
+        const promise: Promise<boolean> = new Promise(async (resolve, reject) => {
+
+            if (annotation === Annotation.Raw) {
+                // const response: CoreNLPResponse = await this.corenlp(content);
+                // const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
+                // console.log(r);
+                // r[0].splice(0, 6);
+                // const lastPosition = r[r.length - 1].length;
+                // r[r.length - 1].splice(lastPosition - 2, 2);
+                // console.log(r);
+                const r = nerSents.map(s => s.map(t => t.token));
+                content = r.map(tab => tab.join('\n')).join('\n\n');
+            }
+
+            // Add new entry in the store
+            const parsedContent = this.parse(content);
+            this.storeService.initStore(this.parser.annotation, parsedContent);
+
+            if (this.storeService.nbSentences === 0) {
+                reject(new Error('Parsing has been asked to be stopped'));
+            }
+            resolve(true);
+        });
+
+        promise
+            .then(_ => {
+                this.isInProgress.complete();
+            })
+            .catch((error) => {
+                this.isInProgress.error(error);
+            })
+            .finally(() => {
+                this.isInProgress.unsubscribe();
+            });
+
+        return this.isInProgress.asObservable();
     }
 
-    // Parsing warpped in a promise
-    // Once done the isInProgress subject completes and unsubscribe
-    const promise: Promise<boolean> = new Promise(async (resolve, reject) => {
-
-      if (annotation === Annotation.raw) {
-        // const response: CoreNLPResponse = await this.corenlp(content);
-        // const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
-        // console.log(r);
-        // r[0].splice(0, 6);
-        // const lastPosition = r[r.length - 1].length;
-        // r[r.length - 1].splice(lastPosition - 2, 2);
-        // console.log(r);
-        const r = nerSents.map(s => s.map(t => t.token));
-        content = r.map(tab => tab.join('\n')).join('\n\n');
-      }
-
-      // Add new entry in the store
-      const parsedContent = this.parse(content);
-      this.storeService.initStore(this.parser.annotation, parsedContent);
-
-      if (this.storeService.nbSentences === 0) {
-        reject(new Error('Parsing has been asked to be stopped'));
-      }
-      resolve(true);
-    });
-
-    promise
-      .then(_ => {
-        this.isInProgress.complete();
-      })
-      .catch((error) => {
-        this.isInProgress.error(error);
-      })
-      .finally(() => {
+    /**
+     * Cancel the injection of the data
+     */
+    cancelContentInjection() {
         this.isInProgress.unsubscribe();
-      });
+        this.storeService.reset();
+    }
 
-    return this.isInProgress.asObservable();
-  }
+    private assertAnnotationType(annotation: string): never {
+        throw new Error(`Annotation type '${annotation}' not recognized`);
+    }
 
-  /**
-   * Cancel the injection of the data
-   */
-  cancelContentInjection() {
-    this.isInProgress.unsubscribe();
-    this.storeService.reset();
-  }
+    /**
+     * Parses the content according to the right parser
+     * @param content The content to parse
+     */
+    private parse(content: string) {
+        // Parsing algo
+        // Split into array of sentences
+        // Split into array of tokens
+        // Split into tokens and annotations
+        return content.split(this.parser.splitPattern)
+            .map(sent => sent.split(this.parser.tokenPattern)
+                .filter(line => !line.trim().match(this.parser.ignoreLinePattern))
+                .map(line => line.trim().split(this.parser.elementsPattern))
+                .filter(tab => tab[0].length > 0)
+                .map(line => this.parser.ofToken(line))
+            );
+    }
 
-  private assertAnnotationType(annotation: string): never {
-    throw new Error(`Annotation type '${annotation}' not recognized`);
-  }
-
-  /**
-   * Parses the content according to the right parser
-   * @param content The content to parse
-   */
-  private parse(content: string) {
-    // Parsing algo
-    // Split into array of sentences
-    // Split into array of tokens
-    // Split into tokens and annotations
-    return content.split(this.parser.splitPattern)
-      .map(sent => sent.split(this.parser.tokenPattern)
-        .filter(line => !line.trim().match(this.parser.ignoreLinePattern))
-        .map(line => line.trim().split(this.parser.elementsPattern))
-        .filter(tab => tab[0].length > 0)
-        .map(line => this.parser.ofToken(line))
-      );
-  }
-
-  private async corenlp(content: string): Promise<any> {
-    return await this.http.post<any>(
-      'https://cors-anywhere.herokuapp.com/http://corenlp.run/?properties={"annotators":"tokenize,ssplit","outputFormat":"json"}',
-      { data: content }
-    ).toPromise();
-  }
+    private async corenlp(content: string): Promise<any> {
+        return await this.http.post<any>(
+            'https://cors-anywhere.herokuapp.com/http://corenlp.run/?properties={"annotators":"tokenize,ssplit","outputFormat":"json"}',
+            { data: content }
+        ).toPromise();
+    }
 
 }
 
@@ -121,41 +121,41 @@ export class InjectorService {
  */
 export interface IParser {
 
-  annotation: Annotation;
-  /**
-   * The pattern to split sentences on
-   */
-  splitPattern: RegExp;
-  /**
-   * The pattern to split tokens on
-   */
-  tokenPattern: RegExp;
-  /**
-   * The pattern to split elements on
-   */
-  elementsPattern: RegExp;
-  /**
-   * The pattern to ignore lines
-   */
-  ignoreLinePattern: RegExp;
-  /**
-   * Builds an Annotation Token
-   * @param value the split array containing a token and its annotations
-   */
-  ofToken(value: string[]): any;
+    annotation: Annotation;
+    /**
+     * The pattern to split sentences on
+     */
+    splitPattern: RegExp;
+    /**
+     * The pattern to split tokens on
+     */
+    tokenPattern: RegExp;
+    /**
+     * The pattern to split elements on
+     */
+    elementsPattern: RegExp;
+    /**
+     * The pattern to ignore lines
+     */
+    ignoreLinePattern: RegExp;
+    /**
+     * Builds an Annotation Token
+     * @param value the split array containing a token and its annotations
+     */
+    ofToken(value: string[]): any;
 }
 
 interface CoreNLPResponse {
-  docDate: any;
-  sentences: CoreNLPSentence[];
+    docDate: any;
+    sentences: CoreNLPSentence[];
 }
 interface CoreNLPSentence {
-  index: number;
-  tokens: CoreNLPToken[];
+    index: number;
+    tokens: CoreNLPToken[];
 }
 
 interface CoreNLPToken {
-  originalText: string;
+    originalText: string;
 }
 
 const nerSents: NerToken[][] = [
@@ -163,968 +163,968 @@ const nerSents: NerToken[][] = [
         {
 
             token: 'Baisse',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'prix',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'en',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Grande',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Bretagne',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ':',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'en',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'novembre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'les',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'prix',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'ont',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'baissé',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '0',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '1',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '%',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'annonce',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'l\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'office',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'statistiques',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '11',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'décembre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '.',
-            tag: '',
-            type: ''
+            label: 'O',
+
         }
     ],
     [
         {
 
             token: 'Signe',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'temps',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ':',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'la',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'très',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'britannique',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'banque',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'd\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'affaires',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'et',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
-        },
-        {
-
-            token: 'marché', tag: '',
-            type: ''
-        },
-        {
-
-            token: 'vient', tag: '',
-            type: ''
-        },
-        {
-
-            token: 'd\'', tag: '',
-            type: ''
+            label: 'O',
 
         },
         {
 
-            token: 'acheter', tag: '',
-            type: ''
+            token: 'marché', label: 'O',
 
         },
         {
 
-            token: 'un', tag: '',
-            type: ''
+            token: 'vient', label: 'O',
 
         },
         {
 
-            token: 'siège', tag: '',
-            type: ''
+            token: 'd\'', label: 'O',
+
+
+        },
+        {
+
+            token: 'acheter', label: 'O',
+
+
+        },
+        {
+
+            token: 'un', label: 'O',
+
+
+        },
+        {
+
+            token: 'siège', label: 'O',
+
 
         },
         {
 
             token: 'à',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'la',
-            tag: '',
-            type: ''
+            label: 'O',
+
 
         },
         {
 
             token: 'Bourse',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Paris',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '.',
-            tag: '',
-            type: ''
+            label: 'O',
+
         }
     ],
     [
         {
 
             token: 'Comme',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'déplore',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'quotidien',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'financier',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'on',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'est',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'bien',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'loin',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'quatre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'vingt',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'deux',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'admissions',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'enregistrées',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'au',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'cours',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'l\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'année',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '1987',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
-            token: '.', tag: '',
-            type: ''
+            token: '.', label: 'O',
+
         }
     ],
     [
         {
 
             token: 'Baisse',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'prix',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'en',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Grande',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Bretagne',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ':',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'en',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'novembre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'les',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'prix',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'ont',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'baissé',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '0',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '1',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '%',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'annonce',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'l\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'office',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'statistiques',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '11',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'décembre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '.',
-            tag: '',
-            type: ''
+            label: 'O',
+
         }
     ],
     [
         {
 
             token: 'Signe',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'temps',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ':',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'la',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'très',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'britannique',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'banque',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'd\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'affaires',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'et',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
-        },
-        {
-
-            token: 'marché', tag: '',
-            type: ''
-        },
-        {
-
-            token: 'vient', tag: '',
-            type: ''
-        },
-        {
-
-            token: 'd\'', tag: '',
-            type: ''
+            label: 'O',
 
         },
         {
 
-            token: 'acheter', tag: '',
-            type: ''
+            token: 'marché', label: 'O',
 
         },
         {
 
-            token: 'un', tag: '',
-            type: ''
+            token: 'vient', label: 'O',
 
         },
         {
 
-            token: 'siège', tag: '',
-            type: ''
+            token: 'd\'', label: 'O',
+
+
+        },
+        {
+
+            token: 'acheter', label: 'O',
+
+
+        },
+        {
+
+            token: 'un', label: 'O',
+
+
+        },
+        {
+
+            token: 'siège', label: 'O',
+
 
         },
         {
 
             token: 'à',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'la',
-            tag: '',
-            type: ''
+            label: 'O',
+
 
         },
         {
 
             token: 'Bourse',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'Paris',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '.',
-            tag: '',
-            type: ''
+            label: 'O',
+
         }
     ],
     [
         {
 
             token: 'Comme',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'déplore',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'le',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'quotidien',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'financier',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: ',',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'on',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'est',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'bien',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'loin',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'des',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'quatre',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'vingt',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '-',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'deux',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'admissions',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'enregistrées',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'au',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'cours',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'de',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'l\'',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: 'année',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
             token: '1987',
-            tag: '',
-            type: ''
+            label: 'O',
+
         },
         {
 
-            token: '.', tag: '',
-            type: ''
+            token: '.', label: 'O',
+
         }
     ]
 ];

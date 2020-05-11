@@ -1,14 +1,14 @@
 import { AbstractStore } from 'src/app/store/store.abstract.model';
 import { IParser } from 'src/app/injector/injector.service';
-import { Annotation } from '../annotations';
+import { Annotation, AnnotationType } from '../annotations';
 import { NerToken } from './ner.model';
-import { Storable } from 'src/app/store/store.interface';
+import { Storable, Matchable } from 'src/app/store/store.interface';
 
 /**
  * Store service for NER
  */
 export class NerService extends AbstractStore<NerToken> implements Storable, IParser {
-    annotation: Annotation = Annotation.ner;
+    annotation: Annotation = Annotation.Ner;
     splitPattern: RegExp = new RegExp(/\n\s*\n/);
     tokenPattern: RegExp = new RegExp(/\n/);
     elementsPattern: RegExp = new RegExp(/\t/);
@@ -19,22 +19,17 @@ export class NerService extends AbstractStore<NerToken> implements Storable, IPa
         if (content) {
             this.content = content;
         }
+        this.observers['Ner++'] = new Matchable().add('label', 'label', ['', '_', '*']);
     }
 
     ofToken(value: string[]): NerToken {
         const token = value[0];
-        let tag = 'O';
-        let type = '';
-        if (value[1] !== '' && value[1] !== 'O') {
-            const t = value[1].split('-');
-            tag = t[0];
-            type = t[1];
-        }
-        return { token, tag, type };
+        const label = value[1];
+        return { token, label };
     }
 
     createToken(token: Partial<NerToken>): NerToken {
-        return { token: token.token, tag: token.tag ? token.tag : '', type: token.type ? token.type : '' };
+        return { token: token.token, label: token.label ? token.label : '' };
     }
 
     intoText(content: NerToken[][]): string {
@@ -90,6 +85,4 @@ export class NerService extends AbstractStore<NerToken> implements Storable, IPa
         const token = this.createToken({ token: '~' });
         super.addToken(isentence, itoken + 1, token);
     }
-
-
 }

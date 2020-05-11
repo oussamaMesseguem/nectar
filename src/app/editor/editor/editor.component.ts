@@ -21,7 +21,7 @@ export class EditorComponent implements OnInit {
   /**
    * The annotation list.
    */
-  get annotations(): string[] { return Object.values(Annotation).filter(a => a !== Annotation.raw); }
+  get annotations(): string[] { return Object.values(Annotation).filter(a => a !== Annotation.Raw); }
 
   /**
    * The current annotation.
@@ -110,5 +110,13 @@ export class EditorComponent implements OnInit {
    */
   removeAnnotation(annotation: string) {
     this.storeService.removeAnnotation(annotation);
+  }
+
+  /**
+   * Will update other annotations that share same properties.
+   * @param itoken The token index
+   */
+  updateProperties(itoken: number) {
+    this.storeService.updateProperties(itoken);
   }
 }

@@ -50,16 +50,13 @@ export class StoreService {
      * * Moves the observable to the new annotation.
      */
     set annotation(annotation: string) {
-        this.annotationValue = annotation;
         // Because: the annotation might have been added to the removed annotations array before
         // therefore it needs to be removed from since it should appear in the selected annotations
         if (this.removedAnnotations.includes(annotation)) {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
-        // Because: the store migth not know about this annotation, therefore it should be init.
-        // if (!this.store.keys().includes(annotation)) {
-        // }
-        this.store.addEntry(annotation);
+        this.store.addEntry(annotation, this.annotationValue);
+        this.annotationValue = annotation;
         this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));
     }
@@ -96,8 +93,8 @@ export class StoreService {
         this.store.initStore(annotation, content);
         this.annotation = annotation;
         // Because: if the uploaded content is not Raw this raw type should not be added in future.
-        if (annotation !== Annotation.raw) {
-            this.removedAnnotations.push(Annotation.raw);
+        if (annotation !== Annotation.Raw) {
+            this.removedAnnotations.push(Annotation.Raw);
         }
         this.selectedAnnotations$.next([annotation]);
     }
@@ -127,6 +124,15 @@ export class StoreService {
         this.annotationValue = '';
         this.selectedAnnotations$.next([]);
         this.sentence$.next([]);
+    }
+
+    /**
+     * Will update other annotations if they share same properties.
+     * @param itoken the token index
+     */
+    async updateProperties(itoken: number) {
+        this.store.updateProperties(
+            this.annotationValue, this.indexValue, itoken, this.store.getSentence(this.annotationValue, this.indexValue)[itoken]);
     }
 
     /**

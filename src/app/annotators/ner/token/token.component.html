@@ -1,6 +1,6 @@
-<mat-form-field *ngIf="token.type" appearance="outline" color="primary">
-    <mat-label [ngStyle]="{'color': labelColor, 'font-weight': 500}">{{token.tag}}-{{token.type}}</mat-label>
+<mat-form-field *ngIf="displayInput" appearance="outline" color="primary">
+    <mat-label [ngStyle]="{'color': labelColor, 'font-weight': 500}">{{token.label}}</mat-label>
     <input [ngStyle]="{'color': labelColor}" matInput [(ngModel)]="token.token">
 </mat-form-field>
 
-<button mat-stroked-button *ngIf="!token.type">{{token.token}}</button>
+<button mat-stroked-button *ngIf="!displayInput">{{token.token}}</button>

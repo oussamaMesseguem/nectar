@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConlluToken } from './conllu.model';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +19,7 @@ export class ConlluComponent implements OnInit {
   displayedColumns = ['index', 'token', 'lemma', 'upos', 'xpos', 'feat', 'head', 'deprel', 'deps', 'misc'];
 
   @Input() sentence$: BehaviorSubject<ConlluToken[]>;
+  @Output() itokenHasChanged: EventEmitter<number> = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
@@ -36,5 +37,13 @@ export class ConlluComponent implements OnInit {
         nbTokens: this.sentence$.value.length
       }
     });
+  }
+
+  /**
+   * Notify Store that a vaalue has hanged to update other annotations
+   * @param itoken the token index
+   */
+  tokenValuesHaveChanged(itoken: number) {
+    this.itokenHasChanged.emit(itoken);
   }
 }

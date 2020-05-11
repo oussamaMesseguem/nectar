@@ -3,10 +3,10 @@
  * Values are the displayed title.
  */
 export enum Annotation {
-    conllu = 'Conll-U',
-    ner = 'Ner',
-    nerPlusPlus = 'Ner++',
-    raw = 'Raw'
+    'Conll-U' = 'Conll-U',
+    Ner = 'Ner',
+    'Ner++' = 'Ner++',
+    Raw = 'Raw'
 }
 
 export enum Language {

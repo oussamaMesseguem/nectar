@@ -82,9 +82,9 @@ export interface Storable {
      * @param annotation The annotation from where an update has been done
      * @param isentence The sentence index
      * @param itoken The token index
-     * @param value The new value
+     * @param token The new value
      */
-    update(annotation: string, isentence: number, itoken: number, value: string): void;
+    update(annotation: string, isentence: number, itoken: number, token: any): void;
 }
 
 /**

@@ -20,10 +20,13 @@
                 <mat-chip *ngFor="let annot of selectedAnnotations | async" [selectable]="true" [removable]="true"
                     [value]="annot" (removed)="removeAnnotation(annot)" (click)="annotation = annot">
                     {{annot}}
-                    <mat-icon [matTooltip]="annot === 'Raw' ? 'Carreful: Raw cannot be added back!' : ''" matChipRemove>cancel</mat-icon>
+                    <mat-icon [matTooltip]="annot === 'Raw' ? 'Carreful: Raw cannot be added back!' : ''" matChipRemove>
+                        cancel</mat-icon>
                 </mat-chip>
 
-                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add annotations"
+                <button *ngIf="filteredAnnotations.length > 0"
+                    mat-icon-button [matMenuTriggerFor]="menu"
+                    [matTooltip]="(selectedAnnotations | async).length > 0 ? 'Add annotation' : 'Should import a file before'"
                     matTooltipPosition="above" matTooltipShowDelay="500">
                     <mat-icon>add_circle_outlined</mat-icon>
                     <mat-menu #menu="matMenu" yPosition="below">
@@ -58,9 +61,11 @@
     <mat-divider></mat-divider>
 
     <ng-container [ngSwitch]="annotation">
-        <app-conllu [sentence$]="sentence$" (itokenHasChanged)="updateProperties($event)" *ngSwitchCase="'Conll-U'"></app-conllu>
+        <app-conllu [sentence$]="sentence$" (itokenHasChanged)="updateProperties($event)" *ngSwitchCase="'Conll-U'">
+        </app-conllu>
         <app-ner [sentence$]="sentence$" (itokenHasChanged)="updateProperties($event)" *ngSwitchCase="'Ner'"></app-ner>
-        <app-ner-plus-plus [sentence$]="sentence$" (itokenHasChanged)="updateProperties($event)" *ngSwitchCase="'Ner++'"></app-ner-plus-plus>
+        <app-ner-plus-plus [sentence$]="sentence$" (itokenHasChanged)="updateProperties($event)"
+            *ngSwitchCase="'Ner++'"></app-ner-plus-plus>
         <app-adjustor [sentence$]="sentence$" *ngSwitchCase="'Raw'"></app-adjustor>
 
         <div class="centered-content" *ngSwitchDefault>

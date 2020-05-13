@@ -68,15 +68,13 @@ export abstract class AbstractStore<T extends Tokenable> implements Partial<Stor
         }
     }
 
-    update(annotation: string, isentence: number, itoken: number, value: string) {
+    update(annotation: string, isentence: number, itoken: number, token: any) {
         const matchable: Matchable = this.observers[annotation];
-        if (matchable && matchable.properties) {
-            matchable.properties.forEach((property: Property) => {
-                if (!property.ignored.includes(value[property.propertyFrom])) {
-                    this.content[isentence][itoken][property.propertyTo] = value[property.propertyFrom];
-                }
-            });
-        }
+        matchable.properties.forEach((property: Property) => {
+            if (!property.ignored.includes(token[property.propertyFrom])) {
+                this.content[isentence][itoken][property.propertyTo] = token[property.propertyFrom];
+            }
+        });
     }
 
     /**

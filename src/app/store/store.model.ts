@@ -16,16 +16,17 @@ export class Store {
 
     // **** Store Content START ****
     /**
-     * Iterates through the raw content and inits new tokens according to the given annotation.
+     * Creates a new store entry from raw content and inits new tokens according to the given annotation.
      * @param annotation The new annotation to add
-     * @param previousAnnotation The previous annotation to update other annotations
+     * @returns true ? if newly created : false when already exists
      */
-    addEntry(annotation: string, previousAnnotation: string) {
+    addEntry(annotation: string): boolean {
         if (!this.keys().includes(annotation)) {
             this.addAnnotationStore(annotation);
             this.store[annotation].from(this.store[Annotation.Raw].content);
-            this.updateContentProperties(previousAnnotation);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -170,17 +171,37 @@ export class Store {
     }
     // **** Tokens operations END ***
 
-    async updateProperties(annotation: string, isentence: number, itoken: number, value: string) {
-        // Filter Because no need to update self-annotation but only others
-        this.storedContent().filter((store: Storable) => store.annotation !== annotation).forEach((store: Storable) => {
-            Object.keys(store.observers).forEach(key => {
-                // Because if the store doesn't contain the annotation, there is no need to update.
-                if (this.keys().includes(key)) {
-                    store.update(key, isentence, itoken, value);
-                }
+    // **** Update token property values START ****
+    /**
+     * Updates the new annotations from the previous one.
+     * @param annotation The previous annotation
+     */
+    async updateContentProperties(annotation: string) {
+        this.store[annotation].content.forEach((sentence: any[], isentence: number) => {
+            sentence.forEach((token: any, itoken: number) => {
+                this.updateProperties(annotation, isentence, itoken, token);
             });
         });
     }
+
+    /**
+     * Iterates through the Store[annotation] and for each stored content that is
+     * in its observer and in the store, updates the stored content token.
+     * @param annotation The annotation that has observers, that has just been modified
+     * @param isentence The sentence index
+     * @param itoken The token index
+     * @param token The token
+     */
+    async updateProperties(annotation: string, isentence: number, itoken: number, token: any) {
+        const observers: string[] = Object.keys(this.store[annotation].observers);
+        observers
+            // Because if the store doesn't contain the annotation, there is no need to update.
+            .filter(annotationObserver => this.keys().includes(annotationObserver))
+            .forEach(annotationObserver => {
+                this.store[annotationObserver].update(annotation, isentence, itoken, token);
+            });
+    }
+    // **** Update token property values END ****
 
     /**
      * Adds a new entry into the Store
@@ -207,17 +228,5 @@ export class Store {
      */
     private storedContent(): Storable[] {
         return Object.values(this.store);
-    }
-
-    /**
-     * Updates the new annotations from the previous one.
-     * @param annotation The previous annotation
-     */
-    private async updateContentProperties(annotation: string) {
-        this.store[annotation].content.forEach((sentence: any[], isentence: number) => {
-            sentence.forEach((token: any, itoken: number) => {
-                this.updateProperties(annotation, isentence, itoken, token);
-            });
-        });
     }
 }

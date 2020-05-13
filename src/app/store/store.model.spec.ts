@@ -1,5 +1,8 @@
 import { Store } from './store.model';
 import { Annotation } from '../annotators/annotations';
+import { ConlluToken } from '../annotators/conllu/conllu.model';
+import { NerPlusPlusToken } from '../annotators/ner++/nerPlusPlus.model';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 const storeContent = {
     Raw: [
@@ -216,7 +219,7 @@ describe('Store class', () => {
 
     it('should add a new ner entry to store and init it', () => {
         store.initStore(Annotation.Raw, JSON.parse(JSON.stringify(storeContent.Raw)));
-        store.addEntry(Annotation.Ner, Annotation.Raw);
+        store.addEntry(Annotation.Ner);
         expect(store.keys()).toContain(Annotation.Ner);
         expect(store.getSentence(Annotation.Ner, 2).length).toEqual(5);
         expect(store.getSentence(Annotation.Ner, 2)[0]).toEqual({ token: 'I', label: '' });
@@ -224,7 +227,7 @@ describe('Store class', () => {
 
     it('should add a new conllu entry to store and init it', () => {
         store.initStore(Annotation.Raw, JSON.parse(JSON.stringify(storeContent.Raw)));
-        store.addEntry(Annotation['Conll-U'], Annotation.Raw);
+        store.addEntry(Annotation['Conll-U']);
         expect(store.keys()).toContain(Annotation['Conll-U']);
         expect(store.getSentence(Annotation['Conll-U'], 1).length).toEqual(4);
         expect(store.getSentence(Annotation['Conll-U'], 1)[0])
@@ -308,4 +311,41 @@ describe('Store class', () => {
         expect(store.getSentence(Annotation.Raw, 1)[0]).toEqual({ token: 'a' }, 'removing a value make move other values back');
     });
     // **** Raw Tests END ****
+
+    // **** Communication between annotations START ****
+    it('should update ner++[pos] and ner++[label] on conllu and ner content as it\'s a new entry', fakeAsync(() => {
+        store.initStore(Annotation['Conll-U'], JSON.parse(JSON.stringify(storeContent['Conll-U'])));
+        const conlluToken: ConlluToken = store.getSentence(Annotation['Conll-U'], 0)[0];
+        conlluToken.upos = 'NEW';
+        store.addEntry(Annotation.Ner);
+        const beenAdded = store.addEntry(Annotation['Ner++']);
+        store.getSentence(Annotation.Ner, 0)[0].label = 'NEW-LABEL';
+
+        expect(beenAdded).toBeTruthy('should be true since Ner++ is a new entry.');
+        // should call after a new entry to updtate the new entry on previous annotations.
+        store.updateContentProperties(Annotation['Conll-U']);
+        store.updateContentProperties(Annotation.Ner);
+        tick();
+        const nerPlusPlusToken: NerPlusPlusToken = store.getSentence(Annotation['Ner++'], 0)[0];
+        expect(nerPlusPlusToken.pos)
+        .toEqual('NEW', 'NER++[pos] should have been updated on Conll-U[upos] since it\'s newly added to store.');
+        expect(nerPlusPlusToken.label)
+        .toEqual('NEW-LABEL', 'NER++[label] should have been updated on Ner[label] since it\'s newly added to store.');
+    }));
+
+    it('should update ner++[pos] when conllu[upos] changes', fakeAsync(() => {
+        store.initStore(Annotation['Conll-U'], JSON.parse(JSON.stringify(storeContent['Conll-U'])));
+        const conlluToken: ConlluToken = store.getSentence(Annotation['Conll-U'], 0)[0];
+        store.addEntry(Annotation['Ner++']);
+
+        conlluToken.upos = 'UPDATED';
+        store.updateProperties(Annotation['Conll-U'], 0, 0, conlluToken);
+        tick();
+
+        const nerPlusPlusToken: NerPlusPlusToken  = store.getSentence(Annotation['Ner++'], 0)[0];
+        console.log(nerPlusPlusToken);
+        expect(nerPlusPlusToken.pos)
+        .toEqual('UPDATED', 'NER++[pos] should have been updated on Conll-U[upos] since conllu has been modified.');
+    }));
+    // **** Communication between annotations END ****
 });

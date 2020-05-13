@@ -55,7 +55,17 @@ export class StoreService {
         if (this.removedAnnotations.includes(annotation)) {
             this.removedAnnotations.splice(this.removedAnnotations.indexOf(annotation), 1);
         }
-        this.store.addEntry(annotation, this.annotationValue);
+        const beenNewlyCreated = this.store.addEntry(annotation);
+        // Because: needs to be updated if this new annotation share some properties
+        // with the ones that are in the store expect self (no need to update self) and Raw (doesn't anything except token).
+        if (beenNewlyCreated) {
+            this.store.keys()
+                .filter(presentAnnotation => presentAnnotation !== Annotation.Raw)
+                .filter(presentAnnotation => presentAnnotation !== annotation)
+                .forEach(presentAnnotation => {
+                    this.store.updateContentProperties(presentAnnotation);
+                });
+        }
         this.annotationValue = annotation;
         this.selectedAnnotations$.next(this.store.keys().filter(a => !this.removedAnnotations.includes(a)));
         this.sentence$.next(this.store.getSentence(this.annotationValue, this.indexValue));

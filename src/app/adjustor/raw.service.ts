@@ -2,6 +2,8 @@ import { AbstractStore } from '../store/store.abstract.model';
 import { Annotation, Tokenable, AnnotationType } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 import { Storable } from '../store/store.interface';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Used by this Injection service to split and tokenise the content
@@ -27,12 +29,24 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
         return token;
     }
 
-    intoText(content: Tokenable[][]): string {
-        throw new Error('Method not implemented.');
+    intoText(): string {
+        console.log("oo", this.content);
+
+        if (this.content[0]) {
+            return this.content
+                .map((sentence: Tokenable[]) => {
+                    const sent = sentence.map((token: Tokenable) => token.token).join('\n');
+                    console.log(sent);
+
+                    return sent;
+                }).join('\n\n');
+        }
+        console.log("failed");
+
     }
 
-    ofToken(tokenAndAnnotation: string[]): Tokenable {
-        return { token: tokenAndAnnotation[0] };
+    ofToken(token: string[]): Tokenable {
+        return { token: token[0] };
     }
 
     duplicateSentence(isentence: number) {
@@ -70,4 +84,48 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
         const token = this.createToken({ token: '~' });
         super.addToken(isentence, itoken + 1, token);
     }
+
+    async split(http: HttpClient, text: string, lang: string) {
+
+        const sentencesString = [];
+        const sentences: SpacyResponse[] = await this.spacySplit(http, text, lang);
+
+        sentences.forEach((sentence: SpacyResponse) => {
+            sentencesString.push(sentence.dep_parse.words.map(obj => obj.text).join('\n'));
+        });
+        return sentencesString.join('\n\n');
+
+    }
+
+    private async spacySplit(http: HttpClient, text: string, lang: string) {
+        const body = { text, model: 'en' };
+        const url = `http://localhost:3000/`;
+        const headers = { 'Content-Type': 'application/json' };
+        return await http.post<SpacyResponse[]>(url + 'sents_dep', body, { headers }).toPromise();
+    }
+    private toTokenable(token: string): Tokenable {
+        return { token };
+    }
+}
+
+interface SpacyResponse {
+    sentence: string;
+    dep_parse: SpacyDep;
+}
+
+interface SpacyDep {
+    arcs: SpacyArc[];
+    words: SpacyWord[];
+}
+interface SpacyArc {
+    dir: string;
+    end: number;
+    label: string;
+    start: number;
+    text: string;
+}
+
+interface SpacyWord {
+    tag: string;
+    text: string;
 }

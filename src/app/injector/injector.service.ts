@@ -42,15 +42,8 @@ export class InjectorService {
         const promise: Promise<boolean> = new Promise(async (resolve, reject) => {
 
             if (annotation === Annotation.Raw) {
-                // const response: CoreNLPResponse = await this.corenlp(content);
-                // const r = response.sentences.map((sent: CoreNLPSentence) => sent.tokens.map((tok: CoreNLPToken) => tok.originalText));
-                // console.log(r);
-                // r[0].splice(0, 6);
-                // const lastPosition = r[r.length - 1].length;
-                // r[r.length - 1].splice(lastPosition - 2, 2);
-                // console.log(r);
-                const r = nerSents.map(s => s.map(t => t.token));
-                content = r.map(tab => tab.join('\n')).join('\n\n');
+                const rawParser = this.parser as RawService;
+                content = await rawParser.split(this.http, content, lang);
             }
 
             // Add new entry in the store
@@ -122,6 +115,8 @@ export class InjectorService {
 export interface IParser {
 
     annotation: Annotation;
+    
+    content: any[][];
     /**
      * The pattern to split sentences on
      */

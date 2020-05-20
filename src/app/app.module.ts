@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EditorModule } from './editor/editor.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { EditorModule } from './editor/editor.module';
     MatIconModule,
     MatGridListModule,
     EditorModule,
+    HttpClientModule,
     // AppRoutingModule: always after other modules that provides routes
     AppRoutingModule
   ],

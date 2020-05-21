@@ -55,9 +55,9 @@ export class ConlluService extends AbstractStore<ConlluToken> implements Storabl
         });
     }
 
-    intoText(content: ConlluToken[][]): string {
+    intoText(): string {
         const text = [];
-        content.forEach(sentence => {
+        this.content.forEach(sentence => {
             const sentenceArray = [];
             sentence.forEach(token => {
                 sentenceArray.push(Object.values(token).join('\t'));

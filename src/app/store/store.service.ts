@@ -150,19 +150,13 @@ export class StoreService {
      * @param annotations the exported annotations
      */
     writeContents(annotations: string[]) {
-        // annotations.forEach(annotation => {
-        //     const a = document.createElement('a');
-        //     let content: string = this.store;
-        //     if (annotation === Annotation.conllu) {
-        //         content = conlluIntoText(this.store.getContent(annotation));
-        //     }
-        //     if (annotation === Annotation.ner) {
-        //         content = nerIntoText(this.store.getContent(annotation));
-        //     }
-        //     const file = new Blob([content], { type: 'text/plain' });
-        //     a.href = URL.createObjectURL(file);
-        //     a.download = `${annotation}.txt`;
-        //     a.click();
-        // });
+        annotations.forEach(annotation => {
+            const a = document.createElement('a');
+            const content: string = this.store.getContentIntoText(annotation);
+            const file = new Blob([content], { type: 'text/plain' });
+            a.href = URL.createObjectURL(file);
+            a.download = `${annotation}.txt`;
+            a.click();
+        });
     }
 }

@@ -1,9 +1,8 @@
 import { AbstractStore } from '../store/store.abstract.model';
-import { Annotation, Tokenable, AnnotationType } from '../annotators/annotations';
+import { Annotation, Tokenable } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 import { Storable } from '../store/store.interface';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
 
 /**
  * Used by this Injection service to split and tokenise the content
@@ -30,19 +29,11 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
     }
 
     intoText(): string {
-        console.log("oo", this.content);
-
-        if (this.content[0]) {
-            return this.content
-                .map((sentence: Tokenable[]) => {
-                    const sent = sentence.map((token: Tokenable) => token.token).join('\n');
-                    console.log(sent);
-
-                    return sent;
-                }).join('\n\n');
-        }
-        console.log("failed");
-
+        return this.content
+            .map((sentence: Tokenable[]) => {
+                const sent = sentence.map((token: Tokenable) => token.token).join('\n');
+                return sent;
+            }).join('\n\n');
     }
 
     ofToken(token: string[]): Tokenable {
@@ -85,6 +76,14 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
         super.addToken(isentence, itoken + 1, token);
     }
 
+    /**
+     * Makes an http call to middleware and send the text as:
+     * - one word per line
+     * - sentences separated by two new lines
+     * @param http HttpClient service
+     * @param text the text to be performed
+     * @param lang the language of the text
+     */
     async split(http: HttpClient, text: string, lang: string) {
 
         const sentencesString = [];
@@ -94,17 +93,19 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
             sentencesString.push(sentence.dep_parse.words.map(obj => obj.text).join('\n'));
         });
         return sentencesString.join('\n\n');
-
     }
 
+    /**
+     * Makes an http call to middleware
+     * @param http HttpClient service
+     * @param text the text to be performed
+     * @param lang the language of the text
+     */
     private async spacySplit(http: HttpClient, text: string, lang: string) {
         const body = { text, model: lang };
         const url = `http://localhost:3000/`;
         const headers = { 'Content-Type': 'application/json' };
         return await http.post<SpacyResponse[]>(url + 'sents_dep', body, { headers }).toPromise();
-    }
-    private toTokenable(token: string): Tokenable {
-        return { token };
     }
 }
 

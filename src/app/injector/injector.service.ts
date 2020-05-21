@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Annotation, Language } from '../annotators/annotations';
+import { Annotation, Language, LanguageMap } from '../annotators/annotations';
 import { HttpClient } from '@angular/common/http';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { ConlluService } from '../annotators/conllu/conllu.service';
@@ -43,7 +43,7 @@ export class InjectorService {
 
             if (annotation === Annotation.Raw) {
                 const rawParser = this.parser as RawService;
-                content = await rawParser.split(this.http, content, lang);
+                content = await rawParser.split(this.http, content, LanguageMap[lang]);
             }
 
             // Add new entry in the store

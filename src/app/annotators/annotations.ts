@@ -15,6 +15,12 @@ export enum Language {
     es = 'Spanish'
 }
 
+export const LanguageMap = {
+    English: 'en',
+    French: 'fr',
+    Spanish: 'es'
+};
+
 export interface Tokenable {
     token: string;
 }

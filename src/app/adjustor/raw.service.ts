@@ -3,6 +3,7 @@ import { Annotation, Tokenable } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 import { Storable } from '../store/store.interface';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 /**
  * Used by this Injection service to split and tokenise the content
@@ -103,7 +104,7 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
      */
     private async spacySplit(http: HttpClient, text: string, lang: string) {
         const body = { text, model: lang };
-        const url = `http://localhost:3000/`;
+        const url = environment.middlewareBaseUrl;
         const headers = { 'Content-Type': 'application/json' };
         return await http.post<SpacyResponse[]>(url + 'sents_dep', body, { headers }).toPromise();
     }

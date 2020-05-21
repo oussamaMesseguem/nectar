@@ -99,14 +99,6 @@ export class InjectorService {
                 .map(line => this.parser.ofToken(line))
             );
     }
-
-    private async corenlp(content: string): Promise<any> {
-        return await this.http.post<any>(
-            'https://cors-anywhere.herokuapp.com/http://corenlp.run/?properties={"annotators":"tokenize,ssplit","outputFormat":"json"}',
-            { data: content }
-        ).toPromise();
-    }
-
 }
 
 /**
@@ -115,7 +107,7 @@ export class InjectorService {
 export interface IParser {
 
     annotation: Annotation;
-    
+
     content: any[][];
     /**
      * The pattern to split sentences on

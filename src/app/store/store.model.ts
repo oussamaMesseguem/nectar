@@ -38,6 +38,14 @@ export class Store {
     }
 
     /**
+     * Returns the content for the given annotation.
+     * @param annotation the annotation
+     */
+    getContentIntoText(annotation: string): string {
+        return this.store[annotation].intoText();
+    }
+
+    /**
      * Returns the sentence at the given index from Store[annotation]
      * @param annotation the annotation
      * @param isentence the sentence index

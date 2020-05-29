@@ -32,9 +32,9 @@ export class NerService extends AbstractStore<NerToken> implements Storable, IPa
         return { token: token.token, label: token.label ? token.label : '' };
     }
 
-    intoText(content: NerToken[][]): string {
+    intoText(): string {
         const text = [];
-        content.forEach(sentence => {
+        this.content.forEach(sentence => {
             const sentenceArray = [];
             sentence.forEach(token => {
                 const values: string[] = Object.values(token);

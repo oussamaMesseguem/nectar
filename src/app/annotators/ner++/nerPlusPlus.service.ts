@@ -43,9 +43,9 @@ export class NerPlusPlusService extends AbstractStore<NerPlusPlusToken> implemen
         };
     }
 
-    intoText(content: NerPlusPlusToken[][]): string {
+    intoText(): string {
         const text = [];
-        content.forEach(sentence => {
+        this.content.forEach(sentence => {
             const sentenceArray = [];
             sentence.forEach(token => {
                 sentenceArray.push(Object.values(token).join('\t'));

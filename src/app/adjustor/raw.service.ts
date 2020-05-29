@@ -1,7 +1,9 @@
 import { AbstractStore } from '../store/store.abstract.model';
-import { Annotation, Tokenable, AnnotationType } from '../annotators/annotations';
+import { Annotation, Tokenable } from '../annotators/annotations';
 import { IParser } from '../injector/injector.service';
 import { Storable } from '../store/store.interface';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 /**
  * Used by this Injection service to split and tokenise the content
@@ -27,12 +29,16 @@ export class RawService extends AbstractStore<Tokenable> implements Storable, IP
         return token;
     }
 
-    intoText(content: Tokenable[][]): string {
-        throw new Error('Method not implemented.');
+    intoText(): string {
+        return this.content
+            .map((sentence: Tokenable[]) => {
+                const sent = sentence.map((token: Tokenable) => token.token).join('\n');
+                return sent;
+            }).join('\n\n');
     }
 
-    ofToken(tokenAndAnnotation: string[]): Tokenable {
-        return { token: tokenAndAnnotation[0] };
+    ofToken(token: string[]): Tokenable {
+        return { token: token[0] };
     }
 
     duplicateSentence(isentence: number) {

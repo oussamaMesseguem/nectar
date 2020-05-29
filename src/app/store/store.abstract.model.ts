@@ -88,7 +88,7 @@ export abstract class AbstractStore<T extends Tokenable> implements Partial<Stor
      * Transforms the content into a string.
      * @param content the content to write
      */
-    abstract intoText(content: T[][]): string;
+    abstract intoText(): string;
 
     /**
      * Creates an object from an array of the token and its annotation.

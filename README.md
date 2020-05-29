@@ -4,7 +4,7 @@ Nectar helps to manually verify NLP based annotations in a simply and clear way.
 
 ## Development server
 
-The application is an angular standalone app which runs on a node server.
+The application is an angular app which runs along with a middleware and spacy api. See [Netar-deployment](https://github.com/oussamaMesseguem/nectar-deployment).
 
 ## How to
 
@@ -24,6 +24,7 @@ The application is an angular standalone app which runs on a node server.
 ## Try it now
 
 Try it now on Github.io page [Nectar](https://oussamamesseguem.github.io/nectar/).
+Only Nectar app without rest services, no Raw features available. 
 
 ## Further
 
